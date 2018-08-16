@@ -1,3 +1,4 @@
+const axios = require('axios')
 
 const functions = require('firebase-functions')
 
@@ -75,20 +76,49 @@ exports.onStatusChange = functions.database.ref('/status/{uid}').onUpdate( async
 	return change.after.ref.once('value').then(async latestSnapshot => {
 		if (latestSnapshot.val().last_changed > eventStatus.last_changed) 
 			return null;
-		console.log('about to break!')
 		eventStatus.last_changed = new Date(eventStatus.last_changed);
-		console.log('this should not print')
 		var data = userFirestoreDoc.data()
-		data.isOnline = eventStatus.isOnline // shouldn't 
+		data.isOnline = eventStatus.isOnline
 		userFirestoreDoc.ref.set(data)
 		console.log('finished')
 	})
 })
 
-exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roomID}').onUpdate(async (change, context) => {
+exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roomID}').onUpdate((change, context) => {
 	const roomID = context.params.roomID;
 
-	const messages = change.after.val().messages
-	const latestMessage = messages[messages.length - 1]
+	const messages = change.after.data().messages
+	const participants = change.after.data().participants
+	const message = messages[messages.length - 1]
+	const senderName = message.author
+	firestore.doc('/users/' + participants[0]).get().then(async snapshot => {
+		console.log(snapshot.data())
+		var receiverToken = snapshot.data().token
 
+		if(snapshot.data().displayName == senderName) {
+			//add then instead of .token after .data(), because firestore.doc returns a promise
+			receiverToken = await firestore.doc('/users/' + participants[1]).get().data().token
+		}
+		const payload = {
+			notification : {
+				title: senderName + ' sent you a message...',
+				body: message.contents,
+				clickAction: 'feynman-village.firebaseapp.com'
+			},
+			to: receiverToken
+		}
+		console.log('great')
+		const headers = {
+			'Content-type': 'application/json',
+			'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
+		}
+		console.log(payload)
+		console.log(headers)
+		axios.create({
+			headers
+		})
+		.post('https://fcm.googleapis.com/fcm/send', payload)
+		.then(response => console.log(response))
+		.catch(error => console.log(error))
+	})
 })
