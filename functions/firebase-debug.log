@@ -1,0 +1,43 @@
+[debug] [2018-08-13T01:02:55.096Z] ----------------------------------------------------------------------
+[debug] [2018-08-13T01:02:55.100Z] Command:       /usr/local/Cellar/node/9.3.0_1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-08-13T01:02:55.100Z] CLI Version:   4.0.0
+[debug] [2018-08-13T01:02:55.100Z] Platform:      darwin
+[debug] [2018-08-13T01:02:55.100Z] Node Version:  v9.3.0
+[debug] [2018-08-13T01:02:55.101Z] Time:          Mon Aug 13 2018 04:02:55 GMT+0300 (IDT)
+[debug] [2018-08-13T01:02:55.102Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-13T01:02:55.132Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-13T01:02:55.133Z] > authorizing via signed-in user
+[debug] [2018-08-13T01:02:55.137Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/feynman-village  
+  
+ Mon Aug 13 2018 04:02:55 GMT+0300 (IDT)
+[debug] [2018-08-13T01:02:55.996Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-13T01:02:55.998Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/feynman-village/tokens  
+  
+ Mon Aug 13 2018 04:02:55 GMT+0300 (IDT)
+[debug] [2018-08-13T01:02:56.812Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-13T01:02:56.815Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/feynman-village  
+  
+ Mon Aug 13 2018 04:02:56 GMT+0300 (IDT)
+[debug] [2018-08-13T01:02:57.865Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/eltonlin/Desktop/Developer/Node/projects/feynman'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-08-13T01:03:07.388Z] Fetching environment
+[debug] [2018-08-13T01:03:07.394Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/339430346564:getServerAppConfig  
+  
+ Mon Aug 13 2018 04:03:07 GMT+0300 (IDT)
+[debug] [2018-08-13T01:03:07.395Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/339430346564/clients/_:getWebAppConfig  
+  
+ Mon Aug 13 2018 04:03:07 GMT+0300 (IDT)
+[debug] [2018-08-13T01:03:08.113Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-13T01:03:08.226Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-13T01:03:08.226Z] Starting @google-cloud/functions-emulator
+[info] i  hosting: Serving hosting files from: dist
+[info] ✔  hosting: Local server: http://localhost:5000
+
+[debug] [2018-08-13T01:03:13.857Z] Parsing function triggers
+[info] ✔  functions: api1: http://localhost:5001/feynman-village/us-central1/api1
+[info] ✔  functions: addStudent: http://localhost:5001/feynman-village/us-central1/addStudent
+[info] ✔  functions: addTeacher: http://localhost:5001/feynman-village/us-central1/addTeacher

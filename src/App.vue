@@ -1,29 +1,36 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <the-navbar/>
     <router-view/>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+import store from '@/store/store.js'
+import TheNavbar from '@/components/TheNavbar.vue'
+import M from 'materialize-css'
+
+export default {
+  name: 'App',
+  store, // injects Vuex to all children
+  components: {
+    TheNavbar
   }
+}
+</script>
+
+<style lang="sass">
+$primary-color: color("materialize-red", "lighten-2") !default;
+$primary-color-light: false !default;
+$primary-color-dark: false !default;
+</style>
+
+<style>
+h2, h3, h4, h4, p, div, span, input {
+  color: white;
+}
+
+body {
+  background-color: #41403F;
 }
 </style>
