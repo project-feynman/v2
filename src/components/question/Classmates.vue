@@ -73,12 +73,8 @@ export default {
       if (!this.question[0]) {
         return []
       } else if (this.question[0]) {
-        console.log('from computed, question =', this.question[0])
-        console.log('from computed, question.feynmen =', this.question[0].feynmen)
         var output = this.question[0].feynmen 
-        console.log('initially, output =', output)
         output = output.filter(f => f.chainReactionCreatorUID != null)
-        console.log('intermediate output =', output)
         output = output.filter(f => f.retired != true || f.retired == null)
         return output 
       }
@@ -98,7 +94,7 @@ export default {
     this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
       .then(doc => {
         this.loading = false
-        // one-way bind "isOnline" for each user 
+        // TODO: one-way bind "isOnline" for each user 
         console.log('doc =', doc[0])
       })
       .catch(error => console.log(error))
@@ -142,7 +138,8 @@ export default {
       if (!chatRoom.data()) {
         await doc.set({
           messages: [],
-          participants: [sortedUsers[0], sortedUsers[1]]
+          participants: [sortedUsers[0], sortedUsers[1]],
+          allPaths: []
         })
       }
       this.$router.push('/chat/' + roomId)
