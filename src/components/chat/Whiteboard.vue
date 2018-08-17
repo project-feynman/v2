@@ -42,7 +42,6 @@ export default {
             // just draw the newly added path 
             const paths = change.doc.data().allPaths
             const newPath = paths[paths.length - 1] 
-            console.log(`new path = ${JSON.stringify(newPath)}`)
             var path = new Path()
             path.strokeColor = 'pink'
             newPath.points.forEach(point => {
