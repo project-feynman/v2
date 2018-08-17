@@ -91,8 +91,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const participants = change.after.data().participants
 	const message = messages[messages.length - 1]
 	const senderName = message.author
-	//return firestore.doc('/users/' + participants[0]).onSnapshot(async snapshot => {
-	firestore.doc('/users/' + participants[0]).get().then(async snapshot => {
+	return firestore.doc('/users/' + participants[0]).onSnapshot(async snapshot => {
 		console.log(snapshot.data())
 		var receiverToken = snapshot.data().token
 
@@ -101,7 +100,6 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			const receiverDoc = await firestore.doc('/users/' + participants[1]).get()
 			receiverToken = receiverDoc.data().token
 		}
-		console.log(receiverToken)
 		const payload = {
 			notification : {
 				title: senderName + ' sent you a message...',
@@ -121,9 +119,6 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			headers
 		})
 		.post('https://fcm.googleapis.com/fcm/send', payload)
-		.then(response => {
-			console.log(response.results)
-		})
 		.catch(error => console.log(error))
 	})
 })

@@ -23,6 +23,10 @@ navigator.serviceWorker
     console.log('Registered!')
     askForPermissionToReceiveNotifications()
     setTimeout(sendNotification, 3000, "Hello", "hello")
+    console.log('Theoretically a notifcaiton should be received')
+  })
+
+Vue.config.productionTip = false
   })
 
 Vue.config.productionTip = false
