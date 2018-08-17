@@ -97,7 +97,8 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 
 		if(snapshot.data().displayName == senderName) {
 			//add then instead of .token after .data(), because firestore.doc returns a promise
-			receiverToken = await firestore.doc('/users/' + participants[1]).get().data().token
+			const receiverDoc = await firestore.doc('/users/' + participants[1]).get()
+			receiverToken = receiverDoc.data().token
 		}
 		const payload = {
 			notification : {
