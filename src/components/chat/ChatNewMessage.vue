@@ -34,7 +34,7 @@ export default {
         this.messages = chatRoom.data().messages
         this.messages.push({
           content,
-          author: user.displayName,
+          author: this.user.displayName,
           timestamp: Date.now()
         })
         await chatRoomRef.update({

@@ -4,7 +4,7 @@
       <div class="card-content">
         <ul class="messages" v-chat-scroll>
           <li v-for="message in messages" :key="message.id">
-            <span class="teal-text">{{ message.author }}</span>
+            <span class="teal-text">{{ message.author }}: </span>
             <span class="grey-text text-darken-3">{{ message.content }}</span>
             <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
           </li>
