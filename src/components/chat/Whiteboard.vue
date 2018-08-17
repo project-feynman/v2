@@ -2,6 +2,7 @@
   <div>
     <canvas id="whiteboard" resize>
     </canvas>
+    <base-button @click="resetBoard()">Reset Board</base-button>
   </div>
 </template>
 
@@ -39,14 +40,25 @@ export default {
         snapshot.docChanges().forEach(change => {
           console.log(`change = ${change}`)
           if (change.type == 'added') {
-            // just draw the newly added path 
-            const paths = change.doc.data().allPaths
-            const newPath = paths[paths.length - 1] 
-            var path = new Path()
-            path.strokeColor = 'pink'
-            newPath.points.forEach(point => {
-              path.add(new Point(point.x, point.y))
+            // DRAW ALL PATHS FOR NOW AND SEE WHAT HAPPENS
+            this.chatRoom.allPaths.forEach(data => {
+              var path = new Path()
+              path.strokeColor = 'pink'
+              data.points.forEach(point => {
+                path.add(new Point(point.x, point.y))
+              })
             })
+            // just draw the newly added path 
+            // const paths = change.doc.data().allPaths
+            // const newPath = paths[paths.length - 1] 
+            // var path = new Path()
+            // path.strokeColor = 'pink'
+            // if (newPath && newPath.points) {
+            //   newPath.points.forEach(point => {
+            //     // TODO: make it truly live - this is not drawing at the moment
+            //     path.add(new Point(point.x, point.y))
+            //   })
+            // }
           }
         })
       })
@@ -67,7 +79,7 @@ export default {
       this.path.smooth()
       const segments = this.path.getSegments()
       // save the "path" that the user has just drawn
-      var pathObj = {} // contains "points" and "pathID"
+      var pathObj = {} 
       var points = [] 
       segments.forEach(segment => {
         var point = {} 
@@ -84,6 +96,24 @@ export default {
         allPaths: updatedPaths
       })
       this.path = null 
+    }
+  },
+  methods: {
+    async resetBoard () {
+      console.log('resetting board')
+      const ref = db.collection('chatRooms').doc(this.$route.params.room_id)
+      await ref.update({
+        allPaths: []
+      })
+    },
+    drawAllPaths () {
+      this.chatRoom.allPaths.forEach(data => {
+        var path = new Path()
+        path.strokeColor = 'pink'
+        data.points.forEach(point => {
+          path.add(new Point(point.x, point.y))
+        })
+      })
     }
   }
 }
