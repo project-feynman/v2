@@ -1,0 +1,1 @@
+In paper.js, calling "add()" automatically triggers an update/redraw
