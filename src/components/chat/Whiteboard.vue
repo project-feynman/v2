@@ -29,7 +29,6 @@ export default {
       this.chatRoom.allPaths.forEach(data => {
         var path = new Path()
         path.strokeColor = 'pink'
-        // path.moveTo(new Point(0, 0))
         data.points.forEach(point => {
           path.add(new Point(point.x, point.y))
         })
@@ -40,17 +39,15 @@ export default {
         snapshot.docChanges().forEach(change => {
           console.log(`change = ${change}`)
           if (change.type == 'added') {
-            console.log('now, just draw this new line')
-            console.log(`change.doc.data() = ${JSON.stringify(change.doc.data())}`)
-            // just draw the last path 
+            // just draw the newly added path 
             const paths = change.doc.data().allPaths
             const newPath = paths[paths.length - 1] 
             console.log(`new path = ${JSON.stringify(newPath)}`)
-
-            // this.comments.unshift({
-            //   from: change.doc.data().from,
-            //   content: change.doc.data().content
-            // })
+            var path = new Path()
+            path.strokeColor = 'pink'
+            newPath.points.forEach(point => {
+              path.add(new Point(point.x, point.y))
+            })
           }
         })
       })
