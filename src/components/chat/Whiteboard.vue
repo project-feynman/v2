@@ -16,7 +16,6 @@ export default {
   },
   data () {
     return {
-      // pathID: 0,
       path: null,
       chatRoom: null,
       allPaths: []
@@ -36,13 +35,18 @@ export default {
         })
       })
       // whenever a new path is added to Firestore, update the board
-      const ref = db.collection('chatRooms').where('id', '==', this.$route.params.room_id)
+      const ref = db.collection('chatRooms').where('test', '==', true)
       ref.onSnapshot(snapshot => {
         snapshot.docChanges().forEach(change => {
           console.log(`change = ${change}`)
           if (change.type == 'added') {
             console.log('now, just draw this new line')
-            console.log(`change.do.data() = ${change.doc.data()}`)
+            console.log(`change.doc.data() = ${JSON.stringify(change.doc.data())}`)
+            // just draw the last path 
+            const paths = change.doc.data().allPaths
+            const newPath = paths[paths.length - 1] 
+            console.log(`new path = ${JSON.stringify(newPath)}`)
+
             // this.comments.unshift({
             //   from: change.doc.data().from,
             //   content: change.doc.data().content
@@ -75,9 +79,7 @@ export default {
         point.y = segment.point.y 
         points.push(point)
       })
-      // pathObj.pathID = this.pathID 
       pathObj.points = points 
-      // this.pathID = this.pathID + 1 
       this.chatRoom.allPaths.push(pathObj)
       // push the new "path" to Firestore 
       const updatedPaths = this.chatRoom.allPaths
