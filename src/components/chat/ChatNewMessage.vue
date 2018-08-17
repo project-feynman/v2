@@ -13,6 +13,11 @@ import db from '@/firebase/init.js'
 import moment from 'moment'
 
 export default {
+  computed: {
+    user () {
+      return this.$store.state.user 
+    }
+  },
   data () {
     return {
       messages: null, // used to update Firestore after newMessage is added
@@ -22,18 +27,19 @@ export default {
   methods: {
     async addMessage () {
       if (this.newMessage) {
+        const content = this.newMessage
+        this.newMessage = null 
         let chatRoomRef = db.collection('chatRooms').doc(this.$route.params.room_id)
         let chatRoom = await chatRoomRef.get()
         this.messages = chatRoom.data().messages
         this.messages.push({
-          content: this.newMessage,
-          author: firebase.auth().currentUser.displayName,
+          content,
+          author: user.displayName,
           timestamp: Date.now()
         })
         await chatRoomRef.update({
           messages: this.messages
         })
-        this.newMessage = null
       }
     }
   }
