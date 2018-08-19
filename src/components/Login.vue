@@ -26,7 +26,7 @@
           </div>
           </div>
         </div>
-        <div class="col s12 m4">
+        <div class="col s12 m4 add-padding">
           <div class="card light-card">
             <p class="black-text">Bob is having trouble on his pset, so he goes to office hours. The help queue is longer than any part of his anatomy. He messages his friends on Facebook, but all of them say they’re “already done” or “haven't started yet lol.” Should Bob commit murder?</p>
               <div class="center">
@@ -88,10 +88,6 @@ export default {
   padding: 20px;
 }
 
-.card-wrapper {
-  width: 50%;
-}
-
 /* quickfix */
 .tooltipped {
   margin-top: 20px;
@@ -100,13 +96,7 @@ export default {
 
 .flex-container {
   display: flex;
-  justify-content: space-around;
-}
-
-.information {
-  width: 33%;
-  margin: 20px;
-  flex-grow: 1;
+  justify-content: space-evenly;
 }
 
 .dashboard-button {
