@@ -62,7 +62,6 @@ export default {
     }
   },
   mounted () {
-    console.log(`List of nodes = ${JSON.stringify(this.ListOfNodes)}`)
     this.update(this.root)
   },
   data () {
@@ -73,7 +72,6 @@ export default {
   },
   methods: {
     update (source) {
-        console.log('this.update()')
         // redeclare so svgs can use it 
         var margin = {top: 20, right: 90, bottom: 30, left: 90}
         var width = 960 - margin.left - margin.right
@@ -90,7 +88,6 @@ export default {
           this.svg = svg
           this.firstTime = false 
         } else {
-          console.log('not redrawing this time')
           svg = this.svg
         }
           var i = 0

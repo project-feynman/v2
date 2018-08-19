@@ -95,7 +95,6 @@ export default {
       .then(doc => {
         this.loading = false
         // TODO: one-way bind "isOnline" for each user 
-        console.log('doc =', doc[0])
       })
       .catch(error => console.log(error))
   },

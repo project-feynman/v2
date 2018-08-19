@@ -48,7 +48,6 @@ const actions = {
     var user = null 
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
-        console.log('there is a user')
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()
         if (mirror.exists) {
@@ -72,7 +71,7 @@ const actions = {
       }
       // not necessary - the user only holds information such as tokens - and displayNames - the real important information
       // lies in Question.Feynman 
-      
+
       // whenever "user" changes in Firestore, fetch the new values into Vuex again
       // const ref = db.collection('users').doc(user.uid)
       // ref.onSnapshot(doc => {
