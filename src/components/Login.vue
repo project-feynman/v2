@@ -71,6 +71,8 @@ export default {
           signInSuccessUrl: '/subjects',
           signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
         })
+      } else if (this.user.displayName) {
+        this.$router.push('/subjects')
       }
     }
   },
