@@ -1,7 +1,7 @@
 <template>
   <div class="new-message">
     <form @submit.prevent="addMessage">
-      <label for="new-message">New Message (ENTER to add)</label>
+      <label for="new-message">New message</label>
       <input type="text" name="new-message" v-model="newMessage">
     </form>
   </div>
@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      messages: null, // used to update Firestore after newMessage is added
+      messages: null, 
       newMessage: null
     }
   },

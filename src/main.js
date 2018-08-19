@@ -20,31 +20,18 @@ navigator.serviceWorker
   .register('/firebase-messaging-sw.js')
   .then(registration => {
     firebase.messaging().useServiceWorker(registration)
-    console.log('Registered!')
+    console.log('service worker registered')
     askForPermissionToReceiveNotifications()
-    setTimeout(sendNotification, 3000, "Hello", "hello")
-    console.log('Theoretically a notifcaiton should be received')
   })
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 
-// new Vue({
-// 	router,
-// 	store,
-// 	render: h => h(App)
-// }).$mount('#app')
-
-// render app only after user's login state is calculated
-var app = null
-firebase.auth().onAuthStateChanged(async () => {
-  if (!app) {
-    await store.dispatch('setUser')
-    new Vue({
-      router,
-      store,
-      render: h => h(App)
-    }).$mount('#app')
-  }
-})
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
+// trigger Vuex actions in parallel for better performance
+store.dispatch('fetchUser')

@@ -2,6 +2,7 @@
   <div>
     <canvas id="whiteboard" resize>
     </canvas>
+    <base-button @click="resetBoard()">Reset Board</base-button>
   </div>
 </template>
 
@@ -16,29 +17,53 @@ export default {
   },
   data () {
     return {
-      pathID: 0,
       path: null,
       chatRoom: null,
       allPaths: []
     }
   },
   mounted () {
-    // connect to firebase 
     const roomID = this.$route.params.room_id
-      this.$bind('chatRoom', db.collection('chatRooms').doc(roomID))
+    this.$bind('chatRoom', db.collection('chatRooms').doc(roomID))
     .then(doc => {
+      // load drawings from all previous sessions 
       this.chatRoom.allPaths.forEach(data => {
         var path = new Path()
         path.strokeColor = 'pink'
-        path.moveTo(new Point(0, 0))
         data.points.forEach(point => {
           path.add(new Point(point.x, point.y))
         })
       })
+      // whenever a new path is added to Firestore, update the board
+      const ref = db.collection('chatRooms').where('test', '==', true)
+      ref.onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          console.log(`change = ${change}`)
+          if (change.type == 'added') {
+            // DRAW ALL PATHS FOR NOW AND SEE WHAT HAPPENS
+            this.chatRoom.allPaths.forEach(data => {
+              var path = new Path()
+              path.strokeColor = 'pink'
+              data.points.forEach(point => {
+                path.add(new Point(point.x, point.y))
+              })
+            })
+            // just draw the newly added path 
+            // const paths = change.doc.data().allPaths
+            // const newPath = paths[paths.length - 1] 
+            // var path = new Path()
+            // path.strokeColor = 'pink'
+            // if (newPath && newPath.points) {
+            //   newPath.points.forEach(point => {
+            //     // TODO: make it truly live - this is not drawing at the moment
+            //     path.add(new Point(point.x, point.y))
+            //   })
+            // }
+          }
+        })
+      })
     })
-    .catch((error) => {
-      console.log('error in loading: ', error)
-    })
+    .catch(error => console.log('error in loading: ', error))
     paper.setup('whiteboard')
     var tool = new Tool()
     tool.onMouseDown = event => {
@@ -47,15 +72,14 @@ export default {
     }
     tool.onMouseDrag = event => {
       this.path.add(event.point)
-      console.log(`path = ${this.path.toString()}`)
     }
     tool.onMouseUp = event => {
       this.path.add(event.point)
       this.path.simplify()
       this.path.smooth()
       const segments = this.path.getSegments()
-      // store the points in sequence - hopefully it'll reflect what the users drew 
-      var pathObj = {} // contains "points" and "pathID"
+      // save the "path" that the user has just drawn
+      var pathObj = {} 
       var points = [] 
       segments.forEach(segment => {
         var point = {} 
@@ -63,11 +87,9 @@ export default {
         point.y = segment.point.y 
         points.push(point)
       })
-      pathObj.pathID = this.pathID 
       pathObj.points = points 
-      this.pathID = this.pathID + 1 
-    
       this.chatRoom.allPaths.push(pathObj)
+      // push the new "path" to Firestore 
       const updatedPaths = this.chatRoom.allPaths
       const ref = db.collection('chatRooms').doc(roomID)
       ref.update({
@@ -75,14 +97,32 @@ export default {
       })
       this.path = null 
     }
+  },
+  methods: {
+    async resetBoard () {
+      console.log('resetting board')
+      const ref = db.collection('chatRooms').doc(this.$route.params.room_id)
+      await ref.update({
+        allPaths: []
+      })
+    },
+    drawAllPaths () {
+      this.chatRoom.allPaths.forEach(data => {
+        var path = new Path()
+        path.strokeColor = 'pink'
+        data.points.forEach(point => {
+          path.add(new Point(point.x, point.y))
+        })
+      })
+    }
   }
 }
 </script>
 
 <style lang="scss">
-  canvas {
-    height: 100%;
-    width: 100%;
-    background: white;
-  }
+canvas {
+  height: 100%;
+  width: 100%;
+  background: white;
+}
 </style>
