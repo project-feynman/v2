@@ -12,4 +12,11 @@ Our Vuex store's primary roles are:
         4) Finally, it just assigns a global variable "user" that other components have access to. 
         5) Here, we have a single source of truth, and whenever "user" changes value, other components reactively update.
 
-    
+
+The first time the app loads, main.js is executed. There, we call Vuex to fetch a reference to "firebase.auth().currentUser". However, unlikely previously, we let the components render first and run all the async tasks associated with managing user sessions IN PARALLEL. 
+
+Improvements: 
+
+1) Notice, what blocks the app from rendering was that first, Vuex had to finish all its tasks (we used await) before we let the App load. Now we run the Vuex tasks after the app loads.
+
+2) Secondly, we make "commits" as early as we can, as they are synchronous, and once completed, the other components that need the "user" are able to do what they need to do. You'll notice in many of the actions here, we make commits as early as we can, and then run the other necessary asynchronous tasks afterwards in parallel. 

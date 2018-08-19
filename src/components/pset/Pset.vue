@@ -8,33 +8,32 @@
     <template v-if="allQuestions && !loading">
       <div class="question-card">
         <base-card v-for="(question, i) in allQuestions" :key="i">
-          <div class="flexbox-container">
-            <BaseCheckBox 
-              :value="getUserProgress(question)"
-              @toggle="toggle(question, $event)">
-              <p class="pink-text">Eureka</p>
-            </BaseCheckBox> 
-          </div>
           <h5>{{ question.content }}</h5>
-          <!-- Delete Button -->
-          <span v-if="user.displayName == 'Elton Lin'" @click="deleteQuestion(question.id)" class='btn-floating btn-large halfway-fab red'>
-            <i class='material-icons right'>delete_outline</i>
-          </span>
           <!-- Classmate's Progress -->
-          <h5>{{ getNumberOfFinishedClassmates(question)}}</h5>
-      
-          <h5>Avg. time: {{ getEstimatedTime(question) }} hours</h5>
+          <ul>
+            <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}}</li>
+            <li class="teal-text">Avg. time: {{ getEstimatedTime(question) }} hours</li>
+          </ul>
           <question-duration v-if="user.uid && getUserProgress(question)" 
                              :questionID="question.id" 
                              :userUID="user.uid"
                              class="question-duration"
                              ></question-duration>
+          <BaseCheckBox 
+            :value="getUserProgress(question)"
+            @toggle="toggle(question, $event)">
+            <p class="pink-text">(Check the box when you finish)</p>
+          </BaseCheckBox> 
           <!-- Link -->
           <div class="card-action">
-            <router-link :to="$route.path + `/${getLastChar(question.questionID)}`" class="pink-text">
+            <router-link :to="$route.path + `/${getLastChar(question.questionID)}`" class="black-text">
               Start question
             </router-link>
           </div> 
+          <!-- Delete Button -->
+          <span v-if="user.displayName == 'Elton Lin'" @click="deleteQuestion(question.id)" class='btn-floating btn-large halfway-fab red'>
+            <i class='material-icons right'>delete_outline</i>
+          </span>
         </base-card>
       </div>
     </template>
