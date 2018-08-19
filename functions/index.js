@@ -83,7 +83,6 @@ exports.onStatusChange = functions.database.ref('/status/{uid}').onUpdate( async
 		console.log('finished')
 	})
 })
-
 exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roomID}').onUpdate((change, context) => {
 	const roomID = context.params.roomID;
 
@@ -91,7 +90,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const participants = change.after.data().participants
 	const message = messages[messages.length - 1]
 	const senderName = message.author
-	return firestore.doc('/users/' + participants[0]).onSnapshot(async snapshot => {
+	firestore.doc('/users/' + participants[0]).get().then(async snapshot => {
 		console.log(snapshot.data())
 		var receiverToken = snapshot.data().token
 
@@ -108,7 +107,6 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			},
 			to: receiverToken
 		}
-		console.log('great')
 		const headers = {
 			'Content-type': 'application/json',
 			'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
@@ -119,6 +117,8 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			headers
 		})
 		.post('https://fcm.googleapis.com/fcm/send', payload)
+		.then(response => console.log(response.statusText))
 		.catch(error => console.log(error))
 	})
+	return null;
 })
