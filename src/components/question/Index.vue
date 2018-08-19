@@ -1,6 +1,6 @@
 <template>
   <div class="question">
-    <div class="custom-offset"></div>
+    <!-- <div class="custom-offset"></div> -->
     <h2 class="center">Question {{ $route.params.question_number }}</h2>
     <h3 v-if="question[0]" class="question-text center">
       {{ question[0].content }}
@@ -8,10 +8,10 @@
     <div class="row">
       <div class="col s12">
         <ul id="tabs" class="tabs">
-          <li class="tab col s3"><a href="#test1">Student Explanations</a></li>
-          <li class="tab col s3"><a href="#test2">Other Resources</a></li>
-          <li class="tab col s3"><a href="#test3">Classmates</a></li>
-          <li class="tab col s3"><a href="#test4">Chain Reaction</a></li>
+          <li class="tab col s3"><a href="#test1" class="teal-text">Explanations</a></li>
+          <li class="tab col s3"><a href="#test2" class="teal-text">Resources</a></li>
+          <li class="tab col s3"><a href="#test3" class="teal-text">Classmates</a></li>
+          <li class="tab col s3"><a href="#test4" class="teal-text">Chain Reaction</a></li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">
@@ -21,6 +21,9 @@
         <resources/>
       </div>
       <div id="test3" class="col s12 m12">
+        <div class="center">
+          <big-red-button></big-red-button>
+        </div>
         <classmates/>
       </div>
       <div id="test4" class="col s12 m12">
@@ -37,6 +40,7 @@ import Resources from './Resources.vue'
 import Classmates from './Classmates.vue'
 import ChainReaction from './ChainReaction.vue'
 import Feynmen from './Feynmen.vue'
+import BigRedButton from './BigRedButton.vue'
 
 export default {
   mounted () {
@@ -49,7 +53,8 @@ export default {
     Classmates,
     Resources,
     ChainReaction,
-    Feynmen
+    Feynmen,
+    BigRedButton
   },
   data () {
     return {

@@ -30,16 +30,7 @@ export default {
     async signOut () {
       await this.$store.dispatch('logOut')
       this.$router.push('/')
-    },
-    // async viewNotification () {
-    //   this.$router.push(`/chat${this.user.notifications.URL}`)
-    //   const ref = db.collection('users').doc(this.user.uid)
-    //   await ref.update({
-    //     notifications: {
-    //       new: false
-    //     }
-    //   })
-    // }
+    }
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <h4 class="center">Student Explanations</h4>
     <div v-if="loading">
     </div>
-    <div class="center">
+    <div class="center add-button">
       <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
         <i class='material-icons'>add</i>
       </span>
@@ -199,6 +199,10 @@ export default {
 
 .upvote {
   margin-top: 15px;
+}
+
+.add-button {
+  padding-bottom: 10px;
 }
 </style>
 

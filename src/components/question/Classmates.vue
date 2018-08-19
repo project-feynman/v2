@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h4 class="center">Chain Reaction</h4>
-    <div class="center">
-      <a @click="handleEureka()" class="waves-effect waves-light btn-large yellow-text">Eureka!!!</a>
+    <h4 class="center">Classmates On The Question</h4>
+    <div class="center" id="eureka-button">
+      <big-red-button @click="handleEureka()"></big-red-button>
     </div>
     <div v-if="question[0]">
       <div class="flexbox-container">

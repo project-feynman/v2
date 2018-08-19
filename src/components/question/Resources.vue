@@ -3,7 +3,7 @@
     <h4 class="center">Question Resources</h4>
     <div v-if="loading" class="center">Loading related resources...</div>
     <template v-if="questions[0]">
-      <div class="center">
+      <div class="center add-button">
         <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
           <i class='material-icons'>add</i>
         </span>
@@ -124,5 +124,10 @@ export default {
 .new-resource {
   max-width: 70%;
   margin: auto;
+}
+
+.add-button {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 </style>
