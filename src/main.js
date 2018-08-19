@@ -23,6 +23,7 @@ navigator.serviceWorker
     console.log('service worker registered')
     askForPermissionToReceiveNotifications()
   })
+  .catch(error => console.log('error =', error))
 
 Vue.config.productionTip = false
 
