@@ -2,21 +2,31 @@
   <div class="question">
     <div class="custom-offset"></div>
     <h2 class="center">Question {{ $route.params.question_number }}</h2>
-    <template v-if="question[0]">
-      <h3 class="question-text center">{{ question[0].content }}</h3>
-    </template>
-    <div class="flexbox-container">
-      <div class="row">
-        <div class="col s12 m6">
-          <explanations/> 
-        </div>
-        <div class="col s12 m6">
-          <resources/>
-        </div>
+    <h3 v-if="question[0]" class="question-text center">
+      {{ question[0].content }}
+    </h3>
+    <div class="row">
+      <div class="col s12">
+        <ul id="tabs" class="tabs">
+          <li class="tab col s3"><a href="#test1">Student Explanations</a></li>
+          <li class="tab col s3"><a href="#test2">Other Resources</a></li>
+          <li class="tab col s3"><a href="#test3">Classmates</a></li>
+          <li class="tab col s3"><a href="#test4">Chain Reaction</a></li>
+        </ul>
+      </div>
+      <div id="test1" class="col s12 m12">
+        <explanations/> 
+      </div>
+      <div id="test2" class="col s12 m12">
+        <resources/>
+      </div>
+      <div id="test3" class="col s12 m12">
+        <classmates/>
+      </div>
+      <div id="test4" class="col s12 m12">
+        <feynmen></feynmen>
       </div>
     </div>
-    <classmates/>
-    <feynmen></feynmen>
   </div>
 </template>
 
@@ -29,6 +39,11 @@ import ChainReaction from './ChainReaction.vue'
 import Feynmen from './Feynmen.vue'
 
 export default {
+  mounted () {
+    const el = document.getElementById('tabs')
+    const options = {}
+    const instance = M.Tabs.init(el, options)
+  },
   components: {
     Explanations,
     Classmates,
@@ -51,7 +66,7 @@ export default {
 
 <style scoped>
 .custom-offset {
-  padding-top: 80px;
+  padding-top: 60px;
 }
 
 .question-text {
