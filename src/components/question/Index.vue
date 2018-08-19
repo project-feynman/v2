@@ -5,8 +5,16 @@
     <template v-if="question[0]">
       <h3 class="question-text center">{{ question[0].content }}</h3>
     </template>
-    <explanations/> 
-    <resources/> 
+    <div class="flexbox-container">
+      <div class="row">
+        <div class="col s12 m6">
+          <explanations/> 
+        </div>
+        <div class="col s12 m6">
+          <resources/>
+        </div>
+      </div>
+    </div>
     <classmates/>
     <feynmen></feynmen>
   </div>
@@ -50,5 +58,10 @@ export default {
   margin: auto;
   width: 80%;
   padding-bottom: 50px;
+}
+
+.flexbox-container {
+  display: flex;
+  justify-content: center;
 }
 </style>

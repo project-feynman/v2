@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="center">Classmates</h4>
+    <h4 class="center">Chain Reaction</h4>
     <div class="center">
       <a @click="handleEureka()" class="waves-effect waves-light btn-large yellow-text">Eureka!!!</a>
     </div>
@@ -9,7 +9,7 @@
         <div class="container">
           <ul v-if="activeFeynmen.length != 0" class="collection with-header black">
             <li class="collection-header">
-              <h4 class="black-text">Active Feynmen</h4>
+              <h4 class="black-text">Feynmen</h4>
             </li>
             <template v-for="f in activeFeynmen">
               <li :key="f.uid" class="collection-item avatar white">
@@ -30,7 +30,7 @@
         </div>
         <div class="container">
           <ul v-if="students.length != 0" class="collection with-header black">
-            <li class="collection-header"><h4 class="black-text">5 Most Recent Classmates</h4></li>
+            <li class="collection-header"><h4 class="black-text">Classmates</h4></li>
             <template v-for="f in students.slice(0, 50)">
               <li :key="f.uid" class="collection-item avatar white">
                 <i class="material-icons circle grey">person</i>

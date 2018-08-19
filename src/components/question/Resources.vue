@@ -3,6 +3,24 @@
     <h4 class="center">Question Resources</h4>
     <div v-if="loading" class="center">Loading related resources...</div>
     <template v-if="questions[0]">
+      <div class="center">
+        <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
+          <i class='material-icons'>add</i>
+        </span>
+      </div>
+      <div v-if="showForm" class="new-resource">
+        <form>
+          <input type="text" v-model="newResourceTitle" placeholder="e.g. Recitation Notes">
+          <label>Add a title to the resource</label>
+          <input v-model="newResource" type="text" placeholder="e.g. stellar.mit.edu/6.006">
+          <label>Add a Stellar, Piazza or CSAIL link</label>
+        </form>
+        <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
+        <div class="right-align">
+          <base-button @click="addResource(questions[0])">Submit New Resource</base-button>
+        </div>
+      </div>
+
       <template v-for="(resource, i) in questions[0].resources">
         <div class="card-wrapper" :key="i">
           <base-card>
@@ -15,23 +33,7 @@
         </div>
       </template>
     </template>
-    <div class="center">
-      <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
-        <i class='material-icons'>add</i>
-      </span>
-    </div>
-    <div v-if="showForm" class="new-resource">
-      <form>
-        <input type="text" v-model="newResourceTitle" placeholder="e.g. Recitation Notes">
-        <label>Add a title to the resource</label>
-        <input v-model="newResource" type="text" placeholder="e.g. stellar.mit.edu/6.006">
-        <label>Add a Stellar, Piazza or CSAIL link</label>
-      </form>
-      <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
-      <div class="right-align">
-        <base-button @click="addResource(questions[0])">Submit New Resource</base-button>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -115,7 +117,7 @@ export default {
 
 <style scoped>
 .card-wrapper {
-  max-width: 40%;
+  width: 80%;
   margin: auto;
 }
 

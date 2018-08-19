@@ -3,7 +3,29 @@
     <h4 class="center">Student Explanations</h4>
     <div v-if="loading">
     </div>
-    <ul v-else v-for="(explanation, i) in explanations" :key="i">
+    <div class="center">
+      <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
+        <i class='material-icons'>add</i>
+      </span>
+    </div>
+    <div v-if="showForm" class="new-explanation">
+      <form>
+        <input v-model="newExplanationTitle" placeholder="e.g. Master's Theorem" type="text">
+        <label>Title</label>
+        <input type="text" v-model="newExplanation" placeholder="e.g. youtube.com">
+        <label>URL Link</label>
+        <input type="file" @change="onFileChanged($event)">
+      </form>
+      <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
+      <p v-if="uploadingImage" class="yellow-text">Uploading image...</p>
+      <div class="right-align">
+        <base-button @click="addExplanation()">Submit New Explanation</base-button>
+      </div>
+    </div>
+
+    <ul v-if="!loading" v-for="(explanation, i) in explanations" :key="i">
+
+      
       <div class="card-wrapper">
         <base-card>
           <li class="black-text center">{{ explanation.title }}: 
@@ -30,25 +52,7 @@
         </base-card>
       </div>
     </ul>
-    <div class="center">
-      <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
-        <i class='material-icons'>add</i>
-      </span>
-    </div>
-    <div v-if="showForm" class="new-explanation">
-      <form>
-        <input v-model="newExplanationTitle" placeholder="e.g. Master's Theorem" type="text">
-        <label>Title</label>
-        <input type="text" v-model="newExplanation" placeholder="e.g. youtube.com">
-        <label>URL Link</label>
-        <input type="file" @change="onFileChanged($event)">
-      </form>
-      <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
-      <p v-if="uploadingImage" class="yellow-text">Uploading image...</p>
-      <div class="right-align">
-        <base-button @click="addExplanation()">Submit New Explanation</base-button>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -179,22 +183,22 @@ export default {
 
 <style scoped>
 .new-explanation {
-  max-width: 70%;
+  width: 80%;
   margin: auto;
 }
 
-.upvote {
-  margin-top: 15px;
-}
-
 .card-wrapper {
-  max-width: 30%;
+  width: 80%;
   margin: auto;
 }
 
 .explanation-image {
   width: 100%;
   object-fit: cover;
+}
+
+.upvote {
+  margin-top: 15px;
 }
 </style>
 
