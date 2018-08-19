@@ -4,9 +4,11 @@ import Login from '@/components/Login.vue'
 import Subject from '@/components/Subject.vue'
 import Chat from '@/components/chat/Chat.vue'
 import Pset from '@/components/pset/Pset.vue'
-import Question from '@/components/question/Index.vue'
 import Profile from '@/components/profile/Profile.vue'
 import AllSubjects from '@/components/AllSubjects.vue'
+
+// lazy-loading
+const Question = () => import('@/components/question/Index.vue')
 
 Vue.use(Router)
 
@@ -41,14 +43,6 @@ export default new Router({
     {
       path: '/:subject_id/:pset_number/:question_number',
       component: Question
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }
   ]
 })

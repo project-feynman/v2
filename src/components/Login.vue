@@ -1,14 +1,16 @@
 <template>
   <div>
     <h1 class="center">The Feynman Project</h1>
-    <div v-if="user" class="center dashboard-button">
-      <router-link to="/subjects">
-        <a class="btn-floating pulse pink btn-large">
-          <i class="material-icons">dashboard</i>
-        </a>
-      </router-link>
-    </div>
-    <div v-else id="firebaseui-auth-container"></div>
+    <div id="firebaseui-auth-container"></div>
+    <template v-if="user != 'undetermined'">
+      <div v-if="user" class="center dashboard-button">
+        <router-link to="/subjects">
+          <a class="btn-floating pulse pink btn-large">
+            <i class="material-icons">dashboard</i>
+          </a>
+        </router-link>
+      </div>
+    </template>
     <hr>
     <div class="container">
       <div class="row">
@@ -24,7 +26,6 @@
           </div>
           </div>
         </div>
-
         <div class="col s12 m4">
           <div class="card light-card">
             <p class="black-text">Bob is having trouble on his pset, so he goes to office hours. The help queue is longer than any part of his anatomy. He messages his friends on Facebook, but all of them say they’re “already done” or “haven't started yet lol.” Should Bob commit murder?</p>
@@ -35,7 +36,6 @@
               </div>
           </div>
         </div>
-
         <div class="col s12 m4">
           <div class="card light-card">
             <p class="black-text">The staff notifies everyone that there'd been a mistake with the test cases they provided. Everybody hears about it, besides Jim, who's a bit of a zoned-out legend. He wastes an hour wondering what's wrong with his code. Don't be Jim.</p>
@@ -62,17 +62,21 @@ export default {
       return this.$store.state.user
     }
   },
+  watch: {
+    user () {
+      if (this.user == null) {
+        // sign up user to Firebase - register in Firestore immediately after redirect
+        var ui = new firebaseui.auth.AuthUI(firebase.auth())
+        ui.start('#firebaseui-auth-container', {
+          signInSuccessUrl: '/subjects',
+          signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
+        })
+      }
+    }
+  },
   async mounted () {
     const elems = document.querySelectorAll('.tooltipped')
     var instances = M.Tooltip.init(elems, {})
-    // sign up user to Firebase - register in Firestore immediately after redirect
-    if (!this.user) {
-      var ui = new firebaseui.auth.AuthUI(firebase.auth())
-      ui.start('#firebaseui-auth-container', {
-        signInSuccessUrl: '/subjects',
-        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
-      })
-    }
   }
 }
 </script>

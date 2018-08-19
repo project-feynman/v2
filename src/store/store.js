@@ -6,11 +6,7 @@ import db from '@/firebase/init.js'
 Vue.use(Vuex)
 
 const state = {
-  user: null
-}
-
-const getters = {
-  getUser: state => state.user
+  user: "undetermined"
 }
 
 const mutations = {
@@ -47,29 +43,43 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
   })
 }
 
-const actions = {
-  setUser: async context => {
-    const user = firebase.auth().currentUser
-    // user is just not logged in
-    if (!user) {
-      return
-    }
-    const ref = db.collection('users').doc(user.uid)
-    var mirror = await ref.get()
-    if (!mirror.exists) {
-      // first time user
-      await ref.set({
-        displayName: user.displayName,
-        uid: user.uid
-      })
-      mirror = await ref.get()
-      checkOnlineStatusAndSetDisconnectHook(user)
-      context.commit('setUser', mirror.data())
-    } else {
-      // returning user
-      checkOnlineStatusAndSetDisconnectHook(user)
-      context.commit('setUser', mirror.data())
-    }
+const actions = {  
+  fetchUser: async context => {
+    var user = null 
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        console.log('there is a user')
+        const ref = db.collection('users').doc(user.uid)
+        var mirror = await ref.get()
+        if (mirror.exists) {
+          console.log('commiting mirror data')
+          context.commit('setUser', mirror.data())
+          checkOnlineStatusAndSetDisconnectHook (mirror.data())
+        } else {
+          const newUser = {
+            displayName: user.displayName,
+            uid: user.uid
+          }
+          console.log('committing new mirror data before adding it to the database')
+          context.commit('setUser', newUser)
+          // now that "user" is available, start the update 
+          ref.set(newUser)
+        }
+      } else {
+        // No user is signed in.
+        console.log('user not logged in')
+        context.commit('setUser', null)
+      }
+      // not necessary - the user only holds information such as tokens - and displayNames - the real important information
+      // lies in Question.Feynman 
+      
+      // whenever "user" changes in Firestore, fetch the new values into Vuex again
+      // const ref = db.collection('users').doc(user.uid)
+      // ref.onSnapshot(doc => {
+      //   console.log("Detected user doc change in Vuex, user is now =", doc.data())
+      //   context.dispatch('fetchUser')
+      // })
+    }) 
   },
   logOut: async context => {
     await firebase.auth().signOut()
@@ -81,7 +91,6 @@ const store = new Vuex.Store({
   state,
   mutations,
   actions,
-  getters
 })
 
 export default store
