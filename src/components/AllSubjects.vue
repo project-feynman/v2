@@ -8,8 +8,10 @@
     <template v-if="subjects && !loading" class="subject-card">
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
-          <base-card :key="i" @click="$router.push(`${subject.subjectNumber}`)">
-            <router-link :to="subject.subjectNumber" class="black-text">{{ subject.subjectNumber }}</router-link>
+          <base-card :key="i">
+            <h4 class="black-text">{{ subject.subjectNumber }}</h4>
+            <base-button @click="redirectToPset(subject)">Start p-set {{ getCurrentPset(subject) }}</base-button>
+            <base-button @click="$router.push(`${subject.subjectNumber}`)">View all p-sets</base-button>
           </base-card>
         </template>
       </div>
@@ -58,6 +60,14 @@ export default {
       }
       const ref = db.collection('subjects').doc(this.newSubject)
       await ref.set(newObject)
+    },
+    getCurrentPset ({ psets }) {
+      const lastPset = psets[psets.length - 1]
+      return lastPset 
+    },
+    redirectToPset ({ subjectNumber, psets }) {
+      const URL = subjectNumber + '/' + psets[psets.length -1]
+      this.$router.push(URL)
     }
   }
 }
