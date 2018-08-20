@@ -1,20 +1,21 @@
 <template>
   <div>
-    <div v-if="!submitted" class="center duration-form">
+    <div class="center duration-form">
       <p class="black-text">How many hours did it take?</p>
-      <a @click="addTime($event)" class="waves-effect waves-light btn">0.5</a>
-      <a @click="addTime($event)" class="waves-effect waves-light btn">1</a>
-      <a @click="addTime($event)" class="waves-effect waves-light btn">1.5</a>
-      <a @click="addTime($event)" class="waves-effect waves-light btn">2</a>
+      <p class="black-text">{{ sliderHourValue }} hours</p>
+      <form action="#">
+        <p class="range-field">
+          <input v-model="sliderHourValue" type="range" id="test5" min="0" max="12" />
+        </p>
+      </form>
+      <a @click="addTime()" class="waves-effect waves-light btn">Submit</a>
     </div>
-    <span v-else class="green-text">
-      Time submission recorded
-    </span>
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
+import noUiSlider from 'materialize-css/extras/noUiSlider/nouislider.js'
 
 export default {
   // questionID is the question document ID 
@@ -22,32 +23,12 @@ export default {
   data () {
     return {
       question: null,
-      submitted: false,
+      sliderHourValue: 6
     }
   },
-  async mounted () {
-    const ref = db.collection('questions').doc(this.questionID)
-    var getDoc = ref.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('No such document!')
-      } else {
-        // now, try to determine whether the user has already submitted an answer or not 
-        const feynmen = doc.data().feynmen 
-        feynmen.forEach(f => {
-          if (f.uid == this.userUID) {
-            this.submitted = f.submitted 
-          } 
-        })
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
-    })
-  },
   methods: {
-    async addTime (event) {
-      this.submitted = true 
+    async addTime () {
+      console.log('addTime()')
       const ref = db.collection('questions').doc(this.questionID)
       ref.get().then(doc => {
         if (doc.exists) {
@@ -60,8 +41,8 @@ export default {
             }
           })
           // compute new average 
-          if (!user.submitted) {
-            const newTime = parseFloat(event.target.innerText)
+          if (true) { // user hasn't submitted - that's why he has reached so far 
+            const newTime = parseFloat(this.sliderHourValue)
             var total = question.total 
             if (!total) {
               total = newTime 
@@ -93,6 +74,8 @@ export default {
 </script>
 
 <style>
+@import '/materialize-css/extras/noUiSlider/nouislider.css';
+
 .duration-form {
   padding-bottom: 8%;
 }

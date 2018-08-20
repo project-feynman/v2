@@ -14,11 +14,15 @@
             <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}}</li>
             <li class="teal-text">Avg. time: {{ getEstimatedTime(question) }} hours</li>
           </ul>
-          <question-duration v-if="user.uid && getUserProgress(question)" 
+          <!-- if the user is done and has not submitted -->
+          <question-duration v-if="user.uid && getUserProgress(question) && !didUserSubmitATimeAlready(question)" 
                              :questionID="question.id" 
                              :userUID="user.uid"
                              class="question-duration"
                              ></question-duration>
+          <span v-else class="green-text">
+            Time submission recorded
+           </span>
           <BaseCheckBox 
             :value="getUserProgress(question)"
             @toggle="toggle(question, $event)">
@@ -106,7 +110,7 @@ export default {
             f.submittedTime = 0
           }
         })
-        // fix: revert the total only if the user had submitted a value previously
+        // revert the total only if the user had submitted a value previously
         if (!isNaN(previousSubmittedValue)) {
           total = total - previousSubmittedValue 
         }
@@ -120,8 +124,8 @@ export default {
             feynman.finished = newValue 
           }
         })
-        await db.collection('questions').doc(id)
-        .update({
+        const ref = db.collection('questions').doc(id)
+        await ref.update({
           feynmen
         })
       }
@@ -145,6 +149,7 @@ export default {
         feynmen
       })
     },
+    // refactor - there is no need for this 
     findAllObjects(array, key, value) {
       var output = [] 
       array.forEach(object => {
@@ -157,15 +162,17 @@ export default {
     getLastChar (string) {
       return string.substr(string.length - 1)
     },
-    getEstimatedTime (question) {
-      const n = this.findAllObjects(question.feynmen, 'finished', true).length
-      if (n == 0 || !question.total) {
+    getEstimatedTime ({ feynmen, total }) {
+      const finishedClassmates = feynmen.filter(f => f.finished)
+      const n = finishedClassmates.length 
+      if (n == 0 || !total) {
         return 'N/A'
+      } else {
+        return total / n
       }
-      return question.total / n
     },
     getNumberOfFinishedClassmates (question) {
-      const finishedClassmates = this.findAllObjects(question.feynmen, 'finished', true)
+      const finishedClassmates = question.feynmen.filter(f => f.finished)
       if (finishedClassmates.length == 0) {
         return 'Nobody has finished'
       } else if (finishedClassmates.length == 1) {
@@ -173,6 +180,15 @@ export default {
       } else {
         return `${finishedClassmates.length} classmates finished` 
       }
+    },
+    didUserSubmitATimeAlready ({ feynmen }) {
+      var submitted = false 
+      feynmen.forEach(f => {
+        if (f.uid == this.user.uid) {
+          submitted = f.submitted 
+        } 
+      })
+      return submitted 
     }
   }
 }
