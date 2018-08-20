@@ -1,8 +1,17 @@
 <template>
   <div>
     <h4 class="center">Classmates On The Question</h4>
-    <div class="center" id="eureka-button">
-      <big-red-button @click="handleEureka()"></big-red-button>
+    <div class="center">
+      <big-red-button class="tooltipped" 
+                      @click="handleEureka()"
+                      data-tooltip =
+                      "<ul>
+                        <li>'If you can't explain it simply, you don't understand it.'</li>
+                        <li>Help others and see if you grasped the material properly.</li>
+                        <li>It takes practise to explain things elegantly. Do you have what it takes?</li>
+                      </ul>
+                      ">
+      </big-red-button>
     </div>
     <div v-if="question[0]">
       <div class="flexbox-container">
@@ -93,12 +102,18 @@ export default {
     }
   },
   mounted () {
+    const elems = document.querySelectorAll('.tooltipped')
+    const options = {
+      html: true
+    }
+    var instances = M.Tooltip.init(elems, {})
     this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
       .then(doc => {
         this.loading = false
         // TODO: one-way bind "isOnline" for each user 
       })
       .catch(error => console.log(error))
+
   },
   methods: {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
