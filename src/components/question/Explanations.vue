@@ -13,10 +13,15 @@
       <form>
         <input v-model="newExplanationTitle" placeholder="e.g. Master's Theorem" type="text">
         <label>Title</label>
-        <input type="text" v-model="newExplanation" placeholder="< 1000 words">
+        <input type="text" v-model="newExplanation" placeholder="A short explanation (< 150 words)">
         <label>Content</label>
       </form>
-      <p class="pink-text text-lighten-2">(upload an image below to enhance your explanation)</p>
+      <p class="pink-text text-lighten-3">(upload an image below to enhance your explanation)</p>
+      <p class="white-text">
+        (draw a doodle / upload a doodle (coming soon!))
+      </p>
+      <!-- draw on a whiteboard -->
+      <!-- upload a recent whiteboard! -->
       <input type="file" placeholder="upload an image" @change="onFileChanged($event)">
       <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
       <p v-if="uploadingImage" class="yellow-text">Uploading image...</p>

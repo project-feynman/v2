@@ -11,7 +11,7 @@
       </div>
       <div v-if="showForm" class="new-resource">
         <form>
-          <input type="text" v-model="newResourceTitle" placeholder="e.g. Recitation Notes">
+          <input type="text" v-model="newResourceTitle" placeholder="e.g. Recitation Notes, KhanAcademy">
           <label>Add a title to the resource</label>
           <input v-model="newResource" type="text" placeholder="e.g. stellar.mit.edu, youtube.com">
           <label>Add a Stellar, Piazza or CSAIL link</label>
