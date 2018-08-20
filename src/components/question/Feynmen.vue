@@ -1,7 +1,7 @@
 <template>
   <div v-if="questions[0]">
     <template v-for="(group, idx) in chainReactionGroups">
-      <chain-reaction :list-of-nodes="getParticipants(group)" :key="idx"></chain-reaction>
+      <chain-reaction :list-of-nodes="getParticipants(group)" :groupNumber="idx" :key="idx"></chain-reaction>
     </template>
   </div>
 </template>
