@@ -142,7 +142,8 @@ export default {
       feynmen.push({
         displayName: this.user.displayName,
         uid: this.user.uid,
-        finished: false
+        finished: false,
+        feynmanNumber: this.user.feynmanNumber
       })
       const ref = db.collection('questions').doc(id)
       await ref.update({

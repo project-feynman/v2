@@ -14,7 +14,7 @@
             <template v-for="f in activeFeynmen">
               <li :key="f.uid" class="collection-item avatar white">
                 <i class="material-icons circle grey">person</i>
-                <span class="title">{{ f.displayName }}</span>
+                <span class="title">Feynman #{{ f.feynmanNumber }}</span>
                 <p v-if="f.finished">Finished</p>
                 <Promised :promise="checkOnline(f)">
                   <p>Fetching online status...</p>
@@ -34,7 +34,7 @@
             <template v-for="f in students.slice(0, 50)">
               <li :key="f.uid" class="collection-item avatar white">
                 <i class="material-icons circle grey">person</i>
-                <span class="title">{{ f.displayName }}</span>
+                <span class="title">Feynman #{{ f.feynmanNumber }}</span>
                 <p v-if="!f.finished">Not Finished</p>
                 <Promised :promise="checkOnline(f)">
                   <p>Fetching online status...</p>
