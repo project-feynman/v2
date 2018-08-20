@@ -21,9 +21,6 @@
         <resources/>
       </div>
       <div id="test3" class="col s12 m12">
-        <div class="center">
-          <big-red-button></big-red-button>
-        </div>
         <classmates/>
       </div>
       <div id="test4" class="col s12 m12">
@@ -40,7 +37,6 @@ import Resources from './Resources.vue'
 import Classmates from './Classmates.vue'
 import ChainReaction from './ChainReaction.vue'
 import Feynmen from './Feynmen.vue'
-import BigRedButton from './BigRedButton.vue'
 
 export default {
   mounted () {
@@ -54,7 +50,6 @@ export default {
     Resources,
     ChainReaction,
     Feynmen,
-    BigRedButton
   },
   data () {
     return {

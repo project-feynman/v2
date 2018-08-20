@@ -57,10 +57,12 @@
 import firebase from 'firebase'
 import Promised from 'vue-promised'
 import db from '@/firebase/init.js'
+import BigRedButton from './BigRedButton.vue'
 
 export default {
   components: {
-    Promised
+    Promised,
+    BigRedButton
   },
   created () {
     setTimeout(() => this.loading = false, 500)

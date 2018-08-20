@@ -26,11 +26,12 @@
           <BaseCheckBox 
             :value="getUserProgress(question)"
             @toggle="toggle(question, $event)">
-            <p class="pink-text">(Check the box when you finish)</p>
+            <p v-if="!getUserProgress(question)" class="pink-text">(check the box when you finish)</p>
+            <p v-else class="green-text">(you're done)</p>
           </BaseCheckBox> 
           <!-- Link -->
           <div class="card-action">
-            <router-link :to="$route.path + `/${getLastChar(question.questionID)}`" class="black-text">
+            <router-link :to="$route.path + `/${getLastChar(question.questionID)}`" class="purple-text">
               Start question
             </router-link>
           </div> 
