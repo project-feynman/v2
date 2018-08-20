@@ -44,7 +44,7 @@ export default {
         messages: [],
       })
       const whiteboardRef = db.collection('whiteboards').doc(roomID)
-      await doc.set({
+      await whiteboardRef.set({
         allPaths: []
       })
     }
