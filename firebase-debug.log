@@ -1,0 +1,165 @@
+[debug] [2018-08-20T04:23:40.982Z] ----------------------------------------------------------------------
+[debug] [2018-08-20T04:23:40.984Z] Command:       /usr/local/Cellar/node/9.3.0_1/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-08-20T04:23:40.984Z] CLI Version:   4.0.0
+[debug] [2018-08-20T04:23:40.984Z] Platform:      darwin
+[debug] [2018-08-20T04:23:40.984Z] Node Version:  v9.3.0
+[debug] [2018-08-20T04:23:40.985Z] Time:          Mon Aug 20 2018 07:23:40 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:40.985Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-20T04:23:41.033Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-20T04:23:41.033Z] > authorizing via signed-in user
+[debug] [2018-08-20T04:23:41.035Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-08-20T04:23:41.035Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/U1nnd7g6CN_f2dtnoYDuN1B2dVqHcwggt06xHdE70ls',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Mon Aug 20 2018 07:23:41 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:41.471Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:23:41.507Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/feynman-village  
+  
+ Mon Aug 20 2018 07:23:41 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:42.475Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:23:42.476Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/feynman-village/tokens  
+  
+ Mon Aug 20 2018 07:23:42 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:43.221Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'feynman-village'...
+[info] 
+[info] i  deploying database, storage, firestore, functions, hosting
+[info] i  database: checking rules syntax...
+[debug] [2018-08-20T04:23:54.050Z] >>> HTTP REQUEST PUT https://feynman-village.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+ 
+ Mon Aug 20 2018 07:23:54 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:55.084Z] <<< HTTP RESPONSE 200
+[info] ✔  database: rules syntax for database feynman-village is valid
+[debug] [2018-08-20T04:23:55.087Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/feynman-village  
+  
+ Mon Aug 20 2018 07:23:55 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:56.340Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2018-08-20T04:23:56.343Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/feynman-village:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Aug 20 2018 07:23:56 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:57.438Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[debug] [2018-08-20T04:23:57.450Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/feynman-village:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Aug 20 2018 07:23:57 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:58.460Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: rules file firestore.rules compiled successfully
+[debug] [2018-08-20T04:23:58.463Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "~5.13.0",
+    "firebase-functions": "^2.0.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-08-20T04:23:58.464Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/feynman-village?view=CONSUMER_VIEW  
+  
+ Mon Aug 20 2018 07:23:58 GMT+0300 (IDT)
+[debug] [2018-08-20T04:23:58.465Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/feynman-village?view=CONSUMER_VIEW  
+  
+ Mon Aug 20 2018 07:23:58 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:00.250Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:00.312Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-08-20T04:24:00.314Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/feynman-village  
+  
+ Mon Aug 20 2018 07:24:00 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:01.430Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:01.431Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/339430346564:getServerAppConfig  
+  
+ Mon Aug 20 2018 07:24:01 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:02.249Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2018-08-20T04:24:02.254Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/feynman-village/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Aug 20 2018 07:24:02 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:03.478Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:03.478Z] [rules] created ruleset projects/feynman-village/rulesets/487f299c-f552-4791-995a-5b06297b9981
+[info] i  firestore: uploading rules firestore.rules...
+[debug] [2018-08-20T04:24:03.480Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/feynman-village/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Aug 20 2018 07:24:03 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:03.480Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta1/projects/feynman-village/databases/(default)/indexes  
+  
+ Mon Aug 20 2018 07:24:03 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:04.502Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:04.553Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:04.554Z] [rules] created ruleset projects/feynman-village/rulesets/801848ec-94a2-4a93-a44c-b37c7ac7622d
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-08-20T04:24:04.558Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/feynman-village/configs  
+  
+ Mon Aug 20 2018 07:24:04 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:05.118Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (43.39 KB) for uploading
+[debug] [2018-08-20T04:24:06.403Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/feynman-village/locations/us-central1/functions:generateUploadUrl  
+  
+ Mon Aug 20 2018 07:24:06 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:07.579Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-20T04:24:07.582Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-7f675d2b-e78c-4d2f-a1e4-5321b98146b6/ade66b23-846a-4032-af7a-96c53f2347f8.zip?GoogleAccessId=service-339430346564@gcf-admin-robot.iam.gserviceaccount.com&Expires=1534740847&Signature=J%2FK2%2F%2F%2BKznk4g%2FFX0Xe%2B6UBbN%2B61e7qqE1Qmsl7cRtlAWFujX7khYBe8tF2GqIyWQM%2BQYoFwcunbaT0ItUUypCy2NF8AwVsXrF2DNQ2da83%2BgpOJfDTDwPuTDaKpfREQf3mqpjv6U%2BMdHCYU2pxcCrfyqhcQYpZFhrDYYYfeXUTGFV4OosC7EpE%2BOaoIsDjLfkLm7BCFlUTC0RaakHJNiZVV68Pv2rj9mlVKYHUVVRsFkV2TLkjoXW%2BNkOUE3zhHMKJ%2BwBH7yQ3KrCdwlYWKPAwvHfTnbInRnWEEthuoF4knaw5KiPLBswhpvMzhmVIrvalnby232TdU0EJ3AmK3dQ%3D%3D  
+ ReadStream {
+  _readableState: 
+   ReadableState {
+     objectMode: false,
+     highWaterMark: 65536,
+     buffer: BufferList { head: [Object], tail: [Object], length: 1 },
+     length: 44430,
+     pipes: null,
+     pipesCount: 0,
+     flowing: null,
+     ended: true,
+     endEmitted: false,
+     reading: false,
+     sync: false,
+     needReadable: false,
+     emittedReadable: true,
+     readableListening: false,
+     resumeScheduled: false,
+     destroyed: false,
+     defaultEncoding: 'utf8',
+     awaitDrain: 0,
+     readingMore: false,
+     decoder: null,
+     encoding: null },
+  readable: true,
+  domain: null,
+  _events: { end: [Function] },
+  _eventsCount: 1,
+  _maxListeners: undefined,
+  path: '/var/folders/yz/6jr5xd210jl13pmqg4c8rb7w0000gn/T/firebase-functions-21725UQnck1gB2laU.zip',
+  fd: 19,
+  flags: 'r',
+  mode: 438,
+  start: undefined,
+  end: undefined,
+  autoClose: true,
+  pos: undefined,
+  bytesRead: 44430 } 
+ Mon Aug 20 2018 07:24:07 GMT+0300 (IDT)
+[debug] [2018-08-20T04:24:08.495Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  hosting: preparing dist directory for upload...
+[debug] [2018-08-20T04:24:09.061Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/feynman-village/uploads/-LKKZoxmcvIzNkNNLPuJ?fileCount=28&message=  
+  
+ Mon Aug 20 2018 07:24:09 GMT+0300 (IDT)

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <canvas id="whiteboard" resize>
-    </canvas>
+    <canvas id="whiteboard" resize></canvas>
     <base-button @click="resetBoard()">Reset Board</base-button>
   </div>
 </template>
@@ -15,53 +14,52 @@ export default {
   created () {
     paper.install(window)
   },
+  computed: {
+    user () {
+      return this.$store.state.user 
+    }
+  },
   data () {
     return {
       path: null,
       chatRoom: null,
-      allPaths: []
+      allPaths: [],
+      numOfPaths: 0
     }
   },
   mounted () {
     const roomID = this.$route.params.room_id
-    this.$bind('chatRoom', db.collection('chatRooms').doc(roomID))
+    const ref = db.collection('chatRooms').doc(roomID)
+    this.$bind('chatRoom', ref)
     .then(doc => {
       // load drawings from all previous sessions 
-      this.chatRoom.allPaths.forEach(data => {
-        var path = new Path()
-        path.strokeColor = 'pink'
-        data.points.forEach(point => {
-          path.add(new Point(point.x, point.y))
-        })
-      })
-      // whenever a new path is added to Firestore, update the board
-      const ref = db.collection('chatRooms').where('test', '==', true)
-      ref.onSnapshot(snapshot => {
-        snapshot.docChanges().forEach(change => {
-          console.log(`change = ${change}`)
-          if (change.type == 'added') {
-            // DRAW ALL PATHS FOR NOW AND SEE WHAT HAPPENS
-            this.chatRoom.allPaths.forEach(data => {
-              var path = new Path()
-              path.strokeColor = 'pink'
-              data.points.forEach(point => {
-                path.add(new Point(point.x, point.y))
-              })
-            })
-            // just draw the newly added path 
-            // const paths = change.doc.data().allPaths
-            // const newPath = paths[paths.length - 1] 
-            // var path = new Path()
-            // path.strokeColor = 'pink'
-            // if (newPath && newPath.points) {
-            //   newPath.points.forEach(point => {
-            //     // TODO: make it truly live - this is not drawing at the moment
-            //     path.add(new Point(point.x, point.y))
-            //   })
-            // }
+      this.drawAllPaths()
+      var numOfPaths = this.chatRoom.allPaths.length 
+      ref.onSnapshot(doc => {
+        // console.log(`data = ${JSON.stringify(doc.data())}`)
+        const updatedPaths = doc.data().allPaths
+        const n = updatedPaths.length 
+        console.log(`n = ${n}, numOfPaths = ${this.numOfPaths}`)
+        console.log('either the if or the else statement will trigger')
+        if (n > this.numOfPaths) {
+          console.log('n > numOfPaths')
+          this.numOfPaths = n 
+          const newestPath = updatedPaths[n-1]
+          console.log(`new path = ${JSON.stringify(newestPath)}`)
+          if (newestPath.author == this.user.displayName) {
+            return 
           }
-        })
-      })
+          var whiteboardPath = new Path()
+          newestPath.points.forEach(point => {
+            whiteboardPath.add(new Point(point.x, point.y))
+          })
+          console.log('successfully drawn new line')
+        } else {
+          console.log('it probably means that you reset the board')
+          this.numOfPaths = n 
+          project.activeLayer.removeChildren()
+        }
+      }) 
     })
     .catch(error => console.log('error in loading: ', error))
     paper.setup('whiteboard')
@@ -88,6 +86,7 @@ export default {
         points.push(point)
       })
       pathObj.points = points 
+      pathObj.author = this.user.displayName
       this.chatRoom.allPaths.push(pathObj)
       // push the new "path" to Firestore 
       const updatedPaths = this.chatRoom.allPaths
@@ -100,11 +99,11 @@ export default {
   },
   methods: {
     async resetBoard () {
-      console.log('resetting board')
       const ref = db.collection('chatRooms').doc(this.$route.params.room_id)
       await ref.update({
         allPaths: []
       })
+      console.log('successfully reset whiteboard')
     },
     drawAllPaths () {
       this.chatRoom.allPaths.forEach(data => {

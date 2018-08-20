@@ -41,7 +41,8 @@ export default {
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
       await doc.set({
-        messages: []
+        messages: [],
+        allPaths: []
       })
     }
     doc.onSnapshot(docSnapshot => {
