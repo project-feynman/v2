@@ -73,10 +73,8 @@ export default {
   },
   mounted () {
     this.$bind('allQuestions', db.collection('questions').where('fromPset', '==', this.$route.path))
-    .then((doc) => {
-      this.loading = false 
-    })
-    .catch((error) => {
+    .then(doc => this.loading = false)
+    .catch(error => {
       console.log('error in loading: ', error)
     })
   },
@@ -96,8 +94,9 @@ export default {
       })
       this.newQuestion = null
     },
-    deleteQuestion (id) {
-      db.collection('questions').doc(id).delete()
+    async deleteQuestion (id) {
+      const ref = db.collection('questions').doc(id)
+      await ref.delete()
     },
     async toggle ({ feynmen, id, total }, newValue) {
       if (newValue == false) {
@@ -144,8 +143,8 @@ export default {
         uid: this.user.uid,
         finished: false
       })
-      await db.collection('questions').doc(id)
-      .update({
+      const ref = db.collection('questions').doc(id)
+      await ref.update({
         feynmen
       })
     },
