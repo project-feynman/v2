@@ -161,7 +161,7 @@ export default {
 
             // On exit reduce the node circles size to 0
             nodeExit.select('circle')
-              .attr('r', 1e-6);
+              .attr('r', 1e-6)
 
             // On exit reduce the opacity of text labels
             nodeExit.select('text')
@@ -174,8 +174,8 @@ export default {
                 .data(links, d => d.id)
 
             // Enter any new links at the parent's previous position.
-            var linkEnter = link.enter().insert('path', "g")
-                .attr("class", "link")
+            var linkEnter = link.enter().insert('path', 'g')
+                .attr('class', 'link')
                 .attr('d', d => {
                   var o = {x: source.x0, y: source.y0}
                   return diagonal(o, o)
