@@ -33,7 +33,6 @@ export default {
           }
         }
       })
-      console.log('returning groups =', groups)
       return groups 
     }
   },
