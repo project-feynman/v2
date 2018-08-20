@@ -19,49 +19,93 @@ export default {
       return this.$store.state.user 
     }
   },
+  watch: {
+    user () {
+      if (this.user != null && this.user != 'undetermined') {
+        console.log('user determined, setting onMouseUp callback')
+        tool.onMouseUp = event => {
+          this.path.add(event.point)
+          this.path.simplify()
+          this.path.smooth()
+          const segments = this.path.getSegments()
+          // save the "path" that the user has just drawn
+          var pathObj = {} 
+          var points = [] 
+          segments.forEach(segment => {
+            var point = {} 
+            point.x = segment.point.x
+            point.y = segment.point.y 
+            points.push(point)
+          })
+          pathObj.points = points 
+          pathObj.author = this.user.uid
+          this.chatRoom.allPaths.push(pathObj)
+          // push the new "path" to Firestore 
+          const updatedPaths = this.chatRoom.allPaths
+          const roomID = this.$route.params.room_id
+          const ref = db.collection('whiteboards').doc(roomID)
+          ref.update({
+            allPaths: updatedPaths
+          })
+          this.path = null 
+        }
+      }
+    }
+  },
   data () {
     return {
       path: null,
       chatRoom: null,
-      allPaths: [],
-      numOfPaths: 0
+      numOfPaths: 0,
+      initialRender: true 
     }
   },
   mounted () {
     const roomID = this.$route.params.room_id
-    const ref = db.collection('chatRooms').doc(roomID)
-    this.$bind('chatRoom', ref)
-    .then(doc => {
+    const ref = db.collection('whiteboards').doc(roomID)
+    // this.$bind('chatRoom', ref)
+    // .then(doc => {
       // load drawings from all previous sessions 
-      this.drawAllPaths()
-      var numOfPaths = this.chatRoom.allPaths.length 
       ref.onSnapshot(doc => {
-        // console.log(`data = ${JSON.stringify(doc.data())}`)
-        const updatedPaths = doc.data().allPaths
-        const n = updatedPaths.length 
-        console.log(`n = ${n}, numOfPaths = ${this.numOfPaths}`)
-        console.log('either the if or the else statement will trigger')
-        if (n > this.numOfPaths) {
-          console.log('n > numOfPaths')
-          this.numOfPaths = n 
-          const newestPath = updatedPaths[n-1]
-          console.log(`new path = ${JSON.stringify(newestPath)}`)
-          if (newestPath.author == this.user.displayName) {
-            return 
-          }
-          var whiteboardPath = new Path()
-          newestPath.points.forEach(point => {
-            whiteboardPath.add(new Point(point.x, point.y))
-          })
-          console.log('successfully drawn new line')
+        console.log('onSnapshot()')
+        this.chatRoom = doc.data()
+        // console.log(`this.chatRoom = ${JSON.stringify(this.chatRoom)}`)
+        if (this.initialRender) {
+          this.drawAllPaths()
+          this.numOfPaths = this.chatRoom.allPaths.length 
+          this.initialRender = false
         } else {
-          console.log('it probably means that you reset the board')
-          this.numOfPaths = n 
-          project.activeLayer.removeChildren()
+          // console.log(`data = ${JSON.stringify(doc.data())}`)
+          const updatedPaths = doc.data().allPaths
+          const n = updatedPaths.length 
+          console.log(`n = ${n}, numOfPaths = ${this.numOfPaths}`)
+          if (n >= this.numOfPaths) {
+            console.log('n > numOfPaths')
+            this.numOfPaths = n 
+            const newestPath = updatedPaths[n-1]
+            console.log(`new path = ${JSON.stringify(newestPath)}`)
+            // you were the one who drew the new path: no need to re-render 
+            console.log(`author = ${newestPath.author}, user uid = ${this.user.uid}`)
+            if (newestPath.author == this.user.uid) {
+              console.log('not drawing new path - because you drew it yourself')
+              return 
+            }
+            var whiteboardPath = new Path()
+            whiteboardPath.strokeColor = 'green'
+            newestPath.points.forEach(point => {
+              whiteboardPath.add(new Point(point.x, point.y))
+            })
+            console.log('successfully drawn new line')
+          } else {
+            console.log('it probably means that you reset the board')
+            this.numOfPaths = n 
+            project.activeLayer.removeChildren()
+            console.log('removed children')
+          }
         }
       }) 
-    })
-    .catch(error => console.log('error in loading: ', error))
+    // })
+    // .catch(error => console.log('error in loading: ', error))
     paper.setup('whiteboard')
     var tool = new Tool()
     tool.onMouseDown = event => {
@@ -71,38 +115,14 @@ export default {
     tool.onMouseDrag = event => {
       this.path.add(event.point)
     }
-    tool.onMouseUp = event => {
-      this.path.add(event.point)
-      this.path.simplify()
-      this.path.smooth()
-      const segments = this.path.getSegments()
-      // save the "path" that the user has just drawn
-      var pathObj = {} 
-      var points = [] 
-      segments.forEach(segment => {
-        var point = {} 
-        point.x = segment.point.x
-        point.y = segment.point.y 
-        points.push(point)
-      })
-      pathObj.points = points 
-      pathObj.author = this.user.displayName
-      this.chatRoom.allPaths.push(pathObj)
-      // push the new "path" to Firestore 
-      const updatedPaths = this.chatRoom.allPaths
-      const ref = db.collection('chatRooms').doc(roomID)
-      ref.update({
-        allPaths: updatedPaths
-      })
-      this.path = null 
-    }
   },
   methods: {
     async resetBoard () {
-      const ref = db.collection('chatRooms').doc(this.$route.params.room_id)
+      const ref = db.collection('whiteboards').doc(this.$route.params.room_id)
       await ref.update({
         allPaths: []
       })
+      project.activeLayer.removeChildren()
       console.log('successfully reset whiteboard')
     },
     drawAllPaths () {

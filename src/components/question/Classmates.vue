@@ -157,7 +157,13 @@ export default {
           participants: [sortedUsers[0], sortedUsers[1]],
           allPaths: []
         })
+        const whiteboardRef = db.collection('whiteboards').doc(roomId) 
+        await whiteboardRef.set({
+          allPaths: []
+        })
+        console.log('successfully created whiteboard document')
       }
+
       this.$router.push('/chat/' + roomId)
       // TODO: notify user 
     },
