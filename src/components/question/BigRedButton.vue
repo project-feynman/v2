@@ -3,7 +3,7 @@
 </template>
 
 <style scoped lang="scss">
-$brand: red;
+$brand: rgb(203, 4, 4);
 body {
   margin: 2em;
   text-align:center;
