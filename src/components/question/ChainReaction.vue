@@ -38,7 +38,6 @@ export default {
       if (!participants) { 
         return 
       }
-      console.log(`participants = ${JSON.stringify(participants)}`)
       participants = arrayToTree(participants, {
         parentProperty: 'teacher',
         customID: 'uid'
@@ -53,10 +52,9 @@ export default {
       return participants[0]
     },
     root () {
-      var root
       var margin = {top: 20, right: 90, bottom: 30, left: 90}
       var height = 500 - margin.top - margin.bottom
-      root = d3.hierarchy(this.treeData, d => d.children)
+      var root = d3.hierarchy(this.treeData, d => d.children)
       root.x0 = height / 2 // height 
       root.y0 = 0 // depth 
       return root 
