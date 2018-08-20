@@ -11,7 +11,7 @@
           <h5>{{ question.content }}</h5>
           <!-- Classmate's Progress -->
           <ul>
-            <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}}</li>
+            <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}} (out of {{ question.feynmen.length }})</li>
             <li class="teal-text">Avg. time: {{ getEstimatedTime(question) }} hours</li>
           </ul>
           <!-- if the user is done and has not submitted -->
