@@ -157,6 +157,9 @@ export default {
       console.log('successfully reset whiteboard')
     },
     drawAllPaths () {
+      if (this.chatRoom == null) {
+        return 
+      } 
       this.chatRoom.allPaths.forEach(data => {
         var path = new Path()
         path.strokeColor = 'pink'

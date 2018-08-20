@@ -32,9 +32,13 @@ export default {
         let chatRoomRef = db.collection('chatRooms').doc(this.$route.params.room_id)
         let chatRoom = await chatRoomRef.get()
         this.messages = chatRoom.data().messages
+        const author = {
+          displayName: this.user.displayName,
+          uid: this.user.uid 
+        }
         this.messages.push({
           content,
-          author: this.user.displayName,
+          author,
           timestamp: Date.now()
         })
         await chatRoomRef.update({

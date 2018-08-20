@@ -147,14 +147,22 @@ export default {
       }
       // create a chat room 
       // make sure order of UIDs stays consistent no matter who asks for help
-      const sortedUsers = [this.user.uid, uid].sort()
-      const roomId = sortedUsers.join('')
+      const sortedUIDs = [this.user.uid, uid].sort()
+      const roomId = sortedUIDs.join('')
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
+      const currentUser = {
+        displayName: this.user.displayName,
+        uid: this.user.uid 
+      }
+      const feynman = {
+        displayName,
+        uid
+      }
       if (!chatRoom.data()) {
         await doc.set({
           messages: [],
-          participants: [sortedUsers[0], sortedUsers[1]],
+          participants: [currentUser, feynman],
         })
         const whiteboardRef = db.collection('whiteboards').doc(roomId) 
         await whiteboardRef.set({
