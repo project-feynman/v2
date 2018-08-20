@@ -38,9 +38,10 @@ export default {
       if (!participants) { 
         return 
       }
+      console.log(`participants = ${JSON.stringify(participants)}`)
       participants = arrayToTree(participants, {
         parentProperty: 'teacher',
-        customID: 'displayName'
+        customID: 'uid'
       })
       participants = rename(participants, key => {
         if (key === 'child') {
