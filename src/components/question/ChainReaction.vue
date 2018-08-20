@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h4 class="center">Chain Reaction</h4>
-    <div id="reaction-tree">
+    <h4 class="center">Chain Reaction #{{ groupNumber }}</h4>
+    <div :id="`reaction-tree-${groupNumber}`" class="reaction-tree">
     </div>
   </div>
 </template>
@@ -19,6 +19,9 @@ export default {
       default () {
         return [{"displayName":"Elton Lin","finished":true,"retired":true,"submitted":true,"submittedTime":0.5,"teacher":"Feynman","uid":"tV4cmAAs4lZ8xTRkQHKvXg3qQmB2"},{"displayName":"Nathan Cheung","finished":false,"teacher":"Elton Lin","uid":"RSdcyx9CZwOFaxo3qi7sVPQQwFk1"},{"displayName":"Rachida Kernis","finished":true,"retired":false,"teacher":"Elton Lin","uid":"4y1lACMaGxR0e0UVQhiZw6CD4vn1"},{"displayName":"Elnard Utiushev","finished":false,"submitted":false,"submittedTime":0,"teacher":"Rachida Kernis","uid":"amzrmJ5wvMhl5eP91KpYxg8tgrP2"},{"displayName":"Patrick Wahl","finished":false,"teacher":"Elnard Utiushev","uid":"yoKyuKWWOnhPdXSvcVj7eY5MUk42"},{"displayName":"Karisa Tzeng","finished":true,"submitted":true,"submittedTime":2,"teacher":"Rachida Kernis","uid":"UQAV20zHt8ZD1Z4a6pFNhPFxQMu2"},{"displayName":"Rishab Nayak","finished":false,"submitted":false,"submittedTime":0,"teacher":"Rachida Kernis","uid":"FTN51WIKTPM4lXz8be6SQI4AE8C3"},{"displayName":"Thomas Xiong","finished":false,"submitted":false,"submittedTime":0,"teacher":"Elnard Utiushev","uid":"6ykdkaVaYyQByube2iTYAEMoWJG2"}]
       }
+    },
+    groupNumber: {
+      type: Number
     }
   },
   watch: {
@@ -78,9 +81,10 @@ export default {
 
         var svg 
         if (this.firstTime) {
-            svg = d3.select("#reaction-tree")
+            svg = d3.select(`#reaction-tree-${this.groupNumber}`)
             .append('svg')
-              .attr('width', width + margin.right + margin.left)
+              // .attr('width', width + margin.right + margin.left)
+              .attr('width', '100%')
               .attr('height', height + margin.top + margin.bottom)
             .append('g')
               .attr('transform', `translate(${margin.left}, ${margin.top})`)
@@ -250,7 +254,8 @@ export default {
   stroke-width: 2px;
 }
 
-#reaction-tree {
+.reaction-tree {
   background-color: rgb(247, 243, 243);
+  width: 100%;
 }
 </style>
