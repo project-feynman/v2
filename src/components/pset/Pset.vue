@@ -131,7 +131,7 @@ export default {
       }
     },
     getUserProgress (question) {
-      const enrolledUser = this.findAllObjects(question.feynmen, 'uid', this.user.uid)[0]
+      const enrolledUser = question.feynmen.find(f => f.uid == this.user.uid)
       if (enrolledUser) {
         return enrolledUser.finished
       } else {
@@ -148,16 +148,6 @@ export default {
       .update({
         feynmen
       })
-    },
-    // refactor - there is no need for this 
-    findAllObjects(array, key, value) {
-      var output = [] 
-      array.forEach(object => {
-        if (object[key] == value) {
-          output.push(object)
-        }
-      })
-      return output 
     },
     getLastChar (string) {
       return string.substr(string.length - 1)
