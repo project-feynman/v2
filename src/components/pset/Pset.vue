@@ -100,7 +100,6 @@ export default {
       await ref.delete()
     },
     async toggle ({ feynmen, id, total }, newValue) {
-      console.log('toggle()')
       if (newValue == false) {
         var previousSubmittedValue = null 
         feynmen.forEach(f => {

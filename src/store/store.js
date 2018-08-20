@@ -51,7 +51,6 @@ const actions = {
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()
         if (mirror.exists) {
-          console.log('commiting mirror data')
           context.commit('setUser', mirror.data())
           checkOnlineStatusAndSetDisconnectHook (mirror.data())
         } else {
@@ -59,10 +58,15 @@ const actions = {
             displayName: user.displayName,
             uid: user.uid
           }
-          console.log('committing new mirror data before adding it to the database')
           context.commit('setUser', newUser)
-          // now that "user" is available, start the update 
+          const countRef = db.collection('statistics').doc('users')
+          const doc = await countRef.get()
+          const numOfUsers = doc.data().count 
+          newUser.feynmanNumber = numOfUsers + 1
           ref.set(newUser)
+          countRef.update({
+            count: numOfUsers + 1
+          })
         }
       } else {
         // No user is signed in.
