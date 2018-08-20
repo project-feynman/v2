@@ -89,21 +89,17 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const messages = change.after.data().messages
 	const participants = change.after.data().participants
 	const message = messages[messages.length - 1]
-	const senderName = message.author
-	firestore.doc('/users/' + participants[0]).get().then(async snapshot => {
-		console.log(snapshot.data())
+	const senderName = message.author.displayName
+	const senderUid = message.author.uid
+	firestore.doc('/users/' + senderUid).get().then(async snapshot => {
 		var receiverToken = snapshot.data().token
 
-		if(snapshot.data().displayName == senderName) {
-			//add then instead of .token after .data(), because firestore.doc returns a promise
-			const receiverDoc = await firestore.doc('/users/' + participants[1]).get()
-			receiverToken = receiverDoc.data().token
-		}
 		const payload = {
 			notification : {
 				title: senderName + ' sent you a message...',
 				body: message.content,
-				clickAction: 'feynman-village.firebaseapp.com'
+				click_action: 'https://feynman-village.firebaseapp.com',
+				sound: 'default'
 			},
 			to: receiverToken
 		}
@@ -111,11 +107,10 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			'Content-type': 'application/json',
 			'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
 		}
-		console.log(payload)
-		console.log(headers)
 		axios.create({
 			headers
 		})
+		console.log(payload)
 		.post('https://fcm.googleapis.com/fcm/send', payload)
 		.then(response => console.log(response.statusText))
 		.catch(error => console.log(error))
