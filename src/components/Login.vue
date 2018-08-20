@@ -20,11 +20,6 @@
               View explanations created by previous students. Ask questions to classmates who are currently
               on the same question as you
             </p>
-            <div class="center">
-            <a slot="action" class="btn-floating tooltipped btn-large black center" data-tooltip="View the best student explanations for the hardest concepts">
-              <i class="material-icons">video_library</i>
-            </a>
-          </div>
         </div>
       </div>
       <div class="col s12 m4 add-padding">
@@ -32,21 +27,11 @@
           <p class="black-text">
             When you get an Eureka moment, get ready to explain the concept to two other classmates anonymously
           </p>
-            <div class="center">
-              <a slot="action" class="btn-floating tooltipped btn-large black" data-tooltip="Talk to classmates who're online and completed the question you're on">
-                <i class="material-icons">people_outline</i>
-              </a>
-            </div>
         </div>
       </div>
         <div class="col s12 m4">
           <div class="card light-card">
             <p class="black-text">Later, all names will be revealed, and the visualization of the "chain-reaction" you've started will be available</p>
-              <div class="center">
-                <a slot="action" class="btn-floating tooltipped btn-large black center" data-tooltip="Get info from Stellar, Piazza...in one place">
-                  <i class="material-icons">info</i>
-                </a>
-              </div>
           </div>
         </div>
       </div>
@@ -79,7 +64,7 @@ export default {
       }
     }
   },
-  async mounted () {
+  mounted () {
     const elems = document.querySelectorAll('.tooltipped')
     var instances = M.Tooltip.init(elems, {})
   }
