@@ -5,7 +5,8 @@
     <template v-if="questions[0]">
       <div class="center add-button">
         <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
-          <i class='material-icons'>add</i>
+          <i v-if="!showForm" class='material-icons'>add</i>
+          <i v-else class='material-icons'>close</i>
         </span>
       </div>
       <div v-if="showForm" class="new-resource">

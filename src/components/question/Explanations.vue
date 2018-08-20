@@ -5,7 +5,8 @@
     </div>
     <div class="center add-button">
       <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
-        <i class='material-icons'>add</i>
+        <i v-if="!showForm" class='material-icons'>add</i>
+        <i v-else class='material-icons'>close</i>
       </span>
     </div>
     <div v-if="showForm" class="new-explanation">
@@ -14,8 +15,9 @@
         <label>Title</label>
         <input type="text" v-model="newExplanation" placeholder="e.g. youtube.com">
         <label>URL Link</label>
-        <input type="file" @change="onFileChanged($event)">
       </form>
+      <p class="pink-text text-lighten-2">(upload an image below to enhance your explanation)</p>
+      <input type="file" placeholder="upload an image" @change="onFileChanged($event)">
       <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
       <p v-if="uploadingImage" class="yellow-text">Uploading image...</p>
       <div class="right-align">
@@ -24,8 +26,6 @@
     </div>
 
     <ul v-if="!loading" v-for="(explanation, i) in explanations" :key="i">
-
-      
       <div class="card-wrapper">
         <base-card>
           <li class="black-text center">{{ explanation.title }}: 
