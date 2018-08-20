@@ -13,8 +13,8 @@
       <form>
         <input v-model="newExplanationTitle" placeholder="e.g. Master's Theorem" type="text">
         <label>Title</label>
-        <input type="text" v-model="newExplanation" placeholder="e.g. youtube.com">
-        <label>URL Link</label>
+        <input type="text" v-model="newExplanation" placeholder="< 1000 words">
+        <label>Content</label>
       </form>
       <p class="pink-text text-lighten-2">(upload an image below to enhance your explanation)</p>
       <input type="file" placeholder="upload an image" @change="onFileChanged($event)">
@@ -29,7 +29,8 @@
       <div class="card-wrapper">
         <base-card>
           <li class="black-text center">{{ explanation.title }}: 
-            <a :href="getValidURL(explanation.link)" target="_blank">{{ explanation.link }}</a>
+            <p class="black-text">{{ explanation.link }}</p>
+            <!-- <a :href="getValidURL(explanation.link)" target="_blank">{{ explanation.link }}</a> -->
           </li>
           <li v-if="explanation.imageRef">
             <div class="center"><img :src="explanation.imageRef" class="center explanation-image"></div>

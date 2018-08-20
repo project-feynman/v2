@@ -13,7 +13,7 @@
         <form>
           <input type="text" v-model="newResourceTitle" placeholder="e.g. Recitation Notes">
           <label>Add a title to the resource</label>
-          <input v-model="newResource" type="text" placeholder="e.g. stellar.mit.edu/6.006">
+          <input v-model="newResource" type="text" placeholder="e.g. stellar.mit.edu, youtube.com">
           <label>Add a Stellar, Piazza or CSAIL link</label>
         </form>
         <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
