@@ -91,7 +91,6 @@ export default {
         }
           var i = 0
           var duration = 800
-  
           var treemap = d3.tree().size([height, width])
           var root
           root = d3.hierarchy(this.treeData, d => d.children)
@@ -135,7 +134,7 @@ export default {
               .attr('dy', '.25em')
               .attr('x', d => d.children || d._children ? -13 : 13)
               .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
-              .text(d => d.data.name )
+              .text(d => d.data.feynmanNumber )
 
             // UPDATE
             var nodeUpdate = nodeEnter.merge(node);
