@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     async addTime () {
-      console.log('addTime()')
       const ref = db.collection('questions').doc(this.questionID)
       ref.get().then(doc => {
         if (doc.exists) {

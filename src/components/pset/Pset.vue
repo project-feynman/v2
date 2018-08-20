@@ -5,7 +5,7 @@
     <div v-if="loading" class="spinner-wrapper">
       <base-spinner></base-spinner>
     </div>
-    <template v-if="allQuestions && !loading">
+    <template v-if="allQuestions && !loading && user != null && user != 'undetermined'">
       <div class="question-card">
         <base-card v-for="(question, i) in allQuestions" :key="i">
           <h5>{{ question.content }}</h5>
@@ -100,6 +100,7 @@ export default {
       await ref.delete()
     },
     async toggle ({ feynmen, id, total }, newValue) {
+      console.log('toggle()')
       if (newValue == false) {
         var previousSubmittedValue = null 
         feynmen.forEach(f => {
