@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1 class="center">The Feynman Project</h1>
+    <div class="spinner-wrapper">
+      <base-spinner v-if="loading"></base-spinner>
+    </div>
     <div id="firebaseui-auth-container"></div>
     <template v-if="user != 'undetermined'">
       <div v-if="user" class="center dashboard-button">
@@ -45,6 +48,11 @@ import firebaseui from 'firebaseui'
 import db from '@/firebase/init.js'
 
 export default {
+  data () {
+    return {
+      loading: true 
+    }
+  },
   computed: {
     user () {
       return this.$store.state.user
@@ -53,6 +61,7 @@ export default {
   watch: {
     user () {
       if (this.user == null) {
+        this.loading = false 
         // sign up user to Firebase - register in Firestore immediately after redirect
         var ui = new firebaseui.auth.AuthUI(firebase.auth())
         ui.start('#firebaseui-auth-container', {
@@ -60,11 +69,15 @@ export default {
           signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
         })
       } else if (this.user.displayName) {
+        this.loading = false 
         this.$router.push('/subjects')
       }
     }
   },
   mounted () {
+    if (this.user != null && this.user != 'undetermined') {
+      this.loading = false
+    }
     const elems = document.querySelectorAll('.tooltipped')
     var instances = M.Tooltip.init(elems, {})
   }
@@ -105,5 +118,9 @@ h1 {
 hr {
   margin-top: 20px;
   margin-bottom: 50px;
+}
+
+.spinner-wrapper {
+  margin-left: 49%;
 }
 </style>
