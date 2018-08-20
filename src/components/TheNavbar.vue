@@ -8,7 +8,7 @@
         <template v-if="user">
           <li><a href="https://github.com/Gustwalker/Feynman" class="black-text">About</a></li>
           <!-- <li v-if="user.notifications.new == true"><a @click="viewNotification()" class="red-text">Someone needs you!<span class="new badge pink"></span></a></li> -->
-          <li v-if="user"><router-link class="black-text" to="/profile"><i class="material-icons left">person_pin</i>{{ user.displayName }}</router-link></li>
+          <li v-if="user"><router-link class="black-text" to="/profile"><i class="material-icons left">person_pin</i>Hi, Feynman #{{ user.feynmanNumber }}</router-link></li>
           <li><base-button @click="signOut()" buttonColor="grey" textColor="white-text">Logout</base-button></li>
         </template>
       </ul>
