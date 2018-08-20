@@ -42,11 +42,16 @@ export default {
     if (!chatRoom.data()) {
       await doc.set({
         messages: [],
+      })
+      const whiteboardRef = db.collection('whiteboards').doc(roomID)
+      await doc.set({
         allPaths: []
       })
     }
-    doc.onSnapshot(docSnapshot => {
-      this.messages = docSnapshot.data().messages
+    doc.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        this.messages = snapshot.data().messages
+      }
     })
   },
   methods: {
