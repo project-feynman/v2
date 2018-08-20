@@ -43,9 +43,9 @@ export default {
           })
           pathObj.points = points 
           pathObj.author = this.user.uid
-          this.chatRoom.allPaths.push(pathObj)
+          this.whiteboard.allPaths.push(pathObj)
           // push the new "path" to Firestore 
-          const updatedPaths = this.chatRoom.allPaths
+          const updatedPaths = this.whiteboard.allPaths
           const roomID = this.$route.params.room_id
           const ref = db.collection('whiteboards').doc(roomID)
           await ref.update({
@@ -60,7 +60,7 @@ export default {
   data () {
     return {
       path: null,
-      chatRoom: null,
+      whiteboard: null,
       numOfPaths: 0,
       initialRender: true,
       onMouseUpInitialized: false
@@ -94,9 +94,9 @@ export default {
         })
         pathObj.points = points 
         pathObj.author = this.user.uid
-        this.chatRoom.allPaths.push(pathObj)
+        this.whiteboard.allPaths.push(pathObj)
         // push the new "path" to Firestore 
-        const updatedPaths = this.chatRoom.allPaths
+        const updatedPaths = this.whiteboard.allPaths
         const roomID = this.$route.params.room_id
         const ref = db.collection('whiteboards').doc(roomID)
         await ref.update({
@@ -110,22 +110,19 @@ export default {
     const ref = db.collection('whiteboards').doc(roomID)
     ref.onSnapshot(doc => {
       console.log('onSnapshot()')
-      this.chatRoom = doc.data()
-      // console.log(`this.chatRoom = ${JSON.stringify(this.chatRoom)}`)
+      this.whiteboard = doc.data()
       if (this.initialRender) {
         this.drawAllPaths()
-        this.numOfPaths = this.chatRoom.allPaths.length 
+        this.numOfPaths = this.whiteboard.allPaths.length 
         this.initialRender = false
       } else {
         // console.log(`data = ${JSON.stringify(doc.data())}`)
         const updatedPaths = doc.data().allPaths
         const n = updatedPaths.length 
-        console.log(`n = ${n}, numOfPaths = ${this.numOfPaths}`)
         if (n >= this.numOfPaths) {
-          console.log('n > numOfPaths')
+          console.log('a new line has been added to Firestore')
           this.numOfPaths = n 
           const newestPath = updatedPaths[n-1]
-          console.log(`new path = ${JSON.stringify(newestPath)}`)
           // you were the one who drew the new path: no need to re-render 
           console.log(`author = ${newestPath.author}, user uid = ${this.user.uid}`)
           if (newestPath.author == this.user.uid) {
@@ -142,7 +139,6 @@ export default {
           console.log('it probably means that you reset the board')
           this.numOfPaths = n 
           project.activeLayer.removeChildren()
-          console.log('removed children')
         }
       }
     }) 
@@ -154,13 +150,12 @@ export default {
         allPaths: []
       })
       project.activeLayer.removeChildren()
-      console.log('successfully reset whiteboard')
     },
     drawAllPaths () {
-      if (this.chatRoom == null) {
+      if (this.whiteboard == null) {
         return 
       } 
-      this.chatRoom.allPaths.forEach(data => {
+      this.whiteboard.allPaths.forEach(data => {
         var path = new Path()
         path.strokeColor = 'pink'
         data.points.forEach(point => {
