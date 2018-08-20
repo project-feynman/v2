@@ -24,7 +24,7 @@ export default {
       if (this.user != null && this.user != 'undetermined') {
         console.log('user determined, setting onMouseUp callback')
         // already initialized 
-        if (onMouseUpInitialized) {
+        if (this.onMouseUpInitialized) {
           return 
         }
         tool.onMouseUp = async event => {
@@ -77,6 +77,7 @@ export default {
       this.path.add(event.point)
     }
     if (this.user != null && this.user != 'undetermined') {
+      this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
         this.path.add(event.point)
         this.path.simplify()
