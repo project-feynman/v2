@@ -6,7 +6,7 @@ import db from '@/firebase/init.js'
 Vue.use(Vuex)
 
 const state = {
-  user: "undetermined"
+  user: 'undetermined'
 }
 
 const mutations = {
