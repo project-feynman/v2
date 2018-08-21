@@ -25,7 +25,6 @@ import Whiteboard from './Whiteboard.vue'
 import db from '@/firebase/init.js'
 
 export default {
-  props: ['name'],
   components: {
     ChatNewMessage,
     Whiteboard
@@ -35,7 +34,23 @@ export default {
       messages: []
     }
   },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
+  watch: {
+    // don't want to execute this more than twice
+    user () {
+      if (this.user != null && this.user != 'undetermined') {
+        this.addToRecentChat()
+      }
+    }
+  },
   async created () {
+    if (this.user != null && this.user != 'undetermined') {
+      this.addToRecentChat()
+    }
     let roomID = this.$route.params.room_id
     let doc = db.collection('chatRooms').doc(roomID)
     let chatRoom = await doc.get()
@@ -57,6 +72,14 @@ export default {
   methods: {
     prettifyDate (timestamp) {
       return moment(timestamp).format("lll")
+    },
+    async addToRecentChat () {
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        recentChatID: this.$route.params.room_id
+      })
+      // update the Vuex
+      // this.$store.dispatch('fetchUser')
     }
   }
 }

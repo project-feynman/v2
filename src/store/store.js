@@ -74,14 +74,7 @@ const actions = {
         context.commit('setUser', null)
       }
       // not necessary - the user only holds information such as tokens - and displayNames - the real important information
-      // lies in Question.Feynman 
-
-      // whenever "user" changes in Firestore, fetch the new values into Vuex again
-      // const ref = db.collection('users').doc(user.uid)
-      // ref.onSnapshot(doc => {
-      //   console.log("Detected user doc change in Vuex, user is now =", doc.data())
-      //   context.dispatch('fetchUser')
-      // })
+      // lies in Question.Feynman      
     }) 
   },
   logOut: async context => {
