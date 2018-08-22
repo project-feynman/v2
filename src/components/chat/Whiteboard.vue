@@ -56,7 +56,6 @@ export default {
     const roomID = this.$route.params.room_id
     const ref = db.collection('whiteboards').doc(roomID)
     ref.onSnapshot(doc => {
-      console.log('onSnapshot()')
       this.whiteboard = doc.data()
       if (this.initialRender) {
         this.drawAllPaths()
@@ -67,13 +66,10 @@ export default {
         const updatedPaths = doc.data().allPaths
         const n = updatedPaths.length 
         if (n >= this.numOfPaths) {
-          console.log('a new line has been added to Firestore')
           this.numOfPaths = n 
           const newestPath = updatedPaths[n-1]
           // you were the one who drew the new path: no need to re-render 
-          console.log(`author = ${newestPath.author}, user uid = ${this.user.uid}`)
           if (newestPath.author == this.user.uid) {
-            console.log('not drawing new path - because you drew it yourself')
             return 
           }
           var whiteboardPath = new Path()
@@ -81,10 +77,8 @@ export default {
           newestPath.points.forEach(point => {
             whiteboardPath.add(new Point(point.x, point.y))
           })
-          console.log('successfully drawn new line')
         } else {
-          console.log('it probably means that you reset the board')
-          this.numOfPaths = n 
+          this.numOfPaths = n // probably means board has been reset
           project.activeLayer.removeChildren()
         }
       }
@@ -111,7 +105,6 @@ export default {
       })
     },
     initOnMouseUp () {
-      console.log('initOnMouseUp()')
       this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
         this.path.add(event.point)
@@ -140,7 +133,6 @@ export default {
         console.log('uploaded what you just drawn to Firestore!')
         this.path = null 
       }
-      console.log('initOnMouseUp() successfully finished')
     }
   }
 }
