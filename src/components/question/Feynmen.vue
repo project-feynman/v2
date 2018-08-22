@@ -130,6 +130,9 @@ export default {
     BigRedButton
   },
   computed: {
+    user () {
+      return this.$store.state.user
+    },
     participants () {
       return this.questions[0].feynmen.filter(f => f.teacher != null)
     },
