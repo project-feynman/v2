@@ -1,0 +1,27 @@
+[debug] [2018-08-22T05:15:04.411Z] ----------------------------------------------------------------------
+[debug] [2018-08-22T05:15:04.416Z] Command:       /usr/local/Cellar/node/9.3.0_1/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-08-22T05:15:04.416Z] CLI Version:   4.0.0
+[debug] [2018-08-22T05:15:04.416Z] Platform:      darwin
+[debug] [2018-08-22T05:15:04.416Z] Node Version:  v9.3.0
+[debug] [2018-08-22T05:15:04.417Z] Time:          Wed Aug 22 2018 06:15:04 GMT+0100 (BST)
+[debug] [2018-08-22T05:15:04.417Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-22T05:15:04.456Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-22T05:15:04.458Z] > authorizing via signed-in user
+[debug] [2018-08-22T05:15:04.464Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-08-22T05:15:04.465Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/U1nnd7g6CN_f2dtnoYDuN1B2dVqHcwggt06xHdE70ls',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Aug 22 2018 06:15:04 GMT+0100 (BST)
+[debug] [2018-08-22T05:15:04.819Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-22T05:15:04.871Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/feynman-village  
+  
+ Wed Aug 22 2018 06:15:04 GMT+0100 (BST)
+[debug] [2018-08-22T05:15:05.649Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-22T05:15:05.651Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/feynman-village/tokens  
+  
+ Wed Aug 22 2018 06:15:05 GMT+0100 (BST)
+[debug] [2018-08-22T05:15:06.322Z] <<< HTTP RESPONSE 200

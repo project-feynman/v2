@@ -97,6 +97,7 @@ export default {
         displayName,
         uid
       }
+      // ideally, create the chatroom only in one place 
       if (!chatRoom.data()) {
         await doc.set({
           messages: [],
@@ -158,9 +159,6 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
-    },
-    participants () {
-      return this.questions[0].feynmen.filter(f => f.teacher != null)
     },
     chainReactionGroups () {
       var groups = [] 
