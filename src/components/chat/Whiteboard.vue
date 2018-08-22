@@ -33,7 +33,7 @@ export default {
       path: null,
       whiteboard: null,
       numOfPaths: 0,
-      initialRender: true,
+      loadedPreviousDrawings: false,
       onMouseUpInitialized: false
     }
   },
@@ -57,7 +57,7 @@ export default {
     const ref = db.collection('whiteboards').doc(roomID)
     ref.onSnapshot(doc => {
       this.whiteboard = doc.data()
-      if (this.initialRender) {
+      if (!this.loadedPreviousDrawings) {
         this.drawAllPaths()
         this.numOfPaths = this.whiteboard.allPaths.length 
       } else {
@@ -97,7 +97,7 @@ export default {
             path.add(new Point(point.x, point.y))
           })
         })
-        this.initialRender = false
+        this.loadedPreviousDrawings = true
       } 
     },
     initOnMouseUp () {
