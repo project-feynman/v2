@@ -60,22 +60,19 @@ export default {
       if (this.initialRender) {
         this.drawAllPaths()
         this.numOfPaths = this.whiteboard.allPaths.length 
-        this.initialRender = false
       } else {
         const updatedPaths = doc.data().allPaths
         const n = updatedPaths.length 
         if (n >= this.numOfPaths) {
           this.numOfPaths = n 
           const newestPath = updatedPaths[n-1]
-          // you were the one who drew the new path: no need to re-render 
-          if (newestPath.author == this.user.uid) {
-            return 
+          if (newestPath.author != this.user.uid) {
+            var whiteboardPath = new Path()
+            whiteboardPath.strokeColor = 'green'
+            newestPath.points.forEach(point => {
+              whiteboardPath.add(new Point(point.x, point.y))
+            })
           }
-          var whiteboardPath = new Path()
-          whiteboardPath.strokeColor = 'green'
-          newestPath.points.forEach(point => {
-            whiteboardPath.add(new Point(point.x, point.y))
-          })
         } else {
           this.numOfPaths = n // probably means board has been reset
           project.activeLayer.removeChildren()
@@ -100,6 +97,7 @@ export default {
             path.add(new Point(point.x, point.y))
           })
         })
+        this.initialRender = false
       } 
     },
     initOnMouseUp () {
