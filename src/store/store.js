@@ -6,12 +6,16 @@ import db from '@/firebase/init.js'
 Vue.use(Vuex)
 
 const state = {
-  user: 'undetermined'
+  user: 'undetermined',
+  handledOnlineStatus: false 
 }
 
 const mutations = {
   setUser: (state, payload) => {
     state.user = payload
+  },
+  setHandledOnlineStatus: (state, payload) => {
+    state.handledOnlineStatus = payload 
   }
 }
 
@@ -27,16 +31,19 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
     last_changed: firebase.firestore.FieldValue.serverTimestamp()
   }
   firebase.database().ref('.info/connected').on('value', snapshot => {
-    // if user is offline, there'd be no need to set up an 'onDisconnect()'
+    // why do we even need this line? 
     if (snapshot.val() == false) {
-      firebaseRef.update(isOfflineForDatabase) // firebase wants to keep track of whether Firestore is also synced
+      // since Firestore copies Firebase (due to our Cloud Functions), updating Firebase is enough to change both 
+      firebaseRef.update(isOfflineForDatabase) 
       return
     }
-    // user is online, set up a onDisconnect that will be triggered when he leaves
+    // tell Firestore that if they lose connection, just perform the operation we specify here (update the user to offline)
+    // because we won't be able to tell them what to do when we lose connection, by definition
+    // this is triggered successfully, this is the magic bit not yet supported for Firestore
     firebaseRef.onDisconnect()
-      .set(isOfflineForDatabase) // this is triggered successfully, this is the magic bit not yet supported for Firestore
+      .set(isOfflineForDatabase) 
       .then(() => {
-        // now we set the trap, set the user to online for now until then
+        // now we successfully prepared the "trap", update user as online until then
         firebaseRef.set(isOnlineForDatabase)
         ref.update(isOnlineForDatabase)
       })
@@ -45,14 +52,18 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
 
 const actions = {  
   fetchUser: async context => {
-    var user = null 
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()
         if (mirror.exists) {
-          context.commit('setUser', mirror.data())
-          checkOnlineStatusAndSetDisconnectHook(mirror.data())
+          ref.onSnapshot(mirror => {
+            context.commit('setUser', mirror.data())
+            if (!context.state.handledOnlineStatus) {
+              checkOnlineStatusAndSetDisconnectHook(mirror.data())
+              context.commit('setHandledOnlineStatus', true) 
+            }
+          })
         } else {
           const newUser = {
             displayName: user.displayName,
@@ -67,20 +78,17 @@ const actions = {
             count: numOfUsers + 1
           })
           await ref.set(newUser) // we want to minimize the # of updates we make before setting up an onSnapshot callback 
-          mirror = await ref.get()
+          ref.onSnapshot(mirror => {
+            context.commit('setUser', mirror.data())
+            if (!context.state.handledOnlineStatus) {
+              checkOnlineStatusAndSetDisconnectHook(mirror.data())
+              context.commit('setHandledOnlineStatus', true) 
+            }
+          })
         }
-        checkOnlineStatusAndSetDisconnectHook(mirror.data())
       } else {
-        // No user is signed in.
-        console.log('user not logged in')
-        context.commit('setUser', null)
+        context.commit('setUser', null) // user not logged in
       }
-      // one-way bind Firestore's user to Vuex's user 
-      db.collection('users').doc(user.uid).onSnapshot(snapshot => 
-        {
-          console.log('user was changed (detected in Vuex)')
-          console.log(`data = ${JSON.stringify(snapshot.data())}`)
-        }) 
     }) 
   },
   logOut: async context => {
