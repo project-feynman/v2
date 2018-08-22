@@ -43,10 +43,15 @@
       </div>
     </template>
     <div class="new-question">
-      <form @submit.prevent="addQuestion()">
-        <label>Add Question</label>
+      <form>
         <input type="text" v-model="newQuestion">
+        <label>Question</label>
+        <input type="number" v-model="newQuestionNumber">
+        <label>Question Number</label>
       </form>
+      <div class="right-align">
+        <base-button @click="addQuestion()">Submit New Question</base-button>
+      </div>
     </div>
   </div>
 </template>
@@ -69,6 +74,7 @@ export default {
     return {
       allQuestions: false,
       newQuestion: null,
+      newQuestionNumber: null,
       loading: true,
     }
   },
@@ -81,7 +87,12 @@ export default {
   },
   methods: {
     addQuestion () {
-      const questionID = this.$route.path + '/' + `${this.allQuestions.length + 1}`
+      // if (!this.newExplanation || !this.newExplanationTitle) {
+      //   this.feedback = true 
+      //   return 
+      // }
+      // TODO: ensure that the question is unique 
+      const questionID = this.$route.path + '/' + this.newQuestionNumber 
       const ref = db.collection('questions')
       ref.add({
         content: this.newQuestion,
