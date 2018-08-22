@@ -64,6 +64,7 @@ export default {
     }
   },
   mounted () {
+    console.log('ListOfNodes =', this.ListOfNodes)
     this.update(this.root)
   },
   data () {

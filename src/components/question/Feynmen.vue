@@ -122,7 +122,33 @@ export default {
           return 'online'
         } 
       }
-    } 
+    },
+    async handleEureka () {
+      var joinedReaction = false 
+      this.questions[0].feynmen.forEach(f => {
+        if (f.uid == this.user.uid && f.mostRecentFeynman) {
+          console.log('student had teachers')
+          f.teacher = f.mostRecentFeynman.displayName
+          f.chainReactionCreatorUID = f.mostRecentFeynman.chainReactionCreatorUID
+          joinedReaction = true 
+        }
+      })
+      const updatedFeynmen = this.questions[0].feynmen 
+      // user was not taught by anyone - let him start his own chain reaction
+      if (!joinedReaction) {
+        console.log('student was alone')
+        this.questions[0].feynmen.forEach(f => {
+          if (f.uid == this.user.uid) {
+            f.teacher = "Richard Feynman"
+            f.chainReactionCreatorUID = f.uid 
+          }
+        })
+      }
+      const ref = db.collection('questions').doc(this.questions[0].id)
+      await ref.update({
+        feynmen: updatedFeynmen
+      })
+    }
   },
   components: {
     ChainReaction,
