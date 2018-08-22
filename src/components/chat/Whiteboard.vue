@@ -22,12 +22,9 @@ export default {
   watch: {
     user () {
       if (this.user != null && this.user != 'undetermined') {
-        console.log('user determined, setting onMouseUp callback')
-        if (this.onMouseUpInitialized) {
-          return 
-        } else {
+        if (!this.onMouseUpInitialized) {
           this.initOnMouseUp() 
-        }
+        } 
       }
     }
   },
@@ -51,8 +48,11 @@ export default {
       this.path.add(event.point)
     }
     if (this.user != null && this.user != 'undetermined') {
-      this.initOnMouseUp()
+      if (!this.onMouseUpInitialized) {
+        this.initOnMouseUp()
+      }
     }
+    // sync whiteboard to Firestore 
     const roomID = this.$route.params.room_id
     const ref = db.collection('whiteboards').doc(roomID)
     ref.onSnapshot(doc => {
@@ -92,16 +92,15 @@ export default {
       })
     },
     drawAllPaths () {
-      if (this.whiteboard == null) {
-        return 
-      } 
-      this.whiteboard.allPaths.forEach(data => {
-        var path = new Path()
-        path.strokeColor = 'pink'
-        data.points.forEach(point => {
-          path.add(new Point(point.x, point.y))
+      if (this.whiteboard != null) {
+        this.whiteboard.allPaths.forEach(data => {
+          var path = new Path()
+          path.strokeColor = 'pink'
+          data.points.forEach(point => {
+            path.add(new Point(point.x, point.y))
+          })
         })
-      })
+      } 
     },
     initOnMouseUp () {
       this.onMouseUpInitialized = true 
@@ -129,7 +128,6 @@ export default {
         await ref.update({
           allPaths: updatedPaths
         })
-        console.log('uploaded what you just drawn to Firestore!')
         this.path = null 
       }
     }
