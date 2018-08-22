@@ -20,7 +20,7 @@
                              :userUID="user.uid"
                              class="question-duration"
                              ></question-duration>
-          <span v-else class="green-text">
+          <span v-else-if="didUserSubmitATimeAlready(question)" class="green-text">
             Time submission recorded
            </span>
           <BaseCheckBox 
@@ -88,8 +88,7 @@ export default {
       this.loading = false
       this.newQuestionNumber = this.allQuestions.length + 1
     })
-    .catch(error => console.log('error in loading: ', error)
-    )
+    .catch(error => console.log('error in loading: ', error))
   },
   methods: {
     async addQuestion () {
