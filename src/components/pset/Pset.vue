@@ -49,6 +49,7 @@
         <input type="number" v-model="newQuestionNumber">
         <label>Question Number</label>
       </form>
+      <p v-if="feedback" class="red-text">{{ feedback }}</p>
       <div class="right-align">
         <base-button @click="addQuestion()">Submit New Question</base-button>
       </div>
@@ -76,25 +77,36 @@ export default {
       newQuestion: null,
       newQuestionNumber: null,
       loading: true,
+      feedback: null
     }
   },
   mounted () {
     this.$bind('allQuestions', db.collection('questions').where('fromPset', '==', this.$route.path))
     .then(doc => this.loading = false)
-    .catch(error => {
-      console.log('error in loading: ', error)
-    })
+    .catch(error => console.log('error in loading: ', error)
+    )
   },
   methods: {
-    addQuestion () {
-      // if (!this.newExplanation || !this.newExplanationTitle) {
-      //   this.feedback = true 
-      //   return 
-      // }
-      // TODO: ensure that the question is unique 
+    async addQuestion () {
+      // check if the question is unique 
+      var isDuplicate = false 
+      this.allQuestions.forEach(question => {
+        const questionNumber = question.questionID.slice(question.questionID.length - 1)
+        if (questionNumber == this.newQuestionNumber) {
+          isDuplicate = true 
+          this.feedback = `Someone already submitted a question ${questionNumber}`
+        }
+      })
+      if (isDuplicate) {
+        return 
+      }
+      if (!this.newQuestion || !this.newQuestionNumber) {
+        this.feedback = 'You must specify BOTH the question and the question number'
+        return 
+      }
+      // create question object 
       const questionID = this.$route.path + '/' + this.newQuestionNumber 
-      const ref = db.collection('questions')
-      ref.add({
+      const questionObject = {
         content: this.newQuestion,
         fromPset: this.$route.path,
         questionID,
@@ -103,8 +115,12 @@ export default {
           uid: this.user.uid,
           finished: false
         }]
-      })
+      }
       this.newQuestion = null
+      this.newQuestiomNumber = null
+      // upload it to Firestore
+      const ref = db.collection('questions')
+      await ref.add(questionObject)
     },
     async deleteQuestion (id) {
       const ref = db.collection('questions').doc(id)

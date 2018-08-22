@@ -52,6 +52,7 @@ import db from '@/firebase/init.js'
 export default {
   methods: {
     getParticipants (group) {
+      console.log(this.questions[0].feynmen.filter(f => f.chainReactionCreatorUID == group))
       return this.questions[0].feynmen.filter(f => f.chainReactionCreatorUID == group)
     },
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
