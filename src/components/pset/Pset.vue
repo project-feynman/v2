@@ -42,18 +42,20 @@
         </base-card>
       </div>
     </template>
-    <div class="new-question">
       <form>
-        <input type="text" v-model="newQuestion">
-        <label>Question</label>
-        <input type="number" v-model="newQuestionNumber">
-        <label>Question Number</label>
+        <div class="new-question">
+          <input type="text" v-model="newQuestion">
+          <label>Question</label>
+        </div>
+        <div class="new-question-number">
+          <input type="number" v-model="newQuestionNumber">
+          <label>Question Number</label>
+        </div>
       </form>
-      <p v-if="feedback" class="red-text">{{ feedback }}</p>
+      <p v-if="feedback" class="red-text center">{{ feedback }}</p>
       <div class="right-align">
         <base-button @click="addQuestion()">Submit New Question</base-button>
       </div>
-    </div>
   </div>
 </template>
 
@@ -69,7 +71,7 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
-    }
+    },
   },
   data () {
     return {
@@ -82,7 +84,10 @@ export default {
   },
   mounted () {
     this.$bind('allQuestions', db.collection('questions').where('fromPset', '==', this.$route.path))
-    .then(doc => this.loading = false)
+    .then(doc => {
+      this.loading = false
+      this.newQuestionNumber = this.allQuestions.length + 1
+    })
     .catch(error => console.log('error in loading: ', error)
     )
   },
@@ -118,6 +123,7 @@ export default {
       }
       this.newQuestion = null
       this.newQuestiomNumber = null
+      this.feedback = null 
       // upload it to Firestore
       const ref = db.collection('questions')
       await ref.add(questionObject)
@@ -228,6 +234,11 @@ export default {
 
 .new-question {
   width: 60%;
+  margin: auto;
+}
+
+.new-question-number {
+  width: 15%;
   margin: auto;
 }
 
