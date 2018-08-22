@@ -52,7 +52,7 @@ const actions = {
         var mirror = await ref.get()
         if (mirror.exists) {
           context.commit('setUser', mirror.data())
-          checkOnlineStatusAndSetDisconnectHook (mirror.data())
+          checkOnlineStatusAndSetDisconnectHook(mirror.data())
         } else {
           const newUser = {
             displayName: user.displayName,
@@ -63,18 +63,24 @@ const actions = {
           const doc = await countRef.get()
           const numOfUsers = doc.data().count 
           newUser.feynmanNumber = numOfUsers + 1
-          ref.set(newUser)
           countRef.update({
             count: numOfUsers + 1
           })
+          await ref.set(newUser) // we want to minimize the # of updates we make before setting up an onSnapshot callback 
+          mirror = await ref.get()
         }
+        checkOnlineStatusAndSetDisconnectHook(mirror.data())
       } else {
         // No user is signed in.
         console.log('user not logged in')
         context.commit('setUser', null)
       }
-      // not necessary - the user only holds information such as tokens - and displayNames - the real important information
-      // lies in Question.Feynman      
+      // one-way bind Firestore's user to Vuex's user 
+      db.collection('users').doc(user.uid).onSnapshot(snapshot => 
+        {
+          console.log('user was changed (detected in Vuex)')
+          console.log(`data = ${JSON.stringify(snapshot.data())}`)
+        }) 
     }) 
   },
   logOut: async context => {
