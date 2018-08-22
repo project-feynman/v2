@@ -64,7 +64,6 @@ export default {
     }
   },
   mounted () {
-    console.log('ListOfNodes =', this.ListOfNodes)
     this.update(this.root)
   },
   data () {
@@ -139,7 +138,7 @@ export default {
               .attr('dy', '.25em')
               .attr('x', d => d.children || d._children ? -13 : 13)
               .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
-              .text(d => d.data.feynmanNumber )
+              .text(d => '#' + d.data.feynmanNumber )
 
             // UPDATE
             var nodeUpdate = nodeEnter.merge(node);

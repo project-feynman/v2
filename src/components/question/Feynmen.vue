@@ -130,7 +130,7 @@ export default {
       this.questions[0].feynmen.forEach(f => {
         if (f.uid == this.user.uid && f.mostRecentFeynman) {
           console.log('student had teachers')
-          f.teacher = f.mostRecentFeynman.displayName
+          f.teacher = f.mostRecentFeynman.uid
           f.chainReactionCreatorUID = f.mostRecentFeynman.chainReactionCreatorUID
           joinedReaction = true 
         }
@@ -141,7 +141,7 @@ export default {
         console.log('student was alone')
         this.questions[0].feynmen.forEach(f => {
           if (f.uid == this.user.uid) {
-            f.teacher = "Richard Feynman"
+            f.teacher = "Richard Feynman's UID"
             f.chainReactionCreatorUID = f.uid 
           }
         })
