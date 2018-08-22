@@ -40,29 +40,27 @@ export default {
             }
           })
           // compute new average 
-          if (true) { // user hasn't submitted - that's why he has reached so far 
-            const newTime = parseFloat(this.sliderHourValue)
-            var total = question.total 
-            if (!total) {
-              total = newTime 
-            } else {
-              total = total + newTime 
-            }
-            ref.update({
-              total
-            }).then(() => {
-              // mark user as submitted 
-              question.feynmen.forEach(f => {
-                if (f.uid == user.uid) {
-                  f.submitted = true 
-                  f.submittedTime = newTime
-                }
-              })
-              ref.update({
-                feynmen: question.feynmen
-              })
-            })
+          const newTime = parseFloat(this.sliderHourValue)
+          var total = question.total 
+          if (!total) {
+            total = newTime 
+          } else {
+            total = total + newTime 
           }
+          ref.update({
+            total
+          }).then(() => {
+            // mark user as submitted 
+            question.feynmen.forEach(f => {
+              if (f.uid == user.uid) {
+                f.submitted = true 
+                f.submittedTime = newTime
+              }
+            })
+            ref.update({
+              feynmen: question.feynmen
+            })
+          })
         } else {
           console.log('Document does not exist')
         }
