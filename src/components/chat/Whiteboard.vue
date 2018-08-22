@@ -62,7 +62,6 @@ export default {
         this.numOfPaths = this.whiteboard.allPaths.length 
         this.initialRender = false
       } else {
-        // console.log(`data = ${JSON.stringify(doc.data())}`)
         const updatedPaths = doc.data().allPaths
         const n = updatedPaths.length 
         if (n >= this.numOfPaths) {
@@ -86,11 +85,11 @@ export default {
   },
   methods: {
     async resetBoard () {
-      const ref = db.collection('whiteboards').doc(this.$route.params.room_id)
+      const roomID = this.$route.params.room_id
+      const ref = db.collection('whiteboards').doc(roomID)
       await ref.update({
         allPaths: []
       })
-      project.activeLayer.removeChildren()
     },
     drawAllPaths () {
       if (this.whiteboard == null) {
