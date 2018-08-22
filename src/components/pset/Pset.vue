@@ -117,6 +117,7 @@ export default {
         feynmen: [{
           displayName: this.user.displayName,
           uid: this.user.uid,
+          feynmanNumber: this.user.feynmanNumber,
           finished: false
         }]
       }
