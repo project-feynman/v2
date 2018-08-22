@@ -8,7 +8,7 @@
     <template v-if="allQuestions && !loading && user != null && user != 'undetermined'">
       <div class="question-card">
         <base-card v-for="(question, i) in allQuestions" :key="i">
-          <h5>{{ question.content }}</h5>
+          <h5>{{ getLastChar(question.questionID) }}. {{ question.content }}</h5>
           <!-- Classmate's Progress -->
           <ul>
             <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}} (out of {{ question.feynmen.length }})</li>
