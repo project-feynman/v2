@@ -23,36 +23,10 @@ export default {
     user () {
       if (this.user != null && this.user != 'undetermined') {
         console.log('user determined, setting onMouseUp callback')
-        // already initialized 
         if (this.onMouseUpInitialized) {
           return 
-        }
-        tool.onMouseUp = async event => {
-          this.path.add(event.point)
-          this.path.simplify()
-          this.path.smooth()
-          const segments = this.path.getSegments()
-          // save the "path" that the user has just drawn
-          var pathObj = {} 
-          var points = [] 
-          segments.forEach(segment => {
-            var point = {} 
-            point.x = segment.point.x
-            point.y = segment.point.y 
-            points.push(point)
-          })
-          pathObj.points = points 
-          pathObj.author = this.user.uid
-          this.whiteboard.allPaths.push(pathObj)
-          // push the new "path" to Firestore 
-          const updatedPaths = this.whiteboard.allPaths
-          const roomID = this.$route.params.room_id
-          const ref = db.collection('whiteboards').doc(roomID)
-          await ref.update({
-            allPaths: updatedPaths
-          })
-          console.log('uploaded what you just drawn to Firestore!')
-          this.path = null 
+        } else {
+          this.initOnMouseUp() 
         }
       }
     }
@@ -77,34 +51,7 @@ export default {
       this.path.add(event.point)
     }
     if (this.user != null && this.user != 'undetermined') {
-      this.onMouseUpInitialized = true 
-      tool.onMouseUp = async event => {
-        this.path.add(event.point)
-        this.path.simplify()
-        this.path.smooth()
-        const segments = this.path.getSegments()
-        // save the "path" that the user has just drawn
-        var pathObj = {} 
-        var points = [] 
-        segments.forEach(segment => {
-          var point = {} 
-          point.x = segment.point.x
-          point.y = segment.point.y 
-          points.push(point)
-        })
-        pathObj.points = points 
-        pathObj.author = this.user.uid
-        this.whiteboard.allPaths.push(pathObj)
-        // push the new "path" to Firestore 
-        const updatedPaths = this.whiteboard.allPaths
-        const roomID = this.$route.params.room_id
-        const ref = db.collection('whiteboards').doc(roomID)
-        await ref.update({
-          allPaths: updatedPaths
-        })
-        console.log('uploaded what you just drawn to Firestore!')
-        this.path = null 
-      }
+      this.initOnMouseUp()
     }
     const roomID = this.$route.params.room_id
     const ref = db.collection('whiteboards').doc(roomID)
@@ -162,6 +109,38 @@ export default {
           path.add(new Point(point.x, point.y))
         })
       })
+    },
+    initOnMouseUp () {
+      console.log('initOnMouseUp()')
+      this.onMouseUpInitialized = true 
+      tool.onMouseUp = async event => {
+        this.path.add(event.point)
+        this.path.simplify()
+        this.path.smooth()
+        const segments = this.path.getSegments()
+        // save the "path" that the user has just drawn
+        var pathObj = {} 
+        var points = [] 
+        segments.forEach(segment => {
+          var point = {} 
+          point.x = segment.point.x
+          point.y = segment.point.y 
+          points.push(point)
+        })
+        pathObj.points = points 
+        pathObj.author = this.user.uid
+        this.whiteboard.allPaths.push(pathObj)
+        // push the new "path" to Firestore 
+        const updatedPaths = this.whiteboard.allPaths
+        const roomID = this.$route.params.room_id
+        const ref = db.collection('whiteboards').doc(roomID)
+        await ref.update({
+          allPaths: updatedPaths
+        })
+        console.log('uploaded what you just drawn to Firestore!')
+        this.path = null 
+      }
+      console.log('initOnMouseUp() successfully finished')
     }
   }
 }
