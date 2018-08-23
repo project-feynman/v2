@@ -191,10 +191,10 @@ export default {
   },
   mounted () {
     this.$bind('questions', db.collection('questions').where('questionID', '==', this.$route.path))
-      .then(doc => {
-        this.loading = false
-      }
-    ).catch(error => {
+    .then(doc => {
+      this.loading = false
+    })
+    .catch(error => {
       console.log('error from connecting to Firestore: ', error)
     })
   }

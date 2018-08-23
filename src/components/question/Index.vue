@@ -1,6 +1,5 @@
 <template>
   <div class="question">
-    <!-- <div class="custom-offset"></div> -->
     <h2 class="center">Question {{ $route.params.question_number }}</h2>
     <h3 v-if="question[0]" class="question-text center">
       {{ question[0].content }}
