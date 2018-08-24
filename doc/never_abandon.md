@@ -13,14 +13,13 @@ This time, a TA saved me...
 
 ---------------------------------------------------------------------------------------
 
-I met a freshman girl whose name I will not share here. Her charactor was symbolically appropriate too - someone who needed help. 
-A freshman who needed a sophomore. A girl who needed a boy...
-But the brutal truth is that - just because you want to help doesn't mean you can. 
+I met a freshman girl whose name I will not share here... Her charactor was symbolically appropriate too - a freshman who needed a sophomore. A girl who needed a boy...
+The brutal truth is that - wanting to help doesn't mean you can help. 
 And there's nothing worse than to not be able to do anything while watching someone else go through hell. 
 
 --------------------------------------------------------------------------------------------
 
-It dawned on me. It's not about the TA, nor the occassional helper. It's about having a companion, someone who... That's what she needed.
+It dawned on me. It's not about the TA, nor the occassional helper. It's about having a companion, someone who needed her as much as she needed them. To not have to walk to Office Hours alone, to have someone who shares the joy of solving a problem and the pain of getting stuck... That's what she needed...but how exactly could I help?
 
 -----------------------------------------------------------------------------------------
 
@@ -29,5 +28,5 @@ that I decided to confront this complex problem head on and see where it leads..
 
 -------------------------------------------------------------------------
 
-And so, to everyone who helped me, to the TA who renamed my variables, and to my nameless friend: 
+And so, to everyone who helped me, to the TA who renamed my variables, and to my nameless friend who saved me: 
 I will make MIT truly a paradise. Just give me a little more time. 
