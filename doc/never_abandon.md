@@ -1,6 +1,5 @@
-Walking upon the fairway of the Windmill course, pushing my three-wheeled golf trolley, I felt a gentle breeze from ahead. 
-My dog followed besides me, sniffing along the floor. I looked up at the sky. It was grey, but not hopeless. Right there and then,
-I made a grand promise: 
+Walking upon the fairway, pushing my three-wheeled golf trolley, I felt a gentle breeze from ahead. 
+My dog followed besides me, sniffing along the floor. I looked up at the sky. It was grey, but not hopeless. Right there and then, I made a grand promise: 
 
 "The things that had happened to me...I'll ensure nobody else will have to go through them..."
 
