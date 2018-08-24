@@ -15,11 +15,11 @@
             <li class="teal-text">Avg. time: {{ getEstimatedTime(question) }} hours</li>
           </ul>
           <!-- if the user is done and has not submitted -->
-          <question-duration v-if="user.uid && getUserProgress(question) && !didUserSubmitATimeAlready(question)" 
+          <duration-form v-if="user.uid && getUserProgress(question) && !didUserSubmitATimeAlready(question)" 
                              :questionID="question.id" 
                              :userUID="user.uid"
                              class="question-duration"
-                             ></question-duration>
+                             ></duration-form>
           <span v-else-if="didUserSubmitATimeAlready(question)" class="green-text">
             Time submission recorded
            </span>
@@ -62,11 +62,11 @@
 <script>
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
-import QuestionDuration from './QuestionDuration.vue'
+import DurationForm from '@/components/pset/DurationForm.vue'
 
 export default {
   components: {
-    QuestionDuration,
+    DurationForm,
   },
   computed: {
     user () {

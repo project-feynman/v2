@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login.vue'
-import Subject from '@/components/Subject.vue'
+import Login from '@/views/Login.vue'
+import Subject from '@/views/Subject.vue'
 import Chat from '@/components/chat/Chat.vue'
-import Pset from '@/components/pset/Pset.vue'
-import Profile from '@/components/profile/Profile.vue'
-import AllSubjects from '@/components/AllSubjects.vue'
+import Pset from '@/views/Pset.vue'
+import Profile from '@/views/Profile.vue'
+import AllSubjects from '@/views/AllSubjects.vue'
 
 // lazy-loading
-const Question = () => import('@/components/question/Index.vue')
+const Question = () => import('@/views/Question.vue')
 
 Vue.use(Router)
 

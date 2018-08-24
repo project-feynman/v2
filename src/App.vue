@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import store from '@/store/store.js'
+import store from '@/store/index.js'
 import TheNavbar from '@/components/TheNavbar.vue'
 import M from 'materialize-css'
 

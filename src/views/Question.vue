@@ -31,11 +31,11 @@
 
 <script>
 import db from '@/firebase/init.js'
-import Explanations from './Explanations.vue'
-import Resources from './Resources.vue'
-import Classmates from './Classmates.vue'
-import ChainReaction from './ChainReaction.vue'
-import Feynmen from './Feynmen.vue'
+import Explanations from '@/components/question/Explanations.vue'
+import Resources from '@/components/question/Resources.vue'
+import Classmates from '@/components/question/Classmates.vue'
+import ChainReaction from '@/components/question/ChainReaction.vue'
+import Feynmen from '@/components/question/Feynmen.vue'
 
 export default {
   mounted () {
