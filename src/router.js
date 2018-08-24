@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Login from '@/views/Login.vue'
 import Subject from '@/views/Subject.vue'
-import Chat from '@/components/chat/Chat.vue'
+import Chat from '@/views/Chat.vue'
 import Pset from '@/views/Pset.vue'
 import Profile from '@/views/Profile.vue'
 import AllSubjects from '@/views/AllSubjects.vue'
@@ -13,8 +14,8 @@ const Question = () => import('@/views/Question.vue')
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  mode: 'history', 
+  base: process.env.BASE_URL, 
   routes: [
     {
       path: '/',

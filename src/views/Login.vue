@@ -78,8 +78,6 @@ export default {
     if (this.user != null && this.user != 'undetermined') {
       this.loading = false
     }
-    const elems = document.querySelectorAll('.tooltipped')
-    var instances = M.Tooltip.init(elems, {})
   }
 }
 </script>
@@ -87,12 +85,6 @@ export default {
 <style scoped>
 .light-card {
   padding: 20px;
-}
-
-/* quickfix */
-.tooltipped {
-  margin-top: 20px;
-  margin-bottom: 5px;
 }
 
 .flex-container {

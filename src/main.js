@@ -27,7 +27,6 @@ navigator.serviceWorker
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
 store.dispatch('fetchUser') // purposely omit using 'await' so App renders in parallel 
 new Vue({
   router,

@@ -21,7 +21,7 @@
 <script>
 import moment from 'moment'
 import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
-import Whiteboard from './Whiteboard.vue'
+import Whiteboard from '@/components/chat/Whiteboard.vue'
 import db from '@/firebase/init.js'
 
 export default {
