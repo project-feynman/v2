@@ -20,7 +20,7 @@ Feynman is a website where students solve problems together - no matter where th
 
 2) If you can't explain something simply, you don't understand it. There are no exceptions. 
 
-3) The best helper is not a TA, professor nor a genius - but an articulate student who's had an eureka moment. 
+3) [The best helper is not a TA, professor nor a genius - but an articulate student who's had an eureka moment.](./doc/best_helper.md)
 
   1) He understands the material, and, more importantly, he has fresh memory of what it's like to not understand. He is able to leverage that to effectively guide his peers towards their own Eureka moments.
   2) He's already acquired the context surrounding the specific question. He can help without a large initial overhead. 
