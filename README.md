@@ -1,7 +1,5 @@
 # Feynman
 
-The Feynman Project is under active development. Here are the [milestones](https://gitlab.com/Gustwalker/Feynman/milestones)
-
 <p align="center">
   <img src="demo.gif" style="max-height: 250px;" alt="Feynman Preview">
 </p>
@@ -9,6 +7,7 @@ The Feynman Project is under active development. Here are the [milestones](https
 [1-minute video explanation](https://www.youtube.com/watch?v=zsbHQWGIQ9Q)
 
 Feynman is a website where students can p-set more quickly and enjoyably. 
+Feynman is also an attempt to change MIT's culture where students are known to be kind and articulate. 
 
 1) It has visual explanations created by students to complement the rigor of school material. 
 2) It centralizes and curates important information from Stellar, Piazza, Edx and Csail into one place.
