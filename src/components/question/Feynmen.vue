@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="center">
-      <big-red-button class="tooltipped" 
-                      @click="handleEureka()"
-                      data-tooltip =
-                      "<ul>
-                        <li>'If you can't explain it simply, you don't understand it.'</li>
-                        <li>Help others and see if you grasped the material properly.</li>
-                        <li>It takes practise to explain things elegantly. Do you have what it takes?</li>
-                      </ul>
-                      ">
+      <big-red-button 
+        class="tooltipped" 
+        @click="handleEureka()"
+        data-tooltip =
+        "<ul>
+          <li>'If you can't explain it simply, you don't understand it.'</li>
+          <li>Help others and see if you grasped the material properly.</li>
+          <li>It takes practise to explain things elegantly. Do you have what it takes?</li>
+        </ul>">
       </big-red-button>
     </div>
     <div v-if="questions[0]">
@@ -50,9 +50,54 @@ import BigRedButton from './BigRedButton.vue'
 import db from '@/firebase/init.js'
 
 export default {
+  components: {
+    ChainReaction,
+    Promised,
+    BigRedButton
+  },
+  data () {
+    return {
+      loading: true,
+      questions: []
+    }
+  },
+  mounted () {
+    this.$bind('questions', db.collection('questions').where('questionID', '==', this.$route.path))
+    .then(doc => {
+      this.loading = false
+    })
+    .catch(error => {
+      console.log('error from connecting to Firestore: ', error)
+    })
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
+    },
+    chainReactionGroups () {
+      var groups = [] 
+      this.questions[0].feynmen.forEach(f => {
+        if (f.chainReactionCreatorUID) {
+          if (!groups.includes(f.chainReactionCreatorUID)) {
+            groups.push(f.chainReactionCreatorUID)
+          }
+        }
+      })
+      return groups 
+    },
+    activeFeynmen () {
+      if (!this.questions[0]) {
+        return []
+      } else if (this.questions[0]) {
+        var output = this.questions[0].feynmen 
+        output = output.filter(f => f.chainReactionCreatorUID != null)
+        output = output.filter(f => f.retired != true || f.retired == null)
+        return output 
+      }
+    }
+  },
   methods: {
     getParticipants (group) {
-      console.log(this.questions[0].feynmen.filter(f => f.chainReactionCreatorUID == group))
       return this.questions[0].feynmen.filter(f => f.chainReactionCreatorUID == group)
     },
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
@@ -85,9 +130,8 @@ export default {
         })
       }
       // create a chat room 
-      // make sure order of UIDs stays consistent no matter who asks for help
       const sortedUIDs = [this.user.uid, uid].sort()
-      const roomId = sortedUIDs.join('')
+      const roomId = sortedUIDs.join('') // ensure order of UIDs stays consistent no matter who asks
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
       const currentUser = {
@@ -129,7 +173,7 @@ export default {
       var joinedReaction = false 
       this.questions[0].feynmen.forEach(f => {
         if (f.uid == this.user.uid && f.mostRecentFeynman) {
-          console.log('student had teachers')
+          console.log('user had a teacher - adding him/her to a chain reaction')
           f.teacher = f.mostRecentFeynman.uid
           f.chainReactionCreatorUID = f.mostRecentFeynman.chainReactionCreatorUID
           joinedReaction = true 
@@ -138,7 +182,7 @@ export default {
       const updatedFeynmen = this.questions[0].feynmen 
       // user was not taught by anyone - let him start his own chain reaction
       if (!joinedReaction) {
-        console.log('student was alone')
+        console.log('student was alone - starting a new chain reaction')
         this.questions[0].feynmen.forEach(f => {
           if (f.uid == this.user.uid) {
             f.teacher = "Richard Feynman's UID"
@@ -151,52 +195,6 @@ export default {
         feynmen: updatedFeynmen
       })
     }
-  },
-  components: {
-    ChainReaction,
-    Promised,
-    BigRedButton
-  },
-  computed: {
-    user () {
-      return this.$store.state.user
-    },
-    chainReactionGroups () {
-      var groups = [] 
-      this.questions[0].feynmen.forEach(f => {
-        if (f.chainReactionCreatorUID) {
-          if (!groups.includes(f.chainReactionCreatorUID)) {
-            groups.push(f.chainReactionCreatorUID)
-          }
-        }
-      })
-      return groups 
-    },
-    activeFeynmen () {
-      if (!this.questions[0]) {
-        return []
-      } else if (this.questions[0]) {
-        var output = this.questions[0].feynmen 
-        output = output.filter(f => f.chainReactionCreatorUID != null)
-        output = output.filter(f => f.retired != true || f.retired == null)
-        return output 
-      }
-    }
-  },
-  data () {
-    return {
-      loading: true,
-      questions: []
-    }
-  },
-  mounted () {
-    this.$bind('questions', db.collection('questions').where('questionID', '==', this.$route.path))
-    .then(doc => {
-      this.loading = false
-    })
-    .catch(error => {
-      console.log('error from connecting to Firestore: ', error)
-    })
   }
 }
 </script>
