@@ -1,6 +1,6 @@
 The ideal helper is one who:
   1. Has "perfect" understanding of what he is teaching
-  2. Is able to talk to anticipate what the student will be most confused by 
+  2. Is able to anticipate what the student will be most confused by 
 
 Let's use the matrix...
 
