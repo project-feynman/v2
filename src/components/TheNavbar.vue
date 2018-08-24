@@ -6,7 +6,7 @@
       </router-link>
       <ul class="right hide-on-med-and-down">
         <template v-if="user != null && user != 'undetermined'">
-          <li><a href="https://github.com/Gustwalker/feynman-project" class="black-text">About</a></li>
+          <li><a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md" class="black-text">About</a></li>
           <li v-if="user.recentChatID"><router-link class="black-text" :to="`/chat/${user.recentChatID}`">Resume Chat</router-link></li>
           <li v-if="user">
             <router-link class="black-text" to="/profile">
