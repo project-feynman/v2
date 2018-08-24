@@ -7,23 +7,23 @@ import VueChatScroll from 'vue-chat-scroll'
 import App from './App.vue'
 import router from './router'
 import store from './store/index.js'
-import './registerServiceWorker'
+// import './registerServiceWorker'
 import '@/components/reusables/_globals.js'
-import { askForPermissionToReceiveNotifications, sendNotification } from './push_notifications/push_notifications.js'
+// import { askForPermissionToReceiveNotifications, sendNotification } from './push_notifications/push_notifications.js'
 
 Vue.use(VueChatScroll)
 Vue.use(VueResource)
 Vue.use(VueFire)
 Vue.use(router)
 
-navigator.serviceWorker
-  .register('/firebase-messaging-sw.js')
-  .then(registration => {
-    firebase.messaging().useServiceWorker(registration)
-    console.log('service worker registered')
-    askForPermissionToReceiveNotifications()
-  })
-  .catch(error => console.log('error =', error))
+// navigator.serviceWorker
+//   .register('/firebase-messaging-sw.js')
+//   .then(registration => {
+//     firebase.messaging().useServiceWorker(registration)
+//     console.log('service worker registered')
+//     askForPermissionToReceiveNotifications()
+//   })
+//   .catch(error => console.log('error =', error))
 
 Vue.config.productionTip = false
 
