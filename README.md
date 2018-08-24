@@ -30,7 +30,7 @@ Feynman is a website where students can p-set more quickly and enjoyably.
 
 7) Education must be 'result dependent' but 'method independent'. 
 
-8) Never abandon a friend. Else, you tilt the world slightly towards evil rather than good. 
+8)[ Never abandon a friend. Else, you tilt the world slightly towards evil rather than good.](./doc/never_abandon.md)
 
 # How You Can Help 
 
