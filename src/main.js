@@ -8,7 +8,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store/index.js'
 import './registerServiceWorker'
-import '@/components/_globals.js'
+import '@/components/reusables/_globals.js'
 import { askForPermissionToReceiveNotifications, sendNotification } from './push_notifications/push_notifications.js'
 
 Vue.use(VueChatScroll)
