@@ -21,6 +21,7 @@
         (draw a doodle / upload a doodle (coming soon!))
       </p>
       <!-- draw on a whiteboard -->
+      <new-explanation/>
       <!-- upload a recent whiteboard! -->
       <input type="file" placeholder="upload an image" @change="onFileChanged($event)">
       <p v-if="feedback" class="red-text">Enter BOTH a title and a link</p>
@@ -65,8 +66,12 @@
 <script>
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
+import NewExplanation from './NewExplanation.vue'
 
 export default {
+  components: {
+    NewExplanation
+  },
   computed: {
     user () {
       return this.$store.state.user

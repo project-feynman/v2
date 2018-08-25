@@ -2,7 +2,8 @@
   <div>
     <h2 class="center">My Doodles</h2>
       <!-- <template v-for="(doodle, idx) in doodles"> -->
-      <canvas id="whiteboard" resize :key="idx"></canvas>
+      <!-- <div v-if="doodles">{{ doodles[0].title }}</div> -->
+      <canvas id="whiteboard" resize></canvas>
       <!-- </template> -->
   </div>
 </template>
@@ -30,12 +31,13 @@ export default {
       if (this.doodles == null) {
         return 
       } 
-      this.doodles[0].paths.forEach(data => {
-        var path = new Path()
-        path.strokeColor = 'pink'
-        data.points.forEach(point => {
-          path.add(new Point(point.x, point.y))
-        })
+      this.doodles[0].paths.forEach(data => this.drawPath(data))
+    },
+    drawPath (data) {
+      var path = new Path()
+      path.strokeColor = 'pink'
+      data.points.forEach(point => {
+        path.add(new Point(point.x, point.y))
       })
     }
   }
