@@ -1,7 +1,9 @@
 <template>
   <div>
     <h2 class="center">My Doodles</h2>
-    <canvas id="whiteboard" resize></canvas>
+      <!-- <template v-for="(doodle, idx) in doodles"> -->
+      <canvas id="whiteboard" resize :key="idx"></canvas>
+      <!-- </template> -->
   </div>
 </template>
 
@@ -21,16 +23,13 @@ export default {
   async mounted () {
     paper.setup('whiteboard')
     const myDoodles = await this.$bind('doodles', db.collection('doodles'))
-    // console.log(`myDoodles = ${JSON.stringify(myDoodles)}`)
     this.drawAllPaths()
   },
   methods: {
     drawAllPaths () {
       if (this.doodles == null) {
-        console.log('no doodles to be drawn')
         return 
       } 
-      console.log('drawing doodle')
       this.doodles[0].paths.forEach(data => {
         var path = new Path()
         path.strokeColor = 'pink'
