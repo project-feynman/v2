@@ -9,7 +9,7 @@
 Feynman is: 
 - [a website that let's you p-set efficiently](./doc/website_intro.md)
 - a place where people learn to become competent, articulate thinkers  
-- a conspiracy to change MIT's student culture
+- a conspiracy to change MIT's student culture, then the world's. 
 
 # Our Beliefs
 
