@@ -29,12 +29,12 @@ Feynman is:
 
 8) Education must be 'result dependent' but 'method independent'. 
 
-9)[When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
+9) [When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
 
 # How You Can Help 
 
 We'd like visual, intuitive explanations to flourish at MIT. If you found parts of the curriculum to be weak, consider contributing to Feynman's collection of student explanations. 
 
-For curious developers, visit the [contributing guide](CONTRIBUTING.md). It's what separates the men from the boys (or the ladies from the girls) 
+For real men (or women), visit the [contributing guide](CONTRIBUTING.md). 
 
 [Frequently Asked Questions](FAQ.md)
