@@ -20,7 +20,7 @@ The core features are the interactive whiteboard and the chain reaction system. 
     2. Support for interactive white boards/image and video uploads in the online chat page
     3. Support common reusable diagrams for differen topics 
   
-  - Chain reaction(CHAINREACTION.md)
+  - [Chain reaction](CHAINREACTION.md)
     1. A system to match students in real life 
     2. A system to match initiate and manage the chain reaction 
     3. A graphical interface to keep track of the growing complexity of the chain reaction 
