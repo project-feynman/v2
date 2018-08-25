@@ -1,3 +1,10 @@
-1) It has visual explanations created by students to complement the rigor of school material. 
-2) It centralizes and curates important information from Stellar, Piazza, Edx and Csail into one place.
-3) Students learn through the Feynman technique. Everyone learns through teaching each other.
+1) View intuitive, student-made explanations
+  - Complement the rigor of school material. 
+
+2) Have a question? Ask classmates who are also on the same problem?
+  - And leave the most difficult questions for Office Hours and Piazza 
+
+3) Have access to the resources that others found useful
+  - KhanAcademy, Youtube, Quora - don't look for the gems yourself 
+  - As a bonus, the most relevant info from Stellar, Piazza and Edx are centralized in one place 
+
