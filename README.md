@@ -7,7 +7,7 @@
 [1-minute video explanation](https://www.youtube.com/watch?v=zsbHQWGIQ9Q)
 
 Feynman is: 
-- [a website that let's students p-set efficiently by giving them access to curated resources and helpful classmates](./doc/website_intro.md)
+- [a website that let's you p-set efficiently](./doc/website_intro.md)
 - a place where people learn to become competent, articulate thinkers  
 - a conspiracy to change MIT's student culture
 
