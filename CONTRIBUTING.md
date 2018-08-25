@@ -49,20 +49,18 @@ Components are defined in '.vue' files. There are three types of components:
 A component does 3 things normally. 
 
 1) It fetches data from Firestore and binds them to variables
-  - look out for 'this.$bind...' in the 'mounted ()' hook
+  - look out for ```this.$bind...``` in the ```mounted ()``` hook
   ```
    mounted () {
      // save data to the 'question' variable 
      this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
-      .then(doc => {
-        this.loading = false
-      })
+      .then(doc => this.loading = false)
       .catch(error => console.log(error))
    }
   ``` 
 2) It renders the data using reusable UI components 
-    - look out for 'v-for' used with pre-defiend Vue components: 
   ```
+     // iteratively rendering reusable components is incredibly powerful 
      <template v-for="question in questions">
        <base-card>{{ question.content }}</base-card>
      </template>
