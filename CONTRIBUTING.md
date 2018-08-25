@@ -12,6 +12,7 @@ Fullstack:
   - Speed optimizations 
   
 Specialist: 
+
 The core features are the interactive whiteboard and the chain reaction system. They are rabbit holes all by themselves
 
   - Whiteboard: 
@@ -34,7 +35,12 @@ Here's what happens when the website runs (if the scripts were unminified and un
   3) [App.vue](./App.vue) contains a [navbar](./src/components/TheNavbar.vue) and a [router-view](https://github.com/vuejs/vue-router) component
   4) [router-view](https://github.com/vuejs/vue-router) magically loads different components depending on the URL according to the code in [router.js](./src/router.js) 
  
-   
-  
+# Vue Components
+
+Components are defined in '.vue' files. There are three types of components:
+
+1) [View components](./src/views) are the 'pages'/root components rendered at each URL.
+2) [Base components](./src/components/reusables) are typically 'buttons' and 'cards' used throughout the app
+3) [Normal components](./src/components) where the fun is...
 
 
