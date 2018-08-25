@@ -19,17 +19,19 @@ Feynman is:
 
 3) Explanations must be visual and animated whenever possible.
 
-4) Solutions must focus on the thought process 
+4) The friction behind creating visual content must be reduced to a minimum 
 
-5) If you can't explain something simply, you don't understand it.
+5) Solutions must focus on the thought process 
 
-6) [The best helper is not a TA, professor nor genius - but an articulate student who's had an eureka moment.](./doc/best_helper.md)
+6) If you can't explain something simply, you don't understand it.
 
-7) Academic knowledge must be completely open-source. 
+7) [The best helper is not a TA, professor nor genius - but an articulate student who's had an eureka moment.](./doc/best_helper.md)
 
-8) Education must be 'result dependent' but 'method independent'. 
+8) Academic knowledge must be completely distributed and open-source. 
 
-9) [When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
+9) Education must be 'result dependent' but 'method independent'.  
+
+10) [When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
 
 # How You Can Help 
 
