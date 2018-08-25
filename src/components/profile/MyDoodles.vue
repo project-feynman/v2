@@ -27,11 +27,19 @@ export default {
     this.drawAllPaths()
   },
   methods: {
-    drawAllPaths () {
+    async drawAllPaths () {
       if (this.doodles == null) {
         return 
       } 
-      this.doodles[0].paths.forEach(data => this.drawPath(data))
+      function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+      }
+      const paths = this.doodles[0].paths
+      const n =  paths.length 
+      for (var i=0; i<n; i++) {
+        this.drawPath(paths[i])
+        await timeout(500)
+      }
     },
     drawPath (data) {
       var path = new Path()
