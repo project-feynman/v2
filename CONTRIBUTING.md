@@ -4,7 +4,7 @@ I'm happy to get you started through Google Hangouts - reach me on
 or 
 [email](eltonlin@mit.edu)
 
-# Feature Roadmap 
+# Specifications 
 
 Fullstack:
   - Offline push notifications (Progressive Web Application) 
@@ -24,6 +24,8 @@ The core features are the interactive whiteboard and the chain reaction system. 
     1. A system to match students in real life 
     2. A system to match initiate and manage the chain reaction 
     3. A graphical interface to keep track of the growing complexity of the chain reaction 
+    
+Current active sprints are tracked in [Gitlab](https://gitlab.com/Gustwalker/Feynman/boards?=)
 
 # Application Architecture 
 
