@@ -6,30 +6,30 @@
 
 [1-minute video explanation](https://www.youtube.com/watch?v=zsbHQWGIQ9Q)
 
-Feynman is a website where students can p-set more quickly and enjoyably. 
-Feynman is also an attempt to change MIT's culture where students are known to be kind and articulate. 
-
-1) It has visual explanations created by students to complement the rigor of school material. 
-2) It centralizes and curates important information from Stellar, Piazza, Edx and Csail into one place.
-3) Students learn through the Feynman technique. Everyone learns through teaching each other.
+Feynman is: 
+- [a website that let's students p-set efficiently by giving them access to curated resources and helpful classmates](./doc/website_intro.md)
+- a place where people learn to become competent, articulate thinkers  
+- a conspiracy to change MIT's student culture
 
 # Our Beliefs
 
-1) Subpar material must never persist for more than one class generation. 
+1) The only reason you're at MIT is so you can learn with companions.  
 
-2) If you can't explain something simply, you don't understand it.
+2) School material must be constantly renewed by students.
 
-3) [The best helper is not a TA, professor nor genius - but an articulate student who's had an eureka moment.](./doc/best_helper.md)
+3) Explanations must be visual and animated whenever possible.
 
-4) Academic knowledge must be completely open-source. 
+4) Solutions must focus on the thought process 
 
-5) The only reason you're at MIT is to be able to learn with companions.  
+5) If you can't explain something simply, you don't understand it.
 
-6) Explanations must be visual and animated whenever possible.
+6) [The best helper is not a TA, professor nor genius - but an articulate student who's had an eureka moment.](./doc/best_helper.md)
 
-7) Education must be 'result dependent' but 'method independent'. 
+7) Academic knowledge must be completely open-source. 
 
-8)[ Never abandon a friend. Else, you tilt the world slightly towards evil rather than good.](./doc/never_abandon.md)
+8) Education must be 'result dependent' but 'method independent'. 
+
+9)[When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
 
 # How You Can Help 
 
