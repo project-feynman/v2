@@ -82,5 +82,13 @@ A component does 3 things normally.
       }
     // more code 
   ```
+ 
+# Database Architecture 
+
+On Firestore, we have five collections - 'questions', 'users', 'chatRooms', 'subjects' and 'whiteboards'. Those documents point towards each other through references (e.g. a 'question' document can point to a particular 'user' document if it has a user 'uid' field.
+
+Each 'question' document has a field 'questionID' which is in the format 'subject_number/pset_number/question_number' e.g. 6.006/1/2 and is, by definition, unique. 
+
+
 
 
