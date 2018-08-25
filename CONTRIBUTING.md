@@ -6,23 +6,23 @@ or
 
 # Feature Roadmap 
 
-Feynman is a place where students learn rapidly while becoming powerful and articulate thinkers.
+Fullstack:
+  - Offline push notifications (Progressive Web Application) 
+  - Responsive UI 
+  - Speed optimizations 
+  
+Specialist: 
+The core features are the interactive whiteboard and the chain reaction system. They are rabbit holes all by themselves
 
-The core feature of Feyman is the "chain reaction system". In the Open Beta Launch on September 1st, there must be: 
-
-1. A system to match students in real life 
-
-2. A system to match initiate and manage the chain reaction 
-
-3. A graphical interface to keep track of the growing complexity of the chain reaction 
-
-4. Support for interactive white boards/image and video uploads in the online chat page
-
-5. A way to systematically store top explanations for the next generation of students 
-
-To decide on what to work on, observe the discrepancies between the current website and the specification above. 
-
-Here's a [detailed explanation](CHAINREACTION.md) on the actual implementation of the chain reaction: 
+  - Whiteboard: 
+    1. A way to systematically store top explanations for the next generation of students 
+    2. Support for interactive white boards/image and video uploads in the online chat page
+    3. Support common reusable diagrams for differen topics 
+  
+  - Chain reaction(CHAINREACTION.md)
+    1. A system to match students in real life 
+    2. A system to match initiate and manage the chain reaction 
+    3. A graphical interface to keep track of the growing complexity of the chain reaction 
 
 # Application Architecture 
 
@@ -32,7 +32,8 @@ Here's what happens when the website runs (if the scripts were unminified and un
   1) [index.html](./public/index.html) runs on Chrome - it imports [main.js](./src/main.js) in its script tag.
   2) [main.js](./src/main.js) imports global dependencies and renders [App.vue](./App.vue).
   3) [App.vue](./App.vue) contains a [navbar](./src/components/TheNavbar.vue) and a [router-view](https://github.com/vuejs/vue-router) component
-  4) ]router-view](https://github.com/vuejs/vue-router) magically loads different components depending on the URL according to the code in [router.js](./src/router.js) 
+  4) [router-view](https://github.com/vuejs/vue-router) magically loads different components depending on the URL according to the code in [router.js](./src/router.js) 
+ 
    
   
 
