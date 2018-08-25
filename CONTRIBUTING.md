@@ -61,14 +61,13 @@ A component does 3 things normally.
    }
   ``` 
 2) It renders the data using reusable UI components 
-  - look out for 'v-for' used with pre-defiend Vue components: 
+    - look out for 'v-for' used with pre-defiend Vue components: 
   ```
      <template v-for="question in questions">
        <base-card>{{ question.content }}</base-card>
      </template>
   ```
 3) When users click buttons and check boxes, things happen. Those things are defined as methods: 
-  - 
   ``` 
     // notice the enterChat(f) and ignore everything else 
     <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
