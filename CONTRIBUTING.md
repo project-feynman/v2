@@ -1,12 +1,10 @@
 # Get Started
+I'm happy to get you started through Google Hangouts - reach me on 
+[Facebook](https://www.facebook.com/elton.lin.338)
+or 
+[email](eltonlin@mit.edu)
 
-The most pain-free way to get started is to message me on Facebook or email me. I'll then guide you through the process with a video phone call via Google Hangouts (which also allows screenshare). 
-
-Facebook: https://www.facebook.com/elton.lin.338
-
-Email: eltonlin@mit.edu
-
-# MVP
+# Feature Roadmap 
 
 Feynman is a place where students learn rapidly while becoming powerful and articulate thinkers.
 
@@ -26,23 +24,8 @@ To decide on what to work on, observe the discrepancies between the current webs
 
 Here's a [detailed explanation](CHAINREACTION.md) on the actual implementation of the chain reaction: 
 
-# Tasks 
+# Application Architecture 
 
-Reading? Nobody ain't got time for that! Let's just get right to the action. 
+The only folder you need to know about is the "src" folder. Do not be distracted by other folders. 
 
-Top priority, brekathrough features that the core team is struggling with: 
-
-  1) Track geolocation of users to notify them when someone else in a nearby location happens to be on the same part of the p-set and would like to study together (core feature #1) 
-  2) Create a live white board so students can draw visual explanations during a 1-on-1 (core feature #4)
- 
-"Supposedly Easy" tasks for building momentum (things are rarely as simple as they seem):
-
-  1) Use a Materialize "spinner" to replace "Loading..." 
-  2) Create ACTUAL admin privileges for deleting and creating questions and p-sets (currently, I use v-if="user.displayName == 'Elton Lin'") 
-
-If you want to have more impact, view GitLab: https://gitlab.com/Gustwalker/Feynman/boards?=
-
-# Application Architecture
-
-Diagram to be uploaded...
 
