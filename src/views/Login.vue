@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="center">The Feynman Project</h1>
+    <h1 class="center">Feynman Project</h1>
     <div class="spinner-wrapper">
       <base-spinner v-if="loading"></base-spinner>
     </div>

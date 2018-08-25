@@ -2,6 +2,7 @@
   <div>
     <canvas id="whiteboard" resize></canvas>
     <base-button @click="resetBoard()">Reset Board</base-button>
+    <base-button @click="saveDoodle()">Save Doodle</base-button>
   </div>
 </template>
 
@@ -104,8 +105,8 @@ export default {
       this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
         this.path.add(event.point)
-        this.path.simplify()
-        this.path.smooth()
+        // this.path.simplify()
+        // this.path.smooth()
         const segments = this.path.getSegments()
         // save the "path" that the user has just drawn
         var pathObj = {} 
@@ -123,11 +124,25 @@ export default {
         const updatedPaths = this.whiteboard.allPaths
         const roomID = this.$route.params.room_id
         const ref = db.collection('whiteboards').doc(roomID)
-        await ref.update({
+        // experiment with 'await' 
+        ref.update({
           allPaths: updatedPaths
         })
         this.path = null 
       }
+    },
+    async saveDoodle () {
+      // the drawing is saved in the whiteboard already, but it's not saved for the user 
+      const ref = db.collection('doodles')
+      const user = {
+        displayName: this.user.displayName,
+        uid: this.user.uid
+      }
+      const doodle = {
+        drawnBy: user,
+        paths: this.whiteboard.allPaths 
+      }
+      await ref.add(doodle)
     }
   }
 }

@@ -6,14 +6,19 @@
       <li>Number of Eurekas caused indirectly: 0</li>
       <li>% Chance of causing Eureka: 100%</li>
     </ul>
-    <ProfileTree></ProfileTree>
+    <profile-tree></profile-tree>
+    <my-doodles></my-doodles>
   </div>
 </template>
 
 <script>
 import ProfileTree from '@/components/profile/ProfileTree.vue'
+import MyDoodles from '@/components/profile/MyDoodles.vue'
 
 export default {
-  components: { ProfileTree },
+  components: { 
+    ProfileTree, 
+    MyDoodles
+  }
 }
 </script>
