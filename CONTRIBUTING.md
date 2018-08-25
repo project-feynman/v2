@@ -29,9 +29,9 @@ Here's a [detailed explanation](CHAINREACTION.md) on the actual implementation o
 The only folder you need to know about is the "src" folder. Do not be distracted by other folders. 
 
 Here's what happens when the website runs (if the scripts were unminified and unuglified):
-  1) 'index.html' is rendered on the page - it's script tag points to 'main.js'
-  2) 'main.js' imports dependencies (e.g. Vue, Vue-router, Vuex) and creates an App instance based on 'App.vue'
-  3) 'App.vue' contains a 'navbar' (which is always rendered) and a 'router-view' component.
+  1) [index.html](./public/index.html) is rendered on the page - it's script tag points to 'main.js'
+  2) [main.js](./src/main.js) imports dependencies (e.g. Vue, Vue-router, Vuex) and creates an App instance based on 'App.vue'
+  3) [App.vue](./App.vue) contains a 'navbar' (which is always rendered) and a 'router-view' component imported as a NPM module.
   4) 'router-view' loads different components depending on the URL according to the code in [router.js](./src/router.js) 
    
   
