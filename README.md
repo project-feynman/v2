@@ -13,7 +13,7 @@ Feynman is:
 
 # Our Beliefs
 
-1) The only reason you're at MIT is so you can learn with companions.  
+1) The only reason you're at university is so you can learn with companions.  
 
 2) School material must be constantly renewed by students.
 
