@@ -51,12 +51,14 @@ A component does 3 things normally.
 1) It fetches data from Firestore and binds them to variables
   - look out for 'this.$bind...' in the 'mounted ()' hook
   ```
+   mounted () {
      // save data to the 'question' variable 
      this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
       .then(doc => {
         this.loading = false
       })
       .catch(error => console.log(error))
+   }
   ``` 
 2) It renders the data using reusable UI components 
   - look out for 'v-for' used with pre-defiend Vue components: 
@@ -67,12 +69,13 @@ A component does 3 things normally.
   ```
 3) When users click buttons and check boxes, things happen. Those things are defined as methods: 
   - 
-  ``` // notice the enterChat(f) and ignore everything else 
+  ``` 
+    // notice the enterChat(f) and ignore everything else 
     <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
       <i class="material-icons white-text">email</i>
     </a>
   ```
-  method definition: 
+  ```enterChat(f)``` is defined underneath in the '<script>' section: 
   ```
   methods: {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
