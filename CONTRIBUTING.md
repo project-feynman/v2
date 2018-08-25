@@ -16,9 +16,10 @@ Specialist:
 The core features are the interactive whiteboard and the chain reaction system. They are rabbit holes all by themselves
 
   - Whiteboard: 
-    1. A way to systematically store top explanations for the next generation of students 
-    2. Support for interactive white boards/image and video uploads in the online chat page
-    3. Support common reusable diagrams for differen topics 
+    1. Realtime and collaborative 
+    2. Doodles can saved with a click and re-used in explanations
+    3. All doodles are rendered stroke by stroke (quickly though) to preserve the thought process behind the drawings
+    4. Support commonly used standard diagrams (e.g. binary trees for Intro to Algorithms) to reduce time spent drawing
   
   - [Chain reaction](CHAINREACTION.md)
     1. A system to match students in real life 
@@ -44,5 +45,42 @@ Components are defined in '.vue' files. There are three types of components:
 1) [View components](./src/views) are the 'pages'/root components rendered at each URL.
 2) [Base components](./src/components/reusables) are typically 'buttons' and 'cards' used throughout the app
 3) [Normal components](./src/components) where the fun is...
+
+A component does 3 things normally. 
+
+1) It fetches data from Firestore and binds them to variables
+  - look out for 'this.$bind...' in the 'mounted ()' hook
+  ```
+     // save data to the 'question' variable 
+     this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
+      .then(doc => {
+        this.loading = false
+      })
+      .catch(error => console.log(error))
+  ``` 
+2) It renders the data using reusable UI components 
+  - look out for 'v-for' used with pre-defiend Vue components: 
+  ```
+     <template v-for="question in questions">
+       <base-card>{{ question.content }}</base-card>
+     </template>
+  ```
+3) When users click buttons and check boxes, things happen. Those things are defined as methods: 
+  - 
+  ``` // notice the enterChat(f) and ignore everything else 
+    <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
+      <i class="material-icons white-text">email</i>
+    </a>
+  ```
+  method definition: 
+  ```
+  methods: {
+    async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
+      // cannot chat with yourself 
+      if (this.user.uid == uid) {
+        return 
+      }
+    // more code 
+  ```
 
 
