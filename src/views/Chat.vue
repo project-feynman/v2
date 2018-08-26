@@ -78,8 +78,6 @@ export default {
       await userRef.update({
         recentChatID: this.$route.params.room_id
       })
-      // update the Vuex
-      // this.$store.dispatch('fetchUser')
     }
   }
 }

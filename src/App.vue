@@ -19,13 +19,8 @@ export default {
 }
 </script>
 
-<style lang="sass">
-$primary-color: color("materialize-red", "lighten-2") !default;
-$primary-color-light: false !default;
-$primary-color-dark: false !default;
-</style>
-
 <style>
+/* default global styles */
 h2, h3, h4, h4, p, div, span, input {
   color: white;
 }

@@ -11,8 +11,8 @@
           <h5>{{ getLastChar(question.questionID) }}. {{ question.content }}</h5>
           <!-- Classmate's Progress -->
           <ul>
-            <li class="teal-text">{{ getNumberOfFinishedClassmates(question)}} (out of {{ question.feynmen.length }})</li>
-            <li class="teal-text">Avg. time: {{ getEstimatedTime(question) }} hours</li>
+            <li>{{ getNumberOfFinishedClassmates(question)}} (out of {{ question.feynmen.length }})</li>
+            <li>Avg. time: {{ getEstimatedTime(question) }} hours</li>
           </ul>
           <!-- if the user is done and has not submitted -->
           <duration-form v-if="user.uid && getUserProgress(question) && !didUserSubmitATimeAlready(question)" 
@@ -217,6 +217,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+li {
+  @extend .teal-text;
+}
+</style>
 
 <style scoped>
 .flexbox-container {

@@ -1,17 +1,24 @@
 <template>
   <div>
     <div class="custom-offset"></div>
-    <h2 class="center">All Subjects</h2>
-    <div v-if="loading" class="spinner-wrapper">
+    <h2>All Subjects</h2>
+    <div v-if="loading" 
+         class="spinner-wrapper">
       <base-spinner></base-spinner>
     </div>
-    <template v-if="subjects && !loading" class="subject-card">
+    <template v-if="subjects && !loading">
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
-            <h4 class="black-text">{{ subject.subjectNumber }}</h4>
-            <base-button @click="redirectToPset(subject)">Start p-set {{ getCurrentPset(subject) }}</base-button>
-            <base-button @click="$router.push(`${subject.subjectNumber}`)">View all p-sets</base-button>
+            <h4>{{ subject.subjectNumber }}</h4>
+            <base-button 
+              @click="redirectToPset(subject)">
+              Start p-set {{ getCurrentPset(subject) }}
+            </base-button>
+            <base-button 
+              @click="$router.push(`${subject.subjectNumber}`)">
+              View all p-sets
+            </base-button>
           </base-card>
         </template>
       </div>
@@ -68,13 +75,22 @@ export default {
 }
 </script>
 
+
+<style lang="scss" scoped>
+h2 {
+  @extend .center;
+  padding-bottom: 50px;
+}
+
+h4 {
+  @extend .black-text;
+
+}
+</style>
+
 <style scoped>
 .custom-offset {
   padding-top: 60px;
-}
-
-h2 {
-  padding-bottom: 50px;
 }
 
 .subject-card {
