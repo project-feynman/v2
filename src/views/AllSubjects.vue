@@ -44,14 +44,9 @@ export default {
       loading: true,
     }
   },
-  mounted () {
-    this.$bind('subjects', db.collection('subjects'))
-    .then((doc) => {
-      this.loading = false 
-    })
-    .catch((error) => {
-      console.log('error in loading: ', error)
-    })
+  async mounted () {
+    await this.$bind('subjects', db.collection('subjects'))
+    this.loading = false 
   },
   methods: {
     async addSubject () {
