@@ -69,6 +69,7 @@ export default {
       } else {
         const updatedPaths = doc.data().allPaths
         const n = updatedPaths.length 
+        // probably means user's board is outdated
         if (n >= this.numOfPaths) {
           this.numOfPaths = n 
           const newestPath = updatedPaths[n-1]

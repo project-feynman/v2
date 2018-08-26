@@ -99,15 +99,14 @@ export default {
         participants: this.participants 
       }
       const ref = db.collection('conversations')
-      const conversationID = await ref.add(conversation)
-      // get rid of the first 15 characters i.e. /conversations/
-      conversationID = conversationID.slice(15)
-      console.log('conversationID =', conversationID)
+      var conversationID = await ref.add(conversation)
+      console.log(`conversationID = ${conversationID.id}`)
+      conversationID = conversationID.id
       // save conversation for both users 
       this.participants.forEach(async person => {
         const docRef = db.collection('users').doc(person.uid)
+        // use array.update() instead to not have to fetch in order to update 
         const doc = await docRef.get()
-        console.log(`user doc = ${doc}`)
         const convos = doc.conversations 
         const updateObj = {} 
         if (!convos) {
