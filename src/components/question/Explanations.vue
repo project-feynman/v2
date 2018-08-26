@@ -30,23 +30,22 @@
         <base-button @click="addExplanation()">Submit New Explanation</base-button>
       </div>
     </div>
-
     <ul v-if="!loading" v-for="(explanation, i) in explanations" :key="i">
       <div class="card-wrapper">
         <base-card>
-          <li class="black-text center">{{ explanation.title }}: 
-            <p class="black-text">{{ explanation.link }}</p>
+          <li>{{ explanation.title }}: 
+            <p>{{ explanation.link }}</p>
             <!-- <a :href="getValidURL(explanation.link)" target="_blank">{{ explanation.link }}</a> -->
           </li>
           <li v-if="explanation.imageRef">
             <div class="center"><img :src="explanation.imageRef" class="center explanation-image"></div>
           </li>
           <template v-if="explanation.readers">
-            <li class="black-text center">Views: {{ explanation.readers.length }}</li>
-            <li class="black-text center">Confused readers: {{ getNumberOfConfusedReaders(explanation) }}</li>
+            <li>Views: {{ explanation.readers.length }}</li>
+            <li>Confused readers: {{ getNumberOfConfusedReaders(explanation) }}</li>
           </template>
           <template v-if="explanation.upvotes">
-            <li class="black-text center">{{ explanation.upvotes }} upvotes</li>
+            <li>{{ explanation.upvotes }} upvotes</li>
           </template>
           <span v-if="user.displayName == 'Elton Lin'" @click="deleteExplanation(explanation)" class='btn-floating btn-large halfway-fab red'>
             <i class='material-icons right'>delete_outline</i>
@@ -64,6 +63,7 @@
 </template>
 
 <script>
+import M from 'materialize-css'
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
 import NewExplanation from './NewExplanation.vue'
@@ -204,6 +204,16 @@ export default {
 
 .add-button {
   padding-bottom: 10px;
+}
+</style>
+
+<style lang="scss">
+li {
+  @extend .black-text, .center;
+}
+
+p {
+  @extend .black-text;
 }
 </style>
 

@@ -7,7 +7,7 @@
           <li class="collection-header"><h4 class="black-text">Classmates</h4></li>
           <template v-for="f in students.slice(0, 50)">
             <li :key="f.uid" class="collection-item avatar white">
-              <i class="material-icons circle grey">person</i>
+              <i class="material-icons circle grey responsive-icon">person</i>
               <span class="title">Feynman #{{ f.feynmanNumber }}</span>
               <p v-if="!f.finished">Not Finished</p>
               <Promised :promise="checkOnline(f)">
@@ -178,6 +178,11 @@ export default {
 </script>
 
 <style scoped>
+.responsive-icon {
+  height: auto;
+  width: 100%;
+}
+
 a {
   margin-top: 5px;
 }
