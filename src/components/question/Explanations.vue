@@ -89,14 +89,10 @@ export default {
       uploadingImage: false,
     } 
   },
-  mounted () {
-    this.$bind('explanations', db.collection('explanations').where('forQuestion', '==', this.$route.path))
-    .then((doc) => {
-      this.loading = false 
-    })
-    .catch((error) => {
-      console.log('error in loading: ', error)
-    })
+  async mounted () {
+    const ref = db.collection('explanations').where('forQuestion', '==', this.$route.path)
+    await this.$bind('explanations', ref)
+    this.loading = false 
   },
   methods: {
     async deleteExplanation ({ id }) {
