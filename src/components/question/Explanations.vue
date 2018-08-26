@@ -182,6 +182,16 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+li {
+  @extend .black-text, .center;
+}
+
+p {
+  @extend .black-text;
+}
+</style>
+
 <style scoped>
 .new-explanation {
   width: 80%;
@@ -204,16 +214,6 @@ export default {
 
 .add-button {
   padding-bottom: 10px;
-}
-</style>
-
-<style lang="scss">
-li {
-  @extend .black-text, .center;
-}
-
-p {
-  @extend .black-text;
 }
 </style>
 

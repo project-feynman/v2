@@ -19,7 +19,7 @@
       <div class="row">
         <div class="col s12 m4">
           <div class="card light-card">
-            <p class="black-text">
+            <p>
               View explanations created by previous students. Ask questions to classmates who are currently
               on the same question as you
             </p>
@@ -27,14 +27,17 @@
       </div>
       <div class="col s12 m4 add-padding">
         <div class="card light-card">
-          <p class="black-text">
+          <p>
             When you get an Eureka moment, get ready to explain the concept to two other classmates anonymously
           </p>
         </div>
       </div>
         <div class="col s12 m4">
           <div class="card light-card">
-            <p class="black-text">Later, all names will be revealed, and the visualization of the "chain-reaction" you've started will be available</p>
+            <p>
+              Later, all names will be revealed, and the visualization of the "chain-reaction" 
+              you've started will be available
+            </p>
           </div>
         </div>
       </div>
@@ -81,6 +84,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+p {
+  @extend .black-text;
+}
+</style>
 
 <style scoped>
 .light-card {
