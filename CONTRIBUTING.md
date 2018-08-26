@@ -1,48 +1,94 @@
 # Get Started
+I'm happy to get you started through Google Hangouts - reach me on 
+[Facebook](https://www.facebook.com/elton.lin.338)
+or 
+[email](eltonlin@mit.edu)
 
-The most pain-free way to get started is to message me on Facebook or email me. I'll then guide you through the process with a video phone call via Google Hangouts (which also allows screenshare). 
+# Specifications 
 
-Facebook: https://www.facebook.com/elton.lin.338
+Fullstack:
+  - Offline push notifications (Progressive Web Application) 
+  - Responsive UI 
+  - Speed optimizations 
+  
+Specialist: 
 
-Email: eltonlin@mit.edu
+The core features are the interactive whiteboard and the chain reaction system. They are rabbit holes all by themselves
 
-# MVP
+  - Whiteboard: 
+    1. Realtime and collaborative 
+    2. Doodles can saved with a click and re-used in explanations
+    3. All doodles are rendered stroke by stroke (quickly though) to preserve the thought process behind the drawings
+    4. Support commonly used standard diagrams (e.g. binary trees for Intro to Algorithms) to reduce time spent drawing
+  
+  - [Chain reaction](CHAINREACTION.md)
+    1. A system to match students in real life 
+    2. A system to match initiate and manage the chain reaction 
+    3. A graphical interface to keep track of the growing complexity of the chain reaction 
+    
+Current active sprints are tracked in [Gitlab](https://gitlab.com/Gustwalker/Feynman/boards?=)
 
-Feynman is a place where students learn rapidly while becoming powerful and articulate thinkers.
+# Application Architecture 
 
-The core feature of Feyman is the "chain reaction system". In the Open Beta Launch on September 1st, there must be: 
+The only folder you need to know about is the "src" folder. Do not be distracted by other folders. 
 
-1. A system to match students in real life 
-
-2. A system to match initiate and manage the chain reaction 
-
-3. A graphical interface to keep track of the growing complexity of the chain reaction 
-
-4. Support for interactive white boards/image and video uploads in the online chat page
-
-5. A way to systematically store top explanations for the next generation of students 
-
-To decide on what to work on, observe the discrepancies between the current website and the specification above. 
-
-Here's a [detailed explanation](CHAINREACTION.md) on the actual implementation of the chain reaction: 
-
-# Tasks 
-
-Reading? Nobody ain't got time for that! Let's just get right to the action. 
-
-Top priority, brekathrough features that the core team is struggling with: 
-
-  1) Track geolocation of users to notify them when someone else in a nearby location happens to be on the same part of the p-set and would like to study together (core feature #1) 
-  2) Create a live white board so students can draw visual explanations during a 1-on-1 (core feature #4)
+Here's what happens when the website runs (if the scripts were unminified and unuglified):
+  1) [index.html](./public/index.html) runs on Chrome - it imports [main.js](./src/main.js) in its script tag.
+  2) [main.js](./src/main.js) imports global dependencies and renders [App.vue](./App.vue).
+  3) [App.vue](./App.vue) contains a [navbar](./src/components/TheNavbar.vue) and a [router-view](https://github.com/vuejs/vue-router) component
+  4) [router-view](https://github.com/vuejs/vue-router) magically loads different components depending on the URL according to the code in [router.js](./src/router.js) 
  
-"Supposedly Easy" tasks for building momentum (things are rarely as simple as they seem):
+# Vue Components
 
-  1) Use a Materialize "spinner" to replace "Loading..." 
-  2) Create ACTUAL admin privileges for deleting and creating questions and p-sets (currently, I use v-if="user.displayName == 'Elton Lin'") 
+Components are defined in '.vue' files. There are three types of components:
 
-If you want to have more impact, view GitLab: https://gitlab.com/Gustwalker/Feynman/boards?=
+1) [View components](./src/views) are the 'pages'/root components rendered at each URL.
+2) [Base components](./src/components/reusables) are typically 'buttons' and 'cards' used throughout the app
+3) [Normal components](./src/components) where the fun is...
 
-# Application Architecture
+A component does 3 things normally. 
 
-Diagram to be uploaded...
+1) It fetches data from Firestore and binds them to variables
+  - look out for ```this.$bind...``` in the ```mounted ()``` hook
+  ```
+   mounted () {
+     // save data to the 'question' variable 
+     this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
+      .then(doc => this.loading = false)
+      .catch(error => console.log(error))
+   }
+  ``` 
+2) It renders the data using reusable UI components 
+  ```
+     // iteratively rendering reusable components is incredibly powerful 
+     <template v-for="question in questions">
+       <base-card>{{ question.content }}</base-card>
+     </template>
+  ```
+3) When users click buttons and check boxes, things happen. Those things are defined as methods: 
+  ``` 
+    // notice the enterChat(f) and ignore everything else 
+    <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
+      <i class="material-icons white-text">email</i>
+    </a>
+  ```
+  ```enterChat(f)``` is defined underneath in the '<script>' section: 
+  ```
+  methods: {
+    async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
+      // cannot chat with yourself 
+      if (this.user.uid == uid) {
+        return 
+      }
+    // more code 
+  ```
+ 
+# Database Architecture 
+
+On Firestore, we have five collections - 'questions', 'users', 'chatRooms', 'subjects' and 'whiteboards'. Those documents point towards each other through references (e.g. a 'question' document can point to a particular 'user' document if it has a user 'uid' field.
+
+Each 'question' document has a field 'questionID' which is in the format 'subject_number/pset_number/question_number' e.g. 6.006/1/2 and is, by definition, unique. 
+
+
+
 
