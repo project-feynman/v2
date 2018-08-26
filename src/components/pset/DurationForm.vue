@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="center duration-form">
-      <p class="black-text">How many hours did it take?</p>
-      <p class="black-text">{{ sliderHourValue }} hours</p>
+      <p>How many hours did it take?</p>
+      <p>{{ sliderHourValue }} hours</p>
       <form action="#">
         <p class="range-field">
           <input v-model="sliderHourValue" type="range" id="test5" min="0" max="12" />
@@ -69,6 +69,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+p {
+  @extend .black-text;
+}
+</style>
 
 <style>
 @import '/materialize-css/extras/noUiSlider/nouislider.css';

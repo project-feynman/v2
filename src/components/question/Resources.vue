@@ -3,6 +3,7 @@
     <h4 class="center">Question Resources</h4>
     <div v-if="loading" class="center">Loading related resources...</div>
     <template v-if="questions[0]">
+      <!-- Hidden form used to add a new resource -->
       <div class="center add-button">
         <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
           <i v-if="!showForm" class='material-icons'>add</i>
@@ -21,7 +22,7 @@
           <base-button @click="addResource(questions[0])">Submit New Resource</base-button>
         </div>
       </div>
-
+      <!-- Display existing resources-->
       <template v-for="(resource, i) in questions[0].resources">
         <div class="card-wrapper" :key="i">
           <base-card>
@@ -34,7 +35,6 @@
         </div>
       </template>
     </template>
-    
   </div>
 </template>
 
@@ -99,7 +99,8 @@ export default {
           resources.splice(i, 1)
         }
       }
-      await db.collection('questions').doc(id).update({
+      const ref = db.collection('questions').doc(id)
+      await ref.update({
         resources
       })
     },
