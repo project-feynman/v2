@@ -16,13 +16,13 @@
       <div class="container">
         <ul v-if="activeFeynmen.length != 0" class="collection with-header black">
           <li class="collection-header">
-            <h4 class="black-text">Feynmen</h4>
+            <h4>Feynmen</h4>
           </li>
           <template v-for="f in activeFeynmen">
             <li :key="f.uid" class="collection-item avatar white">
               <i class="material-icons circle grey">person</i>
-              <span class="title black-text">Feynman #{{ f.feynmanNumber }}</span>
-              <p v-if="f.finished" class="black-text">Finished</p>
+              <span class="title">Feynman #{{ f.feynmanNumber }}</span>
+              <p v-if="f.finished">Finished</p>
               <Promised :promise="checkOnline(f)">
                 <p>Fetching online status...</p>
                 <p slot-scope="data" class="green-text">{{ data }}</p>
@@ -61,14 +61,10 @@ export default {
       questions: []
     }
   },
-  mounted () {
-    this.$bind('questions', db.collection('questions').where('questionID', '==', this.$route.path))
-    .then(doc => {
-      this.loading = false
-    })
-    .catch(error => {
-      console.log('error from connecting to Firestore: ', error)
-    })
+  async mounted () {
+    const ref = db.collection('questions').where('questionID', '==', this.$route.path)
+    await this.$bind('questions', ref)
+    this.loading = false
   },
   computed: {
     user () {
@@ -198,3 +194,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+li {
+  @extend .black-text;
+}
+
+p, h4, span {
+  @extend .black-text;
+}
+</style>
