@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h4 class="white-text center">
-      Classmates On The Question
-    </h4>
+    <h4 class="white-text center">Classmates On The Question</h4>
     <template v-if="question[0]">
       <div class="container">
         <template v-if="students.length != 0">
@@ -40,9 +38,6 @@ import db from '@/firebase/init.js'
 export default {
   components: {
     Promised
-  },
-  created () {
-    setTimeout(() => this.loading = false, 500)
   },
   computed: {
     user () {

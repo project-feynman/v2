@@ -1,5 +1,5 @@
 <template>
-  <div class="chat">
+  <div>
     <div class="card">
       <div class="card-content">
         <ul class="messages" v-chat-scroll>
@@ -15,6 +15,7 @@
       </div>
     </div>
     <whiteboard></whiteboard>
+    <base-button @click="saveConversation()">Save conversation</base-button>
   </div>
 </template>
 
@@ -31,7 +32,9 @@ export default {
   },
   data () {
     return {
-      messages: []
+      messages: [],
+      whiteboard: {},
+      participants: []
     }
   },
   computed: {
@@ -63,9 +66,18 @@ export default {
         allPaths: []
       })
     }
+    // fetch messages from Firestore and set up syncing 
     doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
         this.messages = snapshot.data().messages
+        this.participants = snapshot.data().participants
+      }
+    })
+    // fetch drawing from Firestore and set up syncing 
+    const whiteboardDoc = db.collection('whiteboards').doc(roomID)
+    whiteboardDoc.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        this.whiteboard = snapshot.data()
       }
     })
   },
@@ -77,6 +89,35 @@ export default {
       const userRef = db.collection('users').doc(this.user.uid)
       await userRef.update({
         recentChatID: this.$route.params.room_id
+      })
+    },
+    async saveConversation () {
+      // save doodle and messages
+      const conversation = {
+        doodle: this.whiteboard.allPaths,
+        messages: this.messages,
+        participants: this.participants 
+      }
+      const ref = db.collection('conversations')
+      const conversationID = await ref.add(conversation)
+      // get rid of the first 15 characters i.e. /conversations/
+      conversationID = conversationID.slice(15)
+      console.log('conversationID =', conversationID)
+      // save conversation for both users 
+      this.participants.forEach(async person => {
+        const docRef = db.collection('users').doc(person.uid)
+        const doc = await docRef.get()
+        console.log(`user doc = ${doc}`)
+        const convos = doc.conversations 
+        const updateObj = {} 
+        if (!convos) {
+          updateObj.conversations = [conversationID] 
+          await docRef.update(updateObj)
+        } else {
+          convos.push(conversationID)
+          updateObj.conversations = convos
+          await docRef.update(updateObj)
+        }
       })
     }
   }

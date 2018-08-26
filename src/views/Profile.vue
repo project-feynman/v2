@@ -8,17 +8,20 @@
     </ul>
     <profile-tree></profile-tree>
     <my-doodles></my-doodles>
+    <my-convos></my-convos>
   </div>
 </template>
 
 <script>
 import ProfileTree from '@/components/profile/ProfileTree.vue'
 import MyDoodles from '@/components/profile/MyDoodles.vue'
+import MyConvos from '@/components/profile/MyConvos.vue'
 
 export default {
   components: { 
     ProfileTree, 
-    MyDoodles
+    MyDoodles,
+    MyConvos
   }
 }
 </script>

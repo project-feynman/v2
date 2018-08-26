@@ -39,11 +39,10 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
     }
     // tell Firestore that if they lose connection, just perform the operation we specify here (update the user to offline)
     // because we won't be able to tell them what to do when we lose connection, by definition
-    // this is triggered successfully, this is the magic bit not yet supported for Firestore
     firebaseRef.onDisconnect()
       .set(isOfflineForDatabase) 
       .then(() => {
-        // now we successfully prepared the "trap", update user as online until then
+        // now that we successfully prepared the "trap", update user as online until then
         firebaseRef.set(isOnlineForDatabase)
         ref.update(isOnlineForDatabase)
       })

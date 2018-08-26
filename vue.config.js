@@ -1,13 +1,9 @@
 module.exports = {
   css: {
     loaderOptions: {
-      // pass options to sass-loader
       sass: {
-        includePaths: [
-          'node_modules'
-        ],
-        // @/ is an alias to src/
-        // so this assumes you have a file named `src/variables.scss`
+        includePaths: ['node_modules'],
+        // ~ is an alias to node_modules/
         data: `@import "~materialize-css/sass/materialize.scss";`
       }
     }
