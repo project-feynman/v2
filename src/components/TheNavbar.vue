@@ -2,19 +2,31 @@
   <nav>
     <div class="nav-wrapper grey lighten-5">
       <router-link to="/">
-        <a class="brand-logo black-text"><i class="material-icons">home</i>Home</a>
+        <a class="brand-logo"><i class="material-icons">home</i>Home</a>
       </router-link>
       <ul class="right hide-on-med-and-down">
         <template v-if="user != null && user != 'undetermined'">
-          <li><a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md" class="black-text">About</a></li>
-          <li v-if="user.recentChatID"><router-link class="black-text" :to="`/chat/${user.recentChatID}`">Resume Chat</router-link></li>
+          <li>
+            <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
+              About
+            </a>
+          </li>
+          <li v-if="user.recentChatID">
+            <router-link class="black-text" :to="`/chat/${user.recentChatID}`">
+              Resume Chat
+            </router-link>
+          </li>
           <li v-if="user">
             <router-link class="black-text" to="/profile">
               <!-- <i class="material-icons left">person_pin</i> -->
               Hi, Feynman #{{ user.feynmanNumber }}
             </router-link>
           </li>
-          <li><base-button @click="signOut()" buttonColor="grey" textColor="white-text">Logout</base-button></li>
+          <li>
+            <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
+              Logout
+            </base-button>
+          </li>
         </template>
       </ul>
     </div>
@@ -39,6 +51,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+a {
+  @extend .black-text;
+}
+</style>
 
 <style scoped>
 a {

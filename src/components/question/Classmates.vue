@@ -1,30 +1,34 @@
 <template>
   <div>
-    <h4 class="white-text center">Classmates On The Question</h4>
-    <div v-if="question[0]">
+    <h4 class="white-text center">
+      Classmates On The Question
+    </h4>
+    <template v-if="question[0]">
       <div class="container">
-        <ul v-if="students.length != 0" class="collection with-header black">
-          <li class="collection-header">
-            <h4>Classmates</h4>
-          </li>
-          <template v-for="f in students.slice(0, 50)">
-            <li :key="f.uid" class="collection-item avatar white">
-              <i class="material-icons circle grey responsive-icon">person</i>
-              <span class="title">Feynman #{{ f.feynmanNumber }}</span>
-              <p v-if="!f.finished">Not Finished</p>
-              <Promised :promise="checkOnline(f)">
-                <p>Fetching online status...</p>
-                <p slot-scope="data" class="green-text">{{ data }}</p>
-                <p slot="catch" slot-scope="error">Error: {{ error.message }}</p>
-              </Promised>
-              <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
-                <i class="material-icons white-text">email</i>
-              </a>
+        <template v-if="students.length != 0">
+          <ul class="collection with-header black">
+            <li class="collection-header">
+              <h4>Classmates</h4>
             </li>
-          </template>
-        </ul>
+            <template v-for="f in students.slice(0, 50)">
+              <li :key="f.uid" class="collection-item avatar white">
+                <i class="material-icons circle grey responsive-icon">person</i>
+                <span class="title">Feynman #{{ f.feynmanNumber }}</span>
+                <p v-if="!f.finished">Not Finished</p>
+                <Promised :promise="checkOnline(f)">
+                  <p>Fetching online status...</p>
+                  <p slot-scope="data" class="green-text">{{ data }}</p>
+                  <p slot="catch" slot-scope="error">Error: {{ error.message }}</p>
+                </Promised>
+                <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
+                  <i class="material-icons white-text">email</i>
+                </a>
+              </li>
+            </template>
+          </ul>
+        </template>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -65,19 +69,17 @@ export default {
       loading: true 
     }
   },
-  mounted () {
+  async mounted () {
+    // initialize tooltips
     const elems = document.querySelectorAll('.tooltipped')
     const options = {
       html: true
     }
     var instances = M.Tooltip.init(elems, {})
-    this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
-      .then(doc => {
-        this.loading = false
-        // TODO: one-way bind "isOnline" for each user 
-      })
-      .catch(error => console.log(error))
-
+    // retrieve data from Firestore
+    await this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
+    this.loading = false
+     // TODO: one-way bind "isOnline" for each user 
   },
   methods: {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
@@ -110,8 +112,7 @@ export default {
         })
       }
       // create a chat room 
-      // make sure order of UIDs stays consistent no matter who asks for help
-      const sortedUIDs = [this.user.uid, uid].sort()
+      const sortedUIDs = [this.user.uid, uid].sort() 
       const roomId = sortedUIDs.join('')
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
@@ -132,7 +133,6 @@ export default {
         await whiteboardRef.set({
           allPaths: []
         })
-        console.log('successfully created whiteboard document')
       }
       this.$router.push('/chat/' + roomId)
       // TODO: notify user 

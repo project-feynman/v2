@@ -14,6 +14,7 @@ $brand: rgb(203, 4, 4);
     margin: 2em;
     text-align:center;
   }
+  
   button {
     font-size: 40px;
     padding: 1em;
