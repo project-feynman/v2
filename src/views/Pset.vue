@@ -222,6 +222,10 @@ export default {
 li {
   @extend .teal-text;
 }
+
+h5 {
+  @extend .black-text;
+}
 </style>
 
 <style scoped>
@@ -250,10 +254,6 @@ li {
 
 h2 {
   padding-bottom: 5%;
-}
-
-h5 {
-  color: black;
 }
 
 .spinner-wrapper {

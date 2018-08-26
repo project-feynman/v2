@@ -1,10 +1,12 @@
 <template>
   <div>
-    <h4 class="center">Classmates On The Question</h4>
+    <h4 class="white-text center">Classmates On The Question</h4>
     <div v-if="question[0]">
       <div class="container">
         <ul v-if="students.length != 0" class="collection with-header black">
-          <li class="collection-header"><h4 class="black-text">Classmates</h4></li>
+          <li class="collection-header">
+            <h4>Classmates</h4>
+          </li>
           <template v-for="f in students.slice(0, 50)">
             <li :key="f.uid" class="collection-item avatar white">
               <i class="material-icons circle grey responsive-icon">person</i>
@@ -176,6 +178,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+h4 {
+  @extend .black-text;
+}
+</style>
 
 <style scoped>
 .responsive-icon {
