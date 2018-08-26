@@ -11,8 +11,11 @@ import paper from 'paper'
 import { version } from 'moment'
 import db from '@/firebase/init.js'
 
+var PATH = null 
+
 export default {
   created () {
+    console.log('created()')
     paper.install(window)
   },
   computed: {
@@ -24,6 +27,7 @@ export default {
     user () {
       if (this.user != null && this.user != 'undetermined') {
         if (!this.onMouseUpInitialized) {
+          console.log('initializing onMouseUp from watcher')
           this.initOnMouseUp() 
         } 
       }
@@ -31,7 +35,6 @@ export default {
   },
   data () {
     return {
-      path: null,
       whiteboard: null,
       numOfPaths: 0,
       loadedPreviousDrawings: false,
@@ -39,17 +42,19 @@ export default {
     }
   },
   mounted () {
+    // setup paper.js 
     paper.setup('whiteboard')
     var tool = new Tool()
     tool.onMouseDown = event => {
-      this.path = new Path()
-      this.path.strokeColor = 'black'
+      PATH = new Path()
+      PATH.strokeColor = 'black'
     }
+    console.log('initialized onMouseDown successfully')
     tool.onMouseDrag = event => {
-      this.path.add(event.point)
+      PATH.add(event.point)
     }
     if (this.user != null && this.user != 'undetermined') {
-      if (!this.onMouseUpInitialized) {
+      if (!this.onMouseUpInitialized) {    
         this.initOnMouseUp()
       }
     }
@@ -90,24 +95,22 @@ export default {
       })
     },
     drawAllPaths () {
-      if (this.whiteboard != null) {
-        this.whiteboard.allPaths.forEach(data => {
-          var path = new Path()
-          path.strokeColor = 'pink'
-          data.points.forEach(point => {
-            path.add(new Point(point.x, point.y))
-          })
-        })
-        this.loadedPreviousDrawings = true
-      } 
+      if (this.whiteboard == null) { return }
+      this.whiteboard.allPaths.forEach(stroke => {
+        var path = new Path()
+        path.strokeColor = 'pink'
+        stroke.points.forEach(p => path.add(new Point(p.x, p.y)))
+      })
+      this.loadedPreviousDrawings = true
     },
     initOnMouseUp () {
       this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
-        this.path.add(event.point)
-        // this.path.simplify()
-        // this.path.smooth()
-        const segments = this.path.getSegments()
+        console.log('onMouseUp()')
+        PATH.add(event.point)
+        PATH.simplify()
+        // const segments = this.path.getSegments()
+        const segments = PATH.getSegments()
         // save the "path" that the user has just drawn
         var pathObj = {} 
         var points = [] 
@@ -124,11 +127,10 @@ export default {
         const updatedPaths = this.whiteboard.allPaths
         const roomID = this.$route.params.room_id
         const ref = db.collection('whiteboards').doc(roomID)
-        // experiment with 'await' 
         ref.update({
           allPaths: updatedPaths
         })
-        this.path = null 
+        PATH = null 
       }
     },
     async saveDoodle () {
@@ -148,7 +150,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 canvas {
   height: 100%;
   width: 100%;
