@@ -114,37 +114,31 @@ export default {
       var author = {  
         uid: this.user.uid,
         displayName: this.user.displayName,
+      }  
+      const newDoc = {
+        title: this.newExplanationTitle,
+        link: this.newExplanation,
+        forQuestion: this.$route.path,
+        readers: [],
+        author
       }
-      const ref = db.collection('explanations')
-      const title = this.newExplanationTitle
-      const link = this.newExplanation
-      const forQuestion = this.$route.path
+      // reset everything
       this.newExplanation = ''
       this.newExplanationTitle = ''
       this.feedback = false 
+      // store in database 
+      const ref = db.collection('explanations')
       if (this.selectedFile) {
         this.uploadingImage = true 
         await this.onUpload() 
         const imgLocation = this.$route.path + '/' + this.selectedFile.name
         const storageRef = firebase.storage().ref()
         const url = await storageRef.child(imgLocation).getDownloadURL()
-        await ref.add({
-          'title': title,
-          link,
-          forQuestion,
-          author,
-          readers: [],
-          imageRef: url
-        })
+        newDoc.imageRef = url 
+        await ref.add(newDoc)
         this.uploadingImage = false
       } else {
-        await ref.add({
-          title,
-          link,
-          forQuestion,
-          author,
-          readers: []
-        })
+        await ref.add(newDoc)
       }
     },
     getValidURL (URL) {
