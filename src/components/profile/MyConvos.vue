@@ -13,8 +13,6 @@ export default {
   },
   created () {
     if (this.user != 'undetermined' && this.user != null) {
-      console.log('app was already opened')
-      console.log(`convos = ${JSON.stringify(this.user.conversations)}`)
       const convos = this.user.conversations
       convos.forEach(async convo => {
         // get document from firestore 
