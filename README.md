@@ -1,4 +1,4 @@
-# Feynman captures the most enlightening 1-on-1 interactions, turning them into priceless resources for other students to learn from 
+# Feynman turns '1-on-1 interactions' into learning resources for other students
 
 <p align="center">
   <img src="demo.gif" style="max-height: 250px;" alt="Feynman Preview">
