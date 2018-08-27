@@ -1,4 +1,4 @@
-# Feynman is a website where natural 1-on-1 interactions are distilled into priceless learning resources for other students
+# 1-on-1 student interactions, if captured,  become priceless learning resources for other students.
 
 <p align="center">
   <img src="demo.gif" style="max-height: 250px;" alt="Feynman Preview">
