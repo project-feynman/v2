@@ -1,4 +1,10 @@
-# 1-on-1 student interactions, if "captured",  become priceless learning resources for other students.
+# 1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students.
+
+You are observing your friend Adam, who understands fuck all about Thermodynamics. Then, suddenly, he visits the TA's office. You wonder what's going on in there behind closed doors, but before long, Adam emerges again. "Eureka!", he says, "I get it now!".
+
+WTF could have possibly happened? Perhaps, the key to the mystery is to be uncovered in their full conversation in front of the whiteboard (which is now simply lost in time and space). 
+
+If you could somehow reconstruct the interaction, then summarize the essence of it, perhaps that'd be more valuable than any textbook or videos on the internet. 
 
 <p align="center">
   <img src="demo.gif" style="max-height: 250px;" alt="Feynman Preview">
