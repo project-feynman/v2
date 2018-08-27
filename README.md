@@ -1,12 +1,12 @@
-# Feynman
+# Feynman captures the most enlightening 1-on-1 interactions, turning them into priceless resources for other students to learn from 
 
 <p align="center">
   <img src="demo.gif" style="max-height: 250px;" alt="Feynman Preview">
 </p>
 
-Problems:
+Problem:
 
-No matter how bad school material is, MIT students will always figure a way out. But for [many reasons](./doc/subject_evals.md), the material will gain no improvements. This is the root cause of many big problems:
+No matter how bad the school material is, students will always figure a way out. But for [many reasons](./doc/subject_evals.md), the material will gain no improvements. This is the root cause of many big problems:
   1) A cold and selfish school culture. Each generation does not take care of the next, so they all have to suffer the same bad material. 
   2) Other resources such as Office Hours and Piazza become heavily pressured and overcrowded 
 
