@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas id="whiteboard" resize></canvas>
+    <canvas id="whiteboar" resize></canvas>
   </div>
 </template>
 
@@ -22,6 +22,7 @@ export default {
   },
   created () {
     paper.install(window)
+    console.log(`allStrokes = ${JSON.stringify(this.allStrokes)}`)
   },
   computed: {
     user () {
@@ -42,7 +43,7 @@ export default {
   },
   mounted () {
     // setup paper.js 
-    paper.setup('whiteboard')
+    paper.setup('whiteboar')
     var tool = new Tool()
     tool.onMouseDown = event => {
       PATH = new Path()
@@ -109,9 +110,7 @@ export default {
         pathObj.author = this.user.uid
         this.$emit('new-stroke', pathObj)
 
-
-        // update to firestore using the array modification syntax 
-
+        // update to firestore using the array modification syntax
         // this.whiteboard.allPaths.push(pathObj)
         // push the new "path" to Firestore 
         // const updatedPaths = this.whiteboard.allPaths

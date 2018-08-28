@@ -3,7 +3,7 @@
     <h2 class="center">My Doodles</h2>
       <!-- <template v-for="(doodle, idx) in doodles"> -->
       <!-- <div v-if="doodles">{{ doodles[0].title }}</div> -->
-      <canvas id="whiteboard" resize></canvas>
+      <canvas id="video" resize></canvas>
       <!-- </template> -->
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     }
   },
   async mounted () {
-    paper.setup('whiteboard')
+    paper.setup('video')
     const myDoodles = await this.$bind('doodles', db.collection('doodles'))
     this.drawAllPaths()
   },

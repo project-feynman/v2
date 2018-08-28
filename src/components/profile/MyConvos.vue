@@ -1,14 +1,28 @@
 <template>
-  <h2>My Conversations</h2>
+  <div>
+    <h2>My Conversations</h2>
+    <template v-if="doodle">
+      <whiteboard :allStrokes="doodle"></whiteboard>
+    </template>
+  </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
+import Whiteboard from '@/components/reusables/Whiteboard.vue'
 
 export default {
+  components: {
+    Whiteboard
+  },
   computed: {
     user () {
       return this.$store.state.user 
+    }
+  },
+  data () {
+    return {
+      doodle: null
     }
   },
   created () {
@@ -20,8 +34,9 @@ export default {
         const doc = await ref.get() 
         if (doc.exists) {
           console.log(`doc data = ${JSON.stringify(doc.data())}`)
-          // display scrollable message 
           // display whiteboard 
+          this.doodle = doc.data().doodle
+          // display scrollable message 
         }
       })
     } else {
