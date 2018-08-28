@@ -28,9 +28,7 @@ export default {
   },
   methods: {
     async drawAllPaths () {
-      if (this.doodles == null) {
-        return 
-      } 
+      if (this.doodles == null) { return } 
       function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
       }

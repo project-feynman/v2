@@ -44,6 +44,7 @@ export default {
   mounted () {
     // setup paper.js 
     paper.setup('whiteboar')
+    this.drawAllPaths()
     var tool = new Tool()
     tool.onMouseDown = event => {
       PATH = new Path()
@@ -89,6 +90,7 @@ export default {
         path.strokeColor = 'pink'
         stroke.points.forEach(p => path.add(new Point(p.x, p.y)))
       })
+      console.log('finished rendering all strokes')
       this.loadedPreviousDrawings = true
     },
     initOnMouseUp () {
