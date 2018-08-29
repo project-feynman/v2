@@ -79,7 +79,6 @@ export default {
     doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
         const data = snapshot.data()
-        console.log(`data = ${JSON.stringify(data)}`)
         this.title = data.title 
         this.messages = data.messages
         this.participants = data.participants
@@ -123,6 +122,7 @@ export default {
         const doc = results.docs[0]
         const convoObj = {
           title: this.title,
+          participants: this.participants,
           conversationID
         }
         const ref = db.collection('questions').doc(doc.id) 

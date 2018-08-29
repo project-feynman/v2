@@ -15,7 +15,11 @@
       </div>
       <div id="test1" class="col s12 m12">
         <!-- <explanations/> -->
-        <journeys v-if="question[0]" :journeys="question[0].journeys"></journeys>
+        <journeys v-if="question[0] && isLoggedIn" 
+                  :journeys="question[0].journeys" 
+                  :user="user"
+                  @delete="payload => deleteJourney(payload)"
+                  ></journeys>
       </div>
       <div id="test2" class="col s12 m12">
         <resources/>
@@ -31,6 +35,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import db from '@/firebase/init.js'
 import Explanations from '@/components/question/Explanations.vue'
 import Resources from '@/components/question/Resources.vue'
@@ -83,6 +88,16 @@ export default {
       await userRef.update({
         recentQuestionID: this.$route.path
       })
+    },
+    async deleteJourney (journey) {
+      console.log(`journey = ${JSON.stringify(journey)}`)
+      // actually, just remove the reference to the 'journey' from the question 
+      console.log('question i =', this.question[0].id)
+      const questionRef = db.collection('questions').doc(this.question[0].id)
+      await questionRef.update({
+        regions: firebase.firestore.FieldValue.arrayRemove(journey)
+      })
+      console.log('successfully removed journey from the array')
     }
   }
 }
