@@ -96,11 +96,11 @@ export default {
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.messages,
-        participants: this.participants 
+        participants: this.participants,
+        title: 'default title'
       }
       const ref = db.collection('conversations')
       var conversationID = await ref.add(conversation)
-      console.log(`conversationID = ${conversationID.id}`)
       conversationID = conversationID.id
       // save conversation for both users 
       this.participants.forEach(async person => {
@@ -109,11 +109,15 @@ export default {
         const doc = await docRef.get()
         const convos = doc.conversations 
         const updateObj = {} 
+        const convoObj = {
+          conversationID,
+          title: 'default title' 
+        }
         if (!convos) {
-          updateObj.conversations = [conversationID] 
+          updateObj.conversations = [convoObj] 
           await docRef.update(updateObj)
         } else {
-          convos.push(conversationID)
+          convos.push(convoObj)
           updateObj.conversations = convos
           await docRef.update(updateObj)
         }

@@ -3,7 +3,7 @@
     <h2>My Conversations</h2>
     <ul>
       <li v-for="(convo, idx) in pastConversations" :key="idx">
-        <router-link :to="'conversation' + '/' + convo">{{ convo }}</router-link>
+        <router-link :to="'conversation' + '/' + convo.conversationID">{{ convo.title }}</router-link>
       </li>
     </ul>
   </div>
