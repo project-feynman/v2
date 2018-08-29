@@ -14,15 +14,19 @@ import paper from 'paper'
 
 export default {
   created () {
-    paper.install(window)
+    this.paper = new paper.PaperScope() 
+    this.paper.activate()
+    this.paper.install(window)
   },
   data () {
     return {
-      doodles: [] 
+      doodles: [],
+      paper: null 
     }
   },
   async mounted () {
-    paper.setup('video')
+    console.log(`project  = ${project}`)
+    this.paper.setup('video')
     const myDoodles = await this.$bind('doodles', db.collection('doodles'))
     this.drawAllPaths()
   },
@@ -33,7 +37,7 @@ export default {
         return new Promise(resolve => setTimeout(resolve, ms))
       }
       const paths = this.doodles[0].paths
-      const n =  paths.length 
+      const n = paths.length 
       for (var i=0; i<n; i++) {
         this.drawPath(paths[i])
         await timeout(500)

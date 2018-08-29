@@ -7,7 +7,6 @@
       <li>% Chance of causing Eureka: 100%</li>
     </ul>
     <profile-tree></profile-tree>
-    <!-- <my-doodles></my-doodles> -->
     <my-convos></my-convos>
   </div>
 </template>

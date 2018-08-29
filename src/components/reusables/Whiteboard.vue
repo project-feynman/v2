@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas id="whiteboar" resize></canvas>
+    <canvas id="whiteboard" resize></canvas>
   </div>
 </template>
 
@@ -17,12 +17,13 @@ export default {
       whiteboard: null,
       numOfPaths: 0,
       loadedPreviousDrawings: false,
-      onMouseUpInitialized: false
+      onMouseUpInitialized: false,
+      paper: null 
     }
   },
   created () {
-    paper.install(window)
-    console.log(`allStrokes = ${JSON.stringify(this.allStrokes)}`)
+    this.paper = new paper.PaperScope()
+    this.paper.install(window)
   },
   computed: {
     user () {
@@ -43,7 +44,7 @@ export default {
   },
   mounted () {
     // setup paper.js 
-    paper.setup('whiteboar')
+    this.paper.setup('whiteboard')
     this.drawAllPaths()
     var tool = new Tool()
     tool.onMouseDown = event => {
@@ -84,14 +85,27 @@ export default {
         }
       }
     },
-    drawAllPaths () {
-      this.allStrokes.forEach(stroke => {
-        var path = new Path()
-        path.strokeColor = 'pink'
-        stroke.points.forEach(p => path.add(new Point(p.x, p.y)))
+    async drawAllPaths () {
+      console.log('drawAllPaths()')
+      function timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+      }
+      console.log(`strokes = ${this.allStrokes}`)
+      const strokes = this.allStrokes
+      const n = strokes.length 
+      for (var i = 0; i < n; i++) {
+        console.log('drawing a path')
+        this.drawPath(strokes[i])
+        await timeout(500)
+      }
+      this.loadedPreviousDrawings = true 
+    },
+    drawPath (data) {
+      var path = new Path()
+      path.strokeColor = 'pink'
+      data.points.forEach(point => {
+        path.add(new Point(point.x, point.y))
       })
-      console.log('finished rendering all strokes')
-      this.loadedPreviousDrawings = true
     },
     initOnMouseUp () {
       this.onMouseUpInitialized = true 
@@ -111,6 +125,10 @@ export default {
         pathObj.points = points 
         pathObj.author = this.user.uid
         this.$emit('new-stroke', pathObj)
+
+
+        // DEFER TILL LATER - right now, there is no need to refacotr
+        // the demo is the #1 priority 
 
         // update to firestore using the array modification syntax
         // this.whiteboard.allPaths.push(pathObj)

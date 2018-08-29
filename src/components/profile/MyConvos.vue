@@ -18,30 +18,55 @@ export default {
   computed: {
     user () {
       return this.$store.state.user 
+    },
+    isLoggedIn () {
+      return this.user != 'undetermined' && this.user != null
+      
     }
   },
   data () {
     return {
-      doodle: null
+      doodle: null,
+      hasFetchedConversation: false 
     }
   },
   created () {
-    if (this.user != 'undetermined' && this.user != null) {
+    if (this.isLoggedIn) {
+      this.fetchConversation()
+    } else {
+      // user directly visited this page, see 'watch' hook below  
+    }
+  },
+  watch: {
+    user () {
+      if (this.isLoggedIn) {
+        if (this.hasFetchedConversation == false) {
+          this.fetchConversation() 
+        }
+      }
+    }
+  },
+  methods: {
+    fetchConversation () {
       const convos = this.user.conversations
       convos.forEach(async convo => {
         // get document from firestore 
         const ref = db.collection('conversations').doc(convo)
         const doc = await ref.get() 
         if (doc.exists) {
-          console.log(`doc data = ${JSON.stringify(doc.data())}`)
           // display whiteboard 
           this.doodle = doc.data().doodle
           // display scrollable message 
+          this.hasFetchedConversation = true
         }
       })
-    } else {
-      console.log('user directly visited this page')
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+h2 {
+  @extend .center;
+}
+</style>
