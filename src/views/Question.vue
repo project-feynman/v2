@@ -1,12 +1,9 @@
 <template>
-  <div class="question">
+  <div>
     <h2>Question {{ $route.params.question_number }}</h2>
     <h3 v-if="question[0]" class="question-text">
       {{ question[0].content }}
     </h3>
-    <div class="back-button center">
-      <base-button @click="redirectToPset()">Back To P-set</base-button>
-    </div>
     <div class="row">
       <div class="col s12">
         <ul id="tabs" class="tabs">
@@ -86,12 +83,7 @@ export default {
       await userRef.update({
         recentQuestionID: this.$route.path
       })
-    },
-    redirectToPset () {
-      const p = this.$route.params 
-      const url = '/' + p.subject_id + '/' + p.pset_number
-      this.$router.push(url)
-    } 
+    }
   }
 }
 </script>
@@ -102,7 +94,9 @@ h2, h3 {
 }
 
 .back-button {
-  margin-bottom: 30px;
+  @extend .center;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 </style>
 
@@ -114,11 +108,6 @@ h2, h3 {
 .question-text {
   margin: auto;
   width: 80%;
-  padding-bottom: 50px;
-}
-
-.flexbox-container {
-  display: flex;
-  justify-content: center;
+  padding-bottom: 20px;
 }
 </style>

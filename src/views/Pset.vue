@@ -72,6 +72,9 @@ export default {
     user () {
       return this.$store.state.user
     },
+    isLoggedIn () {
+      return this.user != null && this.user != 'undetermined'
+    }
   },
   data () {
     return {
@@ -83,6 +86,7 @@ export default {
     }
   },
   mounted () {
+    this.addToRecentPset()
     this.$bind('allQuestions', db.collection('questions').where('fromPset', '==', this.$route.path))
     .then(doc => {
       this.loading = false
@@ -213,7 +217,17 @@ export default {
         } 
       })
       return submitted 
-    }
+    },
+    async addToRecentPset () {
+      console.log('addToRecentPset()')
+      if (!this.isLoggedIn) {
+        return 
+      }
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        recentPsetID: this.$route.path
+      })
+    },
   }
 }
 </script>

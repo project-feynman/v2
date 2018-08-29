@@ -1,5 +1,24 @@
 <template>
   <nav>
+    <ul id="dropdown1" class="dropdown-content">
+      <template v-if="isLoggedIn">
+        <li v-if="user.recentPsetID">
+          <router-link class="black-text" :to="user.recentPsetID">
+            Pset
+          </router-link>
+        </li>
+        <li v-if="user.recentQuestionID">
+          <router-link class="black-text" :to="user.recentQuestionID">
+            Question
+          </router-link>
+        </li>
+        <li v-if="user.recentChatID">
+          <router-link class="black-text" :to="`/chat/${user.recentChatID}`">
+            Chat
+          </router-link>
+        </li>
+      </template>
+    </ul>
     <div class="nav-wrapper grey lighten-5">
       <router-link to="/">
         <a class="brand-logo"><i class="material-icons">home</i>Home</a>
@@ -11,22 +30,13 @@
               About
             </a>
           </li>
-          <li v-if="user.recentQuestionID">
-            <router-link class="black-text" :to="user.recentQuestionID">
-              Resume Question
-            </router-link>
-          </li>
-          <li v-if="user.recentChatID">
-            <router-link class="black-text" :to="`/chat/${user.recentChatID}`">
-              Resume Chat
-            </router-link>
-          </li>
           <li v-if="user">
             <router-link class="black-text" to="/profile">
               <!-- <i class="material-icons left">person_pin</i> -->
               Hi, Feynman #{{ user.feynmanNumber }}
             </router-link>
           </li>
+          <li><a id="dropdown-trigger" class="dropdown-trigger" href="#!" data-target="dropdown1">Resume<i class="material-icons right">arrow_drop_down</i></a></li>
           <li>
             <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
               Logout
@@ -43,6 +53,10 @@ import firebase from 'firebase'
 import db from '@/firebase/init.js'
 
 export default {
+  mounted () {
+    const elem = document.getElementById('dropdown-trigger')
+    M.Dropdown.init(elem)
+  },
   computed: {
     user () {
       return this.$store.state.user
