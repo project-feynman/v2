@@ -17,6 +17,7 @@
     <whiteboard></whiteboard>
     <base-button @click="saveConversation()">Save conversation</base-button>
     <base-button @click="shareJourney()">Share Journey</base-button>
+    <p v-if="feedback">{{ feedback }}</p>
   </div>
 </template>
 
@@ -37,7 +38,8 @@ export default {
       messages: [],
       whiteboard: {},
       participants: [],
-      forQuestion: ''
+      forQuestion: '',
+      feedback: ''
     }
   },
   computed: {
@@ -73,6 +75,7 @@ export default {
     doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
         const data = snapshot.data()
+        console.log(`data = ${JSON.stringify(data)}`)
         this.messages = data.messages
         this.participants = data.participants
         this.forQuestion = data.forQuestion 
@@ -97,7 +100,9 @@ export default {
       })
     },
     async shareJourney () {
+      this.feedback = 'Saving the doodle as an animation...'
       // upload the journey to Firestore 
+      console.log(`this.participants = ${this.participants}`)
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.messages,
@@ -122,7 +127,7 @@ export default {
         })
       }
       // associate journey with the participants themselves
-      this.saveConversation(conversationID)
+      await this.saveConversation(conversationID)
       // redirect to the explanations page
       this.$router.push(this.forQuestion)
     },

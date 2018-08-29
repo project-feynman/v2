@@ -1,11 +1,13 @@
 <template>
-  <ul>
-    <li v-for="(journey, idx) in journeys" :key="idx">
-      <router-link :to="'/conversation/' + journey.conversationID">
+  <div class="collection">
+    <template v-for="(journey, idx) in journeys">
+      <router-link :to="'/conversation/' + journey.conversationID" 
+                   class="collection-item" 
+                   :key="idx">
         {{ journey.title }}
       </router-link>
-    </li>
-  </ul>
+    </template>
+  </div>
 </template>
 
 <script>
