@@ -7,6 +7,7 @@ import Chat from '@/views/Chat.vue'
 import Pset from '@/views/Pset.vue'
 import Profile from '@/views/Profile.vue'
 import AllSubjects from '@/views/AllSubjects.vue'
+import Conversation from '@/views/Conversation.vue'
 
 // lazy-loading
 const Question = () => import('@/views/Question.vue')
@@ -32,6 +33,10 @@ export default new Router({
     {
       path: '/chat/:room_id',
       component: Chat
+    },
+    {
+      path: '/conversation/:convo_id',
+      component: Conversation
     },
     {
       path: '/:subject_id',

@@ -1,9 +1,11 @@
 <template>
   <div>
     <h2>My Conversations</h2>
-    <template v-if="doodle">
-      <whiteboard :allStrokes="doodle"></whiteboard>
-    </template>
+    <ul>
+      <li v-for="(convo, idx) in pastConversations" :key="idx">
+        {{ convo }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -21,18 +23,16 @@ export default {
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null
-      
     }
   },
   data () {
     return {
-      doodle: null,
-      hasFetchedConversation: false 
+      pastConversations: []
     }
   },
   created () {
     if (this.isLoggedIn) {
-      this.fetchConversation()
+      this.pastConversations = this.user.conversations
     } else {
       // user directly visited this page, see 'watch' hook below  
     }
@@ -40,26 +40,13 @@ export default {
   watch: {
     user () {
       if (this.isLoggedIn) {
-        if (this.hasFetchedConversation == false) {
-          this.fetchConversation() 
-        }
+        this.pastConversations = this.user.conversations
       }
     }
   },
   methods: {
-    fetchConversation () {
-      const convos = this.user.conversations
-      convos.forEach(async convo => {
-        // get document from firestore 
-        const ref = db.collection('conversations').doc(convo)
-        const doc = await ref.get() 
-        if (doc.exists) {
-          // display whiteboard 
-          this.doodle = doc.data().doodle
-          // display scrollable message 
-          this.hasFetchedConversation = true
-        }
-      })
+    displayPastConverations () {
+
     }
   }
 }
