@@ -1,9 +1,7 @@
 <template>
   <div>
-    <h4 class="center">Student Explanations</h4>
-    <div v-if="loading">
-    </div>
-    <div class="center add-button">
+    <h4>Journeys</h4>
+    <div class="add-button">
       <span @click="showForm = !showForm" class='btn-floating btn-large pink pulse'>
         <i v-if="!showForm" class='material-icons'>add</i>
         <i v-else class='material-icons'>close</i>
@@ -58,7 +56,6 @@
         </base-card>
       </div>
     </ul>
-    
   </div>
 </template>
 
@@ -183,12 +180,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h4 {
+  @extend .center;
+}
+
 li {
   @extend .black-text, .center;
 }
 
 p {
   @extend .black-text;
+}
+
+.add-button {
+  @extend .center;
+  padding-bottom: 10px;
 }
 </style>
 
@@ -210,10 +216,6 @@ p {
 
 .upvote {
   margin-top: 15px;
-}
-
-.add-button {
-  padding-bottom: 10px;
 }
 </style>
 
