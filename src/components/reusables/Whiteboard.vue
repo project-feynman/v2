@@ -45,7 +45,9 @@ export default {
   mounted () {
     // setup paper.js 
     this.paper.setup('whiteboard')
-    this.drawAllPaths()
+    if (this.allStrokes != []) {
+      this.drawAllPaths() 
+    }
     var tool = new Tool()
     tool.onMouseDown = event => {
       PATH = new Path()
@@ -64,29 +66,13 @@ export default {
     updateBoard () {
       if (!this.loadedPreviousDrawings) {
         this.drawAllPaths()
-        this.numOfPaths = this.allStrokes.length 
-      } else {
-        const updatedPaths = doc.data().allPaths
-        const n = updatedPaths.length 
-        // probably means user's board is outdated
-        if (n >= this.numOfPaths) {
-          this.numOfPaths = n 
-          const newestPath = updatedPaths[n-1]
-          if (newestPath.author != this.user.uid) {
-            var whiteboardPath = new Path()
-            whiteboardPath.strokeColor = 'green'
-            newestPath.points.forEach(point => {
-              whiteboardPath.add(new Point(point.x, point.y))
-            })
-          }
-        } else {
-          this.numOfPaths = n // probably means board has been reset
-          project.activeLayer.removeChildren()
-        }
       }
     },
     async drawAllPaths () {
-      console.log('drawAllPaths()')
+      if (this.allStrokes.length == 0) {
+        console.log('there are no previous drawings to be rendered')
+        return 
+      }
       function timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
       }

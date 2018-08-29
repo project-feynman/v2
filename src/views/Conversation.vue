@@ -1,19 +1,20 @@
 <template>
   <div>
     <h2>Conversation</h2>
-    <template v-if="doodle">
-      <whiteboard :allStrokes="doodle"/>
-    </template>
+    <whiteboard v-if="doodle" :allStrokes="doodle"/>
+    <message-board v-if="messages" :messages="messages"/>
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
 import Whiteboard from '@/components/reusables/Whiteboard.vue'
+import MessageBoard from '@/components/reusables/MessageBoard.vue'
 
 export default {
   components: {
-    Whiteboard
+    Whiteboard,
+    MessageBoard
   },
   computed: {
     user () {
@@ -25,16 +26,16 @@ export default {
   },
   data () {
     return {
-      doodle: null,
+      doodle: [],
+      messages: [],
       hasFetchedConversation: false 
     }
   },
   created () {
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn) { 
       this.fetchConversation()
-    } else {
-      // user directly visited this page, see 'watch' hook below  
-    }
+    } 
+    // if the user directly visited this page, see 'watch' hook below  
   },
   watch: {
     user () {
@@ -49,14 +50,12 @@ export default {
     async fetchConversation () {
       // get document from firestore 
       const id = this.$route.params.convo_id
-      console.log(`conversation ID = ${id}`)
       const ref = db.collection('conversations').doc(id) // user ID 
       const doc = await ref.get() 
       if (doc.exists) {
         // display whiteboard 
         this.doodle = doc.data().doodle
-        console.log('successfully fetched doodle')
-        // display scrollable message 
+        this.messages = doc.data().messages 
         this.hasFetchedConversation = true
       }
     }
