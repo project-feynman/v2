@@ -16,6 +16,7 @@
     </div>
     <whiteboard></whiteboard>
     <base-button @click="saveConversation()">Save conversation</base-button>
+    <base-button @click="shareJourney()">Share Journey</base-button>
   </div>
 </template>
 
@@ -35,7 +36,8 @@ export default {
     return {
       messages: [],
       whiteboard: {},
-      participants: []
+      participants: [],
+      forQuestion: ''
     }
   },
   computed: {
@@ -70,8 +72,10 @@ export default {
     // fetch messages from Firestore and set up syncing 
     doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
-        this.messages = snapshot.data().messages
-        this.participants = snapshot.data().participants
+        const data = snapshot.data()
+        this.messages = data.messages
+        this.participants = data.participants
+        this.forQuestion = data.forQuestion 
       }
     })
     // fetch drawing from Firestore and set up syncing 
@@ -92,18 +96,37 @@ export default {
         recentChatID: this.$route.params.room_id
       })
     },
-    async saveConversation () {
-      // save doodle and messages
+    async shareJourney () {
+      // upload the journey to Firestore 
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.messages,
         participants: this.participants,
         title: 'default title'
       }
-      const ref = db.collection('conversations')
-      var conversationID = await ref.add(conversation)
+      const convoRef = db.collection('conversations')
+      var conversationID = await convoRef.add(conversation)
       conversationID = conversationID.id
-      // save conversation for both users 
+      // associate the journey with the question
+      const query = db.collection('questions').where('questionID', '==', this.forQuestion)
+      const results = await query.get() 
+      if (results) {
+        const doc = results.docs[0]
+        const convoObj = {
+          title: 'default title',
+          conversationID
+        }
+        const ref = db.collection('questions').doc(doc.id) 
+        await ref.update({
+          journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
+        })
+      }
+      // associate journey with the participants themselves
+      this.saveConversation(conversationID)
+      // redirect to the explanations page
+      this.$router.push(this.forQuestion)
+    },
+    async saveConversation (conversationID) {
       this.participants.forEach(async person => {
         const docRef = db.collection('users').doc(person.uid)
         const convoObj = {

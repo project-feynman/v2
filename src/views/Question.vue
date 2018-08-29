@@ -1,20 +1,21 @@
 <template>
   <div class="question">
-    <h2 class="center">Question {{ $route.params.question_number }}</h2>
-    <h3 v-if="question[0]" class="question-text center">
+    <h2>Question {{ $route.params.question_number }}</h2>
+    <h3 v-if="question[0]" class="question-text">
       {{ question[0].content }}
     </h3>
     <div class="row">
       <div class="col s12">
         <ul id="tabs" class="tabs">
-          <li class="tab col s3"><a href="#test1" class="teal-text">Explanations</a></li>
+          <li class="tab col s3"><a href="#test1" class="teal-text">Journeys</a></li>
           <li class="tab col s3"><a href="#test2" class="teal-text">Resources</a></li>
           <li class="tab col s3"><a href="#test3" class="teal-text">Classmates</a></li>
           <li class="tab col s3"><a href="#test4" class="teal-text">Chain Reaction</a></li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">
-        <explanations/> 
+        <!-- <explanations/> -->
+        <journeys v-if="question[0]" :journeys="question[0].journeys"></journeys>
       </div>
       <div id="test2" class="col s12 m12">
         <resources/>
@@ -36,6 +37,7 @@ import Resources from '@/components/question/Resources.vue'
 import Classmates from '@/components/question/Classmates.vue'
 import ChainReaction from '@/components/question/ChainReaction.vue'
 import Feynmen from '@/components/question/Feynmen.vue'
+import Journeys from '@/components/question/Journeys.vue'
 
 export default {
   mounted () {
@@ -49,6 +51,7 @@ export default {
     Resources,
     ChainReaction,
     Feynmen,
+    Journeys
   },
   data () {
     return {
@@ -62,6 +65,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+h2, h3 {
+  @extend .center;
+}
+</style>
 
 <style scoped>
 .custom-offset {

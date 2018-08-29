@@ -123,6 +123,7 @@ export default {
         await doc.set({
           messages: [],
           participants: [currentUser, feynman],
+          forQuestion: this.$route.path
         })
         const whiteboardRef = db.collection('whiteboards').doc(roomId) 
         await whiteboardRef.set({
