@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Conversation</h2>
+    <h2>{{ title }}</h2>
     <doodle v-if="doodle" :allStrokes="doodle"/>
     <message-history v-if="messages" :messages="messages"/>
   </div>
@@ -26,6 +26,7 @@ export default {
   },
   data () {
     return {
+      title: '',
       doodle: [],
       messages: [],
       hasFetchedConversation: false 
@@ -56,6 +57,7 @@ export default {
         // display Doodle 
         this.doodle = doc.data().doodle
         this.messages = doc.data().messages 
+        this.title = doc.data().title 
         this.hasFetchedConversation = true
       }
     }

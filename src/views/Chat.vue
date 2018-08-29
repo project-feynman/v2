@@ -1,5 +1,9 @@
 <template>
   <div>
+    <h2 contenteditable 
+        @keydown="updateTitle($event)" 
+        @keydown.enter.prevent="doNothing()" 
+    >{{ title }}</h2>
     <div class="card">
       <div class="card-content">
         <ul class="messages" v-chat-scroll>
@@ -34,6 +38,7 @@ export default {
   },
   data () {
     return {
+      title: '',
       messages: [],
       whiteboard: {},
       participants: [],
@@ -75,6 +80,7 @@ export default {
       if (snapshot.exists) {
         const data = snapshot.data()
         console.log(`data = ${JSON.stringify(data)}`)
+        this.title = data.title 
         this.messages = data.messages
         this.participants = data.participants
         this.forQuestion = data.forQuestion 
@@ -101,12 +107,11 @@ export default {
     async shareJourney () {
       this.feedback = 'Saving the doodle as an animation...'
       // upload the journey to Firestore 
-      console.log(`this.participants = ${this.participants}`)
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.messages,
         participants: this.participants,
-        title: 'default title'
+        title: this.title 
       }
       const convoRef = db.collection('conversations')
       var conversationID = await convoRef.add(conversation)
@@ -117,7 +122,7 @@ export default {
       if (results) {
         const doc = results.docs[0]
         const convoObj = {
-          title: 'default title',
+          title: this.title,
           conversationID
         }
         const ref = db.collection('questions').doc(doc.id) 
@@ -141,12 +146,31 @@ export default {
           conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
         })
       })
+    },
+    updateTitle (event) {
+      if (event.key == 'Enter') {
+        this.title = event.target.innerText
+        // update title for the chatRoom
+        const roomID = this.$route.params.room_id
+        const docRef = db.collection('chatRooms').doc(roomID)
+        docRef.update({
+          title: this.title 
+        })
+        console.log('updated title')
+      }
+    },
+    doNothing () {
+      return 
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+h2 {
+  @extend .center;
+}
+
 span {
   font-size: 1.4em;
 }

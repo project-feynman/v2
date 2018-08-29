@@ -2,7 +2,6 @@
   <div>
     <canvas id="whiteboard" resize></canvas>
     <base-button @click="resetBoard()">Reset Board</base-button>
-    <!-- <base-button @click="saveDoodle()">Save Doodle</base-button> -->
   </div>
 </template>
 
@@ -133,19 +132,6 @@ export default {
         })
         PATH = null 
       }
-    },
-    async saveDoodle () {
-      // the drawing is saved in the whiteboard already, but it's not saved for the user 
-      const ref = db.collection('doodles')
-      const user = {
-        displayName: this.user.displayName,
-        uid: this.user.uid
-      }
-      const doodle = {
-        drawnBy: user,
-        paths: this.whiteboard.allPaths 
-      }
-      await ref.add(doodle)
     }
   }
 }

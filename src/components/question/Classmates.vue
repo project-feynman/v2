@@ -121,9 +121,10 @@ export default {
       }
       if (!chatRoom.data()) {
         await doc.set({
+          title: 'Click to edit title (press ENTER to save)',
           messages: [],
           participants: [currentUser, feynman],
-          forQuestion: this.$route.path
+          forQuestion: this.$route.path,
         })
         const whiteboardRef = db.collection('whiteboards').doc(roomId) 
         await whiteboardRef.set({

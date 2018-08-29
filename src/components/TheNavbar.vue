@@ -59,6 +59,7 @@ export default {
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
     M.Dropdown.init(elem)
+    console.log('dropdown')
   },
   computed: {
     user () {
