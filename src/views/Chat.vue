@@ -15,7 +15,6 @@
       </div>
     </div>
     <whiteboard></whiteboard>
-    <base-button @click="saveConversation()">Save conversation</base-button>
     <base-button @click="shareJourney()">Share Journey</base-button>
     <p v-if="feedback">{{ feedback }}</p>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <canvas id="whiteboard" resize></canvas>
     <base-button @click="resetBoard()">Reset Board</base-button>
-    <base-button @click="saveDoodle()">Save Doodle</base-button>
+    <!-- <base-button @click="saveDoodle()">Save Doodle</base-button> -->
   </div>
 </template>
 
