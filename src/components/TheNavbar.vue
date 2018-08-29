@@ -1,19 +1,22 @@
 <template>
   <nav>
     <ul id="dropdown1" class="dropdown-content">
+      <li>
+        <router-link to="/subjects">Subjects</router-link>
+      </li>
       <template v-if="isLoggedIn">
         <li v-if="user.recentPsetID">
-          <router-link class="black-text" :to="user.recentPsetID">
+          <router-link :to="user.recentPsetID">
             Pset
           </router-link>
         </li>
         <li v-if="user.recentQuestionID">
-          <router-link class="black-text" :to="user.recentQuestionID">
+          <router-link :to="user.recentQuestionID">
             Question
           </router-link>
         </li>
         <li v-if="user.recentChatID">
-          <router-link class="black-text" :to="`/chat/${user.recentChatID}`">
+          <router-link :to="`/chat/${user.recentChatID}`">
             Chat
           </router-link>
         </li>
