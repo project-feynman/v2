@@ -21,7 +21,6 @@ export default {
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null
-      
     }
   },
   data () {
@@ -56,8 +55,8 @@ export default {
       if (doc.exists) {
         // display whiteboard 
         this.doodle = doc.data().doodle
+        console.log('successfully fetched doodle')
         // display scrollable message 
-
         this.hasFetchedConversation = true
       }
     }
