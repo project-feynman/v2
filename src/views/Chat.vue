@@ -21,6 +21,7 @@
 
 <script>
 import moment from 'moment'
+import firebase from 'firebase'
 import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
 import Whiteboard from '@/components/chat/Whiteboard.vue'
 import db from '@/firebase/init.js'
@@ -107,19 +108,32 @@ export default {
         const docRef = db.collection('users').doc(person.uid)
         // use array.update() instead to not have to fetch in order to update 
         const doc = await docRef.get()
-        const convos = doc.conversations 
+        var convos = null 
+        if (doc.exists) {
+          console.log(`this person is ${doc.data().displayName}`)
+          console.log('the whole document =', doc.data())
+          convos = doc.data().conversations
+          console.log(`convos = ${convos}`) 
+        }
         const updateObj = {} 
         const convoObj = {
           conversationID,
           title: 'default title' 
         }
-        if (!convos) {
+        console.log('just before the if statement, convos =', convos)
+        if (convos == null) {
+          console.log('there are no previous conversations for this user')
           updateObj.conversations = [convoObj] 
           await docRef.update(updateObj)
         } else {
-          convos.push(convoObj)
-          updateObj.conversations = convos
-          await docRef.update(updateObj)
+          // convos.push(convoObj)
+          // updateObj.conversations = convos
+          // await docRef.update(updateObj)
+          console.log('starting arrayUnion operation')
+          await docRef.update({
+              conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
+          })
+          console.log('ending arrayUnion operation')
         }
       })
     }
