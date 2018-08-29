@@ -5,11 +5,16 @@
         <a class="brand-logo"><i class="material-icons">home</i>Home</a>
       </router-link>
       <ul class="right hide-on-med-and-down">
-        <template v-if="user != null && user != 'undetermined'">
+        <template v-if="isLoggedIn">
           <li>
             <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
               About
             </a>
+          </li>
+          <li v-if="user.recentQuestionID">
+            <router-link class="black-text" :to="user.recentQuestionID">
+              Resume Question
+            </router-link>
           </li>
           <li v-if="user.recentChatID">
             <router-link class="black-text" :to="`/chat/${user.recentChatID}`">
@@ -41,6 +46,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    isLoggedIn () {
+      return this.user != null && this.user != 'undetermined'
     }
   },
   methods: {

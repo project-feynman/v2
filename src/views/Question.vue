@@ -4,6 +4,9 @@
     <h3 v-if="question[0]" class="question-text">
       {{ question[0].content }}
     </h3>
+    <div class="back-button center">
+      <base-button @click="redirectToPset()">Back To P-set</base-button>
+    </div>
     <div class="row">
       <div class="col s12">
         <ul id="tabs" class="tabs">
@@ -40,6 +43,17 @@ import Feynmen from '@/components/question/Feynmen.vue'
 import Journeys from '@/components/question/Journeys.vue'
 
 export default {
+  computed: {
+    user () {
+      return this.$store.state.user 
+    },
+    isLoggedIn () {
+      return this.user != 'undetermined' && this.user != null
+    }
+  },
+  created () {
+    this.addToRecentQuestion()
+  },
   mounted () {
     const el = document.getElementById('tabs')
     const options = {}
@@ -62,6 +76,22 @@ export default {
     return {
       question: db.collection('questions').where('questionID', '==', this.$route.path)
     }
+  },
+  methods: {
+    async addToRecentQuestion () {
+      if (!this.isLoggedIn) {
+        return 
+      }
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        recentQuestionID: this.$route.path
+      })
+    },
+    redirectToPset () {
+      const p = this.$route.params 
+      const url = '/' + p.subject_id + '/' + p.pset_number
+      this.$router.push(url)
+    } 
   }
 }
 </script>
@@ -69,6 +99,10 @@ export default {
 <style lang="scss" scoped>
 h2, h3 {
   @extend .center;
+}
+
+.back-button {
+  margin-bottom: 30px;
 }
 </style>
 
