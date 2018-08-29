@@ -126,14 +126,9 @@ export default {
           updateObj.conversations = [convoObj] 
           await docRef.update(updateObj)
         } else {
-          // convos.push(convoObj)
-          // updateObj.conversations = convos
-          // await docRef.update(updateObj)
-          console.log('starting arrayUnion operation')
           await docRef.update({
               conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
           })
-          console.log('ending arrayUnion operation')
         }
       })
     }

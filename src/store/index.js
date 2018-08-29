@@ -66,7 +66,8 @@ const actions = {
         } else {
           const newUser = {
             displayName: user.displayName,
-            uid: user.uid
+            uid: user.uid,
+            conversations: []
           }
           context.commit('setUser', newUser)
           const countRef = db.collection('statistics').doc('users')
