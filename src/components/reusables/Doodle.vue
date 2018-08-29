@@ -25,43 +25,19 @@ export default {
     this.paper = new paper.PaperScope()
     this.paper.install(window)
   },
-  computed: {
-    user () {
-      return this.$store.state.user 
-    }
-  },
-  watch: {
-    user () {
-      if (this.user != null && this.user != 'undetermined') {
-        if (!this.onMouseUpInitialized) {
-          this.initOnMouseUp() 
-        } 
-      }
-    },
-    allStrokes () {
-      this.updateBoard()
-    }
-  },
   mounted () {
     // setup paper.js 
     this.paper.setup('whiteboard')
-    if (this.allStrokes != []) {
-      this.drawAllPaths() 
-    }
-    if (this.user != null && this.user != 'undetermined') {
-      if (!this.onMouseUpInitialized) {    
-        this.initOnMouseUp()
-      }
+    this.drawAllPaths() 
+  },
+  watch: {
+    allStrokes () {
+      this.drawAllPaths()
     }
   },
   methods: {
-    updateBoard () {
-      if (!this.loadedPreviousDrawings) {
-        this.drawAllPaths()
-      }
-    },
     async drawAllPaths () {
-      if (this.allStrokes.length == 0) {
+      if (this.allStrokes.length == 0 || this.loadedPreviousDrawings) {
         return 
       }
       function timeout(ms) {

@@ -1,20 +1,20 @@
 <template>
   <div>
     <h2>Conversation</h2>
-    <whiteboard v-if="doodle" :allStrokes="doodle"/>
-    <message-board v-if="messages" :messages="messages"/>
+    <doodle v-if="doodle" :allStrokes="doodle"/>
+    <message-history v-if="messages" :messages="messages"/>
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
-import Whiteboard from '@/components/reusables/Whiteboard.vue'
-import MessageBoard from '@/components/reusables/MessageBoard.vue'
+import Doodle from '@/components/reusables/Doodle.vue'
+import MessageHistory from '@/components/reusables/MessageHistory.vue'
 
 export default {
   components: {
-    Whiteboard,
-    MessageBoard
+    Doodle,
+    MessageHistory
   },
   computed: {
     user () {
@@ -53,7 +53,7 @@ export default {
       const ref = db.collection('conversations').doc(id) // user ID 
       const doc = await ref.get() 
       if (doc.exists) {
-        // display whiteboard 
+        // display Doodle 
         this.doodle = doc.data().doodle
         this.messages = doc.data().messages 
         this.hasFetchedConversation = true

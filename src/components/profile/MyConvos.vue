@@ -11,12 +11,8 @@
 
 <script>
 import db from '@/firebase/init.js'
-import Whiteboard from '@/components/reusables/Whiteboard.vue'
 
 export default {
-  components: {
-    Whiteboard
-  },
   computed: {
     user () {
       return this.$store.state.user 
@@ -33,20 +29,14 @@ export default {
   created () {
     if (this.isLoggedIn) {
       this.pastConversations = this.user.conversations
-    } else {
-      // user directly visited this page, see 'watch' hook below  
-    }
+    } 
   },
+  // user directly visited this page
   watch: {
     user () {
       if (this.isLoggedIn) {
         this.pastConversations = this.user.conversations
       }
-    }
-  },
-  methods: {
-    displayPastConverations () {
-
     }
   }
 }
