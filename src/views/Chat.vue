@@ -106,30 +106,13 @@ export default {
       // save conversation for both users 
       this.participants.forEach(async person => {
         const docRef = db.collection('users').doc(person.uid)
-        // use array.update() instead to not have to fetch in order to update 
-        const doc = await docRef.get()
-        var convos = null 
-        if (doc.exists) {
-          console.log(`this person is ${doc.data().displayName}`)
-          console.log('the whole document =', doc.data())
-          convos = doc.data().conversations
-          console.log(`convos = ${convos}`) 
-        }
-        const updateObj = {} 
         const convoObj = {
           conversationID,
           title: 'default title' 
         }
-        console.log('just before the if statement, convos =', convos)
-        if (convos == null) {
-          console.log('there are no previous conversations for this user')
-          updateObj.conversations = [convoObj] 
-          await docRef.update(updateObj)
-        } else {
-          await docRef.update({
-              conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
-          })
-        }
+        await docRef.update({
+          conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
+        })
       })
     }
   }
