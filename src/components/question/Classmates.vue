@@ -87,32 +87,6 @@ export default {
       this.$router.push('/chat/' + roomId)
       // TODO: notify user 
     },
-    async handleEureka () {
-      var joinedReaction = false 
-      this.question[0].feynmen.forEach(f => {
-        if (f.uid == this.user.uid && f.mostRecentFeynman) {
-          console.log('student had teachers')
-          f.teacher = f.mostRecentFeynman.displayName
-          f.chainReactionCreatorUID = f.mostRecentFeynman.chainReactionCreatorUID
-          joinedReaction = true 
-        }
-      })
-      const updatedFeynmen = this.question[0].feynmen 
-      // user was not taught by anyone - let him start his own chain reaction
-      if (!joinedReaction) {
-        console.log('student was alone')
-        this.question[0].feynmen.forEach(f => {
-          if (f.uid == this.user.uid) {
-            f.teacher = "Richard Feynman"
-            f.chainReactionCreatorUID = f.uid 
-          }
-        })
-      }
-      const ref = db.collection('questions').doc(this.question[0].id)
-      await ref.update({
-        feynmen: updatedFeynmen
-      })
-    },
     async checkOnline ({ uid }) {
       const ref = db.collection('users').doc(uid)
       const feynman = await ref.get()
