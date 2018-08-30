@@ -7,7 +7,7 @@
         <h4>{{ journey.title }}</h4>
         <template v-if="createdByUser(journey)">
           <div class="delete-button-wrapper">
-            <span @click="$emit('delete', journey)" class='btn-floating btn-small red right top'>
+            <span @click.stop="$emit('delete', journey)" class='btn-floating btn-small red right top'>
               <i class='material-icons delete-button'>delete_outline</i>
             </span>
           </div>

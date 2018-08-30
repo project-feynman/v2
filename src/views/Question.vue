@@ -8,14 +8,14 @@
       <div class="col s12">
         <ul id="tabs" class="tabs">
           <li class="tab tooltipped col s3" 
-              data-tooltip="What do I write here?">
+              data-tooltip="Animated doodles created by students">
             <a href="#test1">Journeys</a>
           </li>
           <li class="tab tooltipped col s3"
-              data-tooltip="How do you explain this?">
+              data-tooltip="List of helpful external resources">
             <a href="#test2">Resources</a></li>
           <li class="tab tooltipped col s3"
-              data-tooltip="This should always be present">
+              data-tooltip="People who are online and doing this question">
             <a href="#test3">Classmates</a></li>
           <li class="tab tooltipped col s3"
               data-tooltip="Chain reaction">

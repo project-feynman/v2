@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="white-text center">Classmates On The Question</h4>
+    <h4 class="white-text center">Classmates On The Question</h4>           
     <template v-if="question[0]">
       <div class="container">
         <template v-if="students.length != 0">
@@ -8,19 +8,13 @@
             <li class="collection-header">
               <h4>Classmates</h4>
             </li>
-            <template v-for="f in students.slice(0, 50)">
-              <li :key="f.uid" class="collection-item avatar white">
-                <i class="material-icons circle grey responsive-icon">person</i>
-                <span class="title">Feynman #{{ f.feynmanNumber }}</span>
-                <p v-if="!f.finished">Not Finished</p>
-                <Promised :promise="checkOnline(f)">
-                  <p>Fetching online status...</p>
-                  <p slot-scope="data" class="green-text">{{ data }}</p>
-                  <p slot="catch" slot-scope="error">Error: {{ error.message }}</p>
-                </Promised>
-                <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
-                  <i class="material-icons white-text">email</i>
-                </a>
+            <template v-for="f in students">
+              <li :key="f.uid" class="collection-item white">
+                <div>
+                  <!-- <a @click="enterChat(f)" class="secondary-content btn-small btn-floating pulse pink message-button"><i class="material-icons">send</i></a> -->
+                  Feynman #{{ f.feynmanNumber }}
+                  <a @click="enterChat(f)" class="secondary-content"><i class="material-icons">send</i></a>
+                </div>
               </li>
             </template>
           </ul>
@@ -43,16 +37,6 @@ export default {
     user () {
       return this.$store.state.user 
     },
-    activeFeynmen () {
-      if (!this.question[0]) {
-        return []
-      } else if (this.question[0]) {
-        var output = this.question[0].feynmen 
-        output = output.filter(f => f.chainReactionCreatorUID != null)
-        output = output.filter(f => f.retired != true || f.retired == null)
-        return output 
-      }
-    },
     students () {
       var output = this.question[0].feynmen
       return output.filter(f => f.chainReactionCreatorUID == null)
@@ -65,8 +49,8 @@ export default {
     }
   },
   async mounted () {
-    // retrieve data from Firestore
-    await this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
+    const ref = db.collection('questions').where('questionID', '==', this.$route.path)
+    await this.$bind('question', ref)
     this.loading = false
      // TODO: one-way bind "isOnline" for each user 
   },
@@ -76,44 +60,20 @@ export default {
       if (this.user.uid == uid) {
         return 
       }
-      // if you're asking a Feynman, record it 
-      if (chainReactionCreatorUID) {
-        this.question[0].feynmen.forEach(f => {
-          if (f.uid == this.user.uid) {
-            // don't fuck with anything if the user is already part of a reaction
-            if (f.chainReactionCreatorUID) {
-              console.log('user is already part of a chain reaction')
-              return 
-            } else {
-              const currentFeynman = {
-                displayName,
-                uid,
-                chainReactionCreatorUID
-              }
-              f.mostRecentFeynman = currentFeynman
-            }
-          }
-        })
-        const ref = db.collection('questions').doc(this.question[0].id)
-        const updatedFeynmen = this.question[0].feynmen 
-        await ref.update({
-          feynmen: updatedFeynmen
-        })
-      }
       // create a chat room 
       const sortedUIDs = [this.user.uid, uid].sort() 
       const roomId = sortedUIDs.join('')
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
-      const currentUser = {
-        displayName: this.user.displayName,
-        uid: this.user.uid 
-      }
-      const feynman = {
-        displayName,
-        uid
-      }
-      if (!chatRoom.data()) {
+      if (!chatRoom.exists) {
+        const currentUser = {
+          displayName: this.user.displayName,
+          uid: this.user.uid 
+        }
+        const feynman = {
+          displayName,
+          uid
+        }
         await doc.set({
           title: 'Click to edit title (press ENTER to save)',
           messages: [],
@@ -172,26 +132,11 @@ export default {
 
 <style lang="scss" scoped>
 h4 {
+  @extend .teal-text;
+}
+
+p, div {
   @extend .black-text;
-}
-</style>
-
-<style scoped>
-.responsive-icon {
-  height: auto;
-  width: 100%;
-}
-
-a {
-  margin-top: 5px;
-}
-
-.collection-item {
-  padding: 18px;
-}
-
-span, p {
-  color: black;
 }
 
 .card-wrapper {
@@ -199,17 +144,11 @@ span, p {
 }
 
 .container {
-  padding-left: 8%;
-  padding-right: 8%;
-}
-
-.teacher-section {
-  padding-left: 8%;
-  padding-right: 8%;
+  width: 25%;
 }
 
 .flexbox-container {
   display: flex;
-  justify-content: space-around;
 }
 </style>
+
