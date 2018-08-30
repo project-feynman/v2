@@ -11,7 +11,7 @@
           <h5>{{ getLastChar(question.questionID) }}. {{ question.content }}</h5>
           <!-- Classmate's Progress -->
           <ul>
-            <li>{{ getNumberOfFinishedClassmates(question)}} (out of {{ question.feynmen.length }})</li>
+            <li>{{ getNumberOfFinishedClassmates(question)}} / {{ question.feynmen.length }} classmates finished</li>
             <li>Avg. time: {{ getEstimatedTime(question) }} hours</li>
           </ul>
           <!-- if the user is done and has not submitted -->
@@ -32,7 +32,7 @@
           <!-- Link -->
           <div class="card-action">
             <router-link :to="$route.path + `/${getLastChar(question.questionID)}`" class="purple-text">
-              Start question
+              <base-button>Start question</base-button>
             </router-link>
           </div> 
           <!-- Delete Button -->
@@ -85,14 +85,11 @@ export default {
       feedback: null
     }
   },
-  mounted () {
+  async mounted () {
     this.addToRecentPset()
-    this.$bind('allQuestions', db.collection('questions').where('fromPset', '==', this.$route.path))
-    .then(doc => {
-      this.loading = false
-      this.newQuestionNumber = this.allQuestions.length + 1
-    })
-    .catch(error => console.log('error in loading: ', error))
+    const ref = db.collection('questions').where('fromPset', '==', this.$route.path)
+    await this.$bind('allQuestions', ref)
+    this.loading = false 
   },
   methods: {
     async addQuestion () {
@@ -203,10 +200,8 @@ export default {
       const finishedClassmates = question.feynmen.filter(f => f.finished)
       if (finishedClassmates.length == 0) {
         return 'Nobody has finished'
-      } else if (finishedClassmates.length == 1) {
-        return `${finishedClassmates.length} classmate finished` 
       } else {
-        return `${finishedClassmates.length} classmates finished` 
+        return finishedClassmates.length
       }
     },
     didUserSubmitATimeAlready ({ feynmen }) {
@@ -234,11 +229,11 @@ export default {
 
 <style lang="scss" scoped>
 li {
-  @extend .teal-text;
+  @extend .black-text;
 }
 
 h5 {
-  @extend .black-text;
+  @extend .teal-text;
 }
 </style>
 
