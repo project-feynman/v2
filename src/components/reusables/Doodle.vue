@@ -11,7 +11,13 @@ import db from '@/firebase/init.js'
 var PATH = null 
 
 export default {
-  props: ['allStrokes'],
+  props: {
+    allStrokes: Array,
+    scaleFactor: {
+      type: Number,
+      default: 1
+    }
+  },
   data () {
     return {
       whiteboard: null,
@@ -55,7 +61,7 @@ export default {
       var path = new Path()
       path.strokeColor = 'pink'
       data.points.forEach(point => {
-        path.add(new Point(point.x, point.y))
+        path.add(new Point(this.scaleFactor * point.x, this.scaleFactor * point.y))
       })
     }
   }

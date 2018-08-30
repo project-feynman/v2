@@ -198,11 +198,7 @@ export default {
     },
     getNumberOfFinishedClassmates (question) {
       const finishedClassmates = question.feynmen.filter(f => f.finished)
-      if (finishedClassmates.length == 0) {
-        return 'Nobody has finished'
-      } else {
-        return finishedClassmates.length
-      }
+      return finishedClassmates.length
     },
     didUserSubmitATimeAlready ({ feynmen }) {
       var submitted = false 

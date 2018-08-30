@@ -15,45 +15,34 @@
       </div>
     </template>
     <hr>
-    <div class="container">
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="card light-card">
-            <p>
-              View explanations created by previous students. Ask questions to classmates who are currently
-              on the same question as you
-            </p>
-        </div>
-      </div>
-      <div class="col s12 m4 add-padding">
-        <div class="card light-card">
-          <p>
-            When you get an Eureka moment, get ready to explain the concept to two other classmates anonymously
-          </p>
-        </div>
-      </div>
-        <div class="col s12 m4">
-          <div class="card light-card">
-            <p>
-              Later, all names will be revealed, and the visualization of the "chain-reaction" 
-              you've started will be available
-            </p>
-          </div>
-        </div>
-      </div>
+    <div class="showcase-container">
+      <journey v-if="showcase != null" :journey="showcase"/>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
 import firebase from 'firebase'
 import firebaseui from 'firebaseui'
 import db from '@/firebase/init.js'
+import Journey from '@/components/reusables/Journey.vue'
 
 export default {
+  components: {
+    Journey
+  },
+  async created () {
+    const ref = db.collection('conversations').doc('mfRdL2JDbkhhemLGlvs5')
+    var doc = await ref.get()
+    if (doc.exists) {
+      this.showcase = doc.data() 
+      console.log('showcase =', this.showcase)
+    }
+  },
   data () {
     return {
-      loading: true 
+      loading: true,
+      showcase: null
     }
   },
   computed: {
@@ -89,6 +78,10 @@ export default {
 p {
   @extend .black-text;
 }
+
+.showcase-container {
+  margin: auto;
+} 
 </style>
 
 <style scoped>
