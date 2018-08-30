@@ -36,7 +36,6 @@ export default {
     var doc = await ref.get()
     if (doc.exists) {
       this.showcase = doc.data() 
-      console.log('showcase =', this.showcase)
     }
   },
   data () {
