@@ -27,6 +27,13 @@
         <a class="brand-logo"><i class="material-icons">home</i>Home</a>
       </router-link>
       <ul class="right hide-on-med-and-down">
+        <li>
+          <a id="dropdown-trigger" 
+             class="dropdown-trigger" 
+             href="#!" 
+             data-target="dropdown1">
+            Resume<i class="material-icons right">arrow_drop_down</i></a>
+        </li>
         <template v-if="isLoggedIn">
           <li>
             <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
@@ -39,7 +46,6 @@
               Hi, Feynman #{{ user.feynmanNumber }}
             </router-link>
           </li>
-          <li><a id="dropdown-trigger" class="dropdown-trigger" href="#!" data-target="dropdown1">Resume<i class="material-icons right">arrow_drop_down</i></a></li>
           <li>
             <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
               Logout
@@ -58,8 +64,9 @@ import db from '@/firebase/init.js'
 export default {
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
+    console.log(`dropdown element = ${elem}`)
     M.Dropdown.init(elem)
-    console.log('dropdown')
+    console.log('dropdown initialized')
   },
   computed: {
     user () {
