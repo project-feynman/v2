@@ -7,10 +7,19 @@
     <div class="row">
       <div class="col s12">
         <ul id="tabs" class="tabs">
-          <li class="tab col s3"><a href="#test1" class="teal-text">Journeys</a></li>
-          <li class="tab col s3"><a href="#test2" class="teal-text">Resources</a></li>
-          <li class="tab col s3"><a href="#test3" class="teal-text">Classmates</a></li>
-          <li class="tab col s3"><a href="#test4" class="teal-text">Chain Reaction</a></li>
+          <li class="tab tooltipped col s3" 
+              data-tooltip="What do I write here?">
+            <a href="#test1">Journeys</a>
+          </li>
+          <li class="tab tooltipped col s3"
+              data-tooltip="How do you explain this?">
+            <a href="#test2">Resources</a></li>
+          <li class="tab tooltipped col s3"
+              data-tooltip="This should always be present">
+            <a href="#test3">Classmates</a></li>
+          <li class="tab tooltipped col s3"
+              data-tooltip="Chain reaction">
+            <a href="#test4">Chain Reaction</a></li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">
@@ -18,8 +27,7 @@
         <journeys v-if="question[0] && isLoggedIn" 
                   :journeys="question[0].journeys" 
                   :user="user"
-                  @delete="payload => deleteJourney(payload)"
-                  ></journeys>
+                  @delete="payload => deleteJourney(payload)"></journeys>
       </div>
       <div id="test2" class="col s12 m12">
         <resources/>
@@ -57,9 +65,12 @@ export default {
     this.addToRecentQuestion()
   },
   mounted () {
+    // initialize tabs
     const el = document.getElementById('tabs')
-    const options = {}
-    const instance = M.Tabs.init(el, options)
+    const instance = M.Tabs.init(el, {})
+    // initialize tooltips 
+    const elems = document.querySelectorAll('.tooltipped')
+    var instances = M.Tooltip.init(elems, {})
   },
   components: {
     Explanations,
@@ -102,6 +113,10 @@ export default {
 <style lang="scss" scoped>
 h2, h3 {
   @extend .center;
+}
+
+a {
+  @extend .teal-text;
 }
 
 .back-button {

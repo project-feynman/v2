@@ -65,12 +65,6 @@ export default {
     }
   },
   async mounted () {
-    // initialize tooltips
-    const elems = document.querySelectorAll('.tooltipped')
-    const options = {
-      html: true
-    }
-    var instances = M.Tooltip.init(elems, {})
     // retrieve data from Firestore
     await this.$bind('question', db.collection('questions').where('questionID', '==', this.$route.path))
     this.loading = false
