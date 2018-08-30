@@ -90,14 +90,10 @@ export default {
       })
     },
     async deleteJourney (journey) {
-      console.log(`journey = ${JSON.stringify(journey)}`)
-      // actually, just remove the reference to the 'journey' from the question 
-      console.log('question i =', this.question[0].id)
       const questionRef = db.collection('questions').doc(this.question[0].id)
       await questionRef.update({
-        regions: firebase.firestore.FieldValue.arrayRemove(journey)
+        journeys: firebase.firestore.FieldValue.arrayRemove(journey)
       })
-      console.log('successfully removed journey from the array')
     }
   }
 }
