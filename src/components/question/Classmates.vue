@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <h4 class="white-text center">Classmates On The Question</h4>           
+  <div>        
     <template v-if="question[0]">
       <div class="container">
         <template v-if="students.length != 0">
-          <ul class="collection with-header black">
+          <ul class="collection with-header">
             <li class="collection-header">
               <h4>Classmates</h4>
             </li>

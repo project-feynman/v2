@@ -8,18 +8,18 @@
       <div class="col s12">
         <ul id="tabs" class="tabs">
           <li class="tab tooltipped col s3" 
-              data-tooltip="Animated doodles created by students">
+              data-tooltip="See how your classmates' questions were answered">
             <a href="#test1">Journeys</a>
           </li>
           <li class="tab tooltipped col s3"
-              data-tooltip="List of helpful external resources">
+              data-tooltip="Helpful external resources found by others">
             <a href="#test2">Resources</a></li>
           <li class="tab tooltipped col s3"
               data-tooltip="People who are online and doing this question">
             <a href="#test3">Classmates</a></li>
           <li class="tab tooltipped col s3"
-              data-tooltip="Chain reaction">
-            <a href="#test4">Chain Reaction</a></li>
+              data-tooltip="People who are done and want to help">
+            <a href="#test4">Feynmen</a></li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">

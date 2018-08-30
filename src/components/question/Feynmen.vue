@@ -6,9 +6,9 @@
         @click="handleEureka()"
         data-tooltip =
         "<ul>
-          <li>'If you can't explain it simply, you don't understand it.'</li>
-          <li>Help others and see if you grasped the material properly.</li>
-          <li>It takes practise to explain things elegantly. Do you have what it takes?</li>
+          <li>If someone was helpful, consider passing it on.</li>
+          <li>Pressing the button will list you as a Feynman below.</li>
+          <li>The more you help, the more the chain reaction grows.</li>
         </ul>">
       </big-red-button>
     </div>
