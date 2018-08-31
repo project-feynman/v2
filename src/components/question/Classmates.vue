@@ -1,19 +1,24 @@
 <template>
   <div>        
     <template v-if="question[0]">
-      <collection-list
-        title="Classmates doing this question right now"
-        :listItems="students" 
-        itemName="displayName"
-        actionIcon="chat"
-        @item-click="student => enterChat(student)"/>
-      <collection-list 
-        title="Classmates who finished and would help"
-        itemName="displayName"
-        :listItems="activeFeynmen" 
-        @entire-click="student => handleEntireClick(student)"
-        actionIcon="message"
-        @item-click="student => enterChat(student)"/>
+      <collection-list title="Classmates doing this question right now"
+                       :listItems="students" 
+                       itemName="displayName"
+                       actionIcon="chat"
+                       @item-click="student => enterChat(student)">
+        <template slot-scope="{ item }">
+          Feynman #{{ item.feynmanNumber }}
+        </template>
+      </collection-list>
+      <collection-list title="Classmates who finished and would help"
+                       :listItems="activeFeynmen" 
+                       @entire-click="student => handleEntireClick(student)"
+                       actionIcon="message"
+                       @item-click="student => enterChat(student)">
+        <template slot-scope="{ item }">
+          Feynman #{{ item.feynmanNumber }}
+        </template>
+      </collection-list>
     </template>
   </div>
 </template>

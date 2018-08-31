@@ -1,23 +1,19 @@
 <template>
   <div class="flexbox-container">
-
-          <!-- <template v-if="createdByUser(journey)">
-            <div class="delete-button-wrapper">
-              <span @click.stop="$emit('delete', journey)" class='btn-floating btn-small red right top'>
-                <i class='material-icons delete-button'>delete_outline</i>
-              </span>
-            </div>
-          </template> -->
-
     <div class="journey-wrapper">
       <!-- <template v-if="createdByUser(journey)"> -->
       <template v-if="true">
         <collection-list title="Recorded discussions"
                          :listItems="journeys"
-                         itemName="title"
                          @entire-click="journey => redirect(journey)"
                          actionIcon="delete"
-                         @item-click="journey => $emit('delete', journey)"/>
+                         @item-click="journey => $emit('delete', journey)">
+          <template slot-scope="{ item }">
+            <!-- Define a custom template for todo items, using -->
+            <!-- `slotProps` to customize each todo.            -->
+            {{ item.title }}
+          </template>
+        </collection-list>
       </template>
       <template v-else>
         <collection-list title="Recorded discussions"
@@ -25,7 +21,6 @@
                         itemName="title"
                         @entire-click="journey => redirect(journey)"/>
       </template>
-  
     </div>
     <div class="classmates-wrapper">
       <classmates/>

@@ -7,7 +7,10 @@
       <template v-for="(item, idx) in listItems">
         <a @click="$emit('entire-click', item)" class="collection-item" :key="idx">
           <div>
-            {{ item[itemName] }}
+            <slot :item="item">
+              <!-- Fallback content -->
+              {{ item }}
+            </slot>
             <template v-if="actionIcon">
               <a @click.stop="$emit('item-click', item)" class="secondary-content">
                 <i class="material-icons">{{ actionIcon }}</i>
