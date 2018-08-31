@@ -5,8 +5,8 @@
       <base-spinner v-if="loading"></base-spinner>
     </div>
     <div id="firebaseui-auth-container"></div>
-    <template v-if="user != 'undetermined'">
-      <div v-if="user" class="center dashboard-button">
+    <template v-if="user != 'undetermined' && user != null">
+      <div class="dashboard-button center">
         <router-link to="/subjects">
           <a class="btn-floating pulse pink btn-large">
             <i class="material-icons">dashboard</i>

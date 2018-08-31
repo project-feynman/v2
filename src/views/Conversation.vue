@@ -51,7 +51,7 @@ export default {
     async fetchConversation () {
       // get document from firestore 
       const id = this.$route.params.convo_id
-      const ref = db.collection('conversations').doc(id) // user ID 
+      const ref = db.collection('conversations').doc(id)
       const doc = await ref.get() 
       if (doc.exists) {
         // display Doodle 
