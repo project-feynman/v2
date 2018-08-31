@@ -1,7 +1,17 @@
 <template>
   <div>        
     <template v-if="question[0]">
-      <collection-list :listItems="students" @item-click="student => enterChat(student)"/>
+      <collection-list
+        title="Classmates doing this question right now"
+        :listItems="students" 
+        itemName="displayName"
+        @item-click="student => enterChat(student)"/>
+      <collection-list 
+        title="Classmates who finished and would help"
+        itemName="displayName"
+        :listItems="activeFeynmen" 
+        @entire-click="student => handleEntireClick(student)"
+        @item-click="student => enterChat(student)"/>
     </template>
   </div>
 </template>
@@ -24,6 +34,16 @@ export default {
     students () {
       var output = this.question[0].feynmen
       return output.filter(f => f.chainReactionCreatorUID == null)
+    },
+    activeFeynmen () {
+      if (!this.question[0]) {
+        return []
+      } else if (this.question[0]) {
+        var output = this.question[0].feynmen 
+        output = output.filter(f => f.chainReactionCreatorUID != null)
+        output = output.filter(f => f.retired != true || f.retired == null)
+        return output 
+      }
     }
   },
   data () {
@@ -83,7 +103,10 @@ export default {
           return 'online'
         } 
       }
-    } 
+    },
+    handleEntireClick () {
+      console.log('entire item was clicked (rather than the action button on the rightmost side')
+    },
   }
 }
 </script>

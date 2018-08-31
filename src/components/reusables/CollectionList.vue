@@ -2,19 +2,18 @@
   <div v-if="listItems">
     <ul class="collection with-header">
       <li class="collection-header">
-        <h6>Classmates doing this question right now</h6>
+        <h6>{{ title }}</h6>
       </li>
-      <li v-for="(item, idx) in listItems"
-          class="collection-item"
-          :key="idx">
-        <div>
-          Feynman #{{ item.feynmanNumber }}
-          <a @click="$emit('item-click', item)" 
-             class="secondary-content">
-            <i class="material-icons">send</i>
-          </a>
-        </div>
-      </li>
+      <template v-for="(item, idx) in listItems">
+        <a @click="$emit('entire-click', item)" class="collection-item" :key="idx">
+          <div>
+            {{ item[itemName] }}
+            <a @click.stop="$emit('item-click', item)" class="secondary-content">
+              <i class="material-icons">send</i>
+            </a>
+          </div>
+        </a>
+      </template>
     </ul>
   </div>
 </template>
@@ -22,7 +21,9 @@
 <script>
 export default {
   props: {
-    listItems: Array
+    title: String,
+    listItems: Array,
+    itemName: String
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="flexbox-container">
-    <div class="collection with-header journey-collection">
+    <!-- <div class="collection with-header journey-collection">
       <li class="collection-header">
         <h4>Recorded Journeys</h4>
       </li>
@@ -18,6 +18,14 @@
           </template>
         </router-link>
       </template>
+    </div> -->
+    <div class="journey-wrapper">
+      <collection-list 
+        title="Recorded discussions"
+        :listItems="journeys"
+        itemName="title"
+        @entire-click="journey => redirect(journey)"
+      />
     </div>
     <div class="classmates-wrapper">
       <classmates/>
@@ -27,11 +35,13 @@
 
 <script>
 import Classmates from './Classmates.vue'
+import CollectionList from '@/components/reusables/CollectionList.vue'
 
 export default {
   props: ['journeys', 'user'],
   components: {
-    Classmates
+    Classmates,
+    CollectionList
   },
   methods: {
     createdByUser ({ participants }) {
@@ -42,6 +52,11 @@ export default {
         }
       })
       return output 
+    },
+    redirect (journey) {
+      console.log(`journey = ${journey}`)
+      const url = '/conversation/' + journey.conversationID
+      this.$router.push(url)
     }
   }
 }
@@ -53,8 +68,13 @@ h4 {
   @extend .teal-text;
 }
 
+.journey-wrapper {
+  width: 500px;
+}
+
 .flexbox-container {
   display: flex;
+  justify-content: space-evenly;
 }
 
 .classmates-wrapper {

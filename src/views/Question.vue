@@ -17,9 +17,9 @@
           <!-- <li class="tab tooltipped col s3"
               data-tooltip="People who are online and doing this question">
             <a href="#test3">Classmates</a></li> -->
-          <li class="tab tooltipped col s3"
+          <!-- <li class="tab tooltipped col s3"
               data-tooltip="People who are done and want to help">
-            <a href="#test4">Feynmen</a></li>
+            <a href="#test4">Feynmen</a></li> -->
         </ul>
       </div>
       <div id="test1" class="col s12 m12">
@@ -35,9 +35,9 @@
       <!-- <div id="test3" class="col s12 m12">
         <classmates/>
       </div> -->
-      <div id="test4" class="col s12 m12">
+      <!-- <div id="test4" class="col s12 m12">
         <feynmen></feynmen>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
