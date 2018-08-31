@@ -1,31 +1,31 @@
 <template>
   <div class="flexbox-container">
-    <!-- <div class="collection with-header journey-collection">
-      <li class="collection-header">
-        <h4>Recorded Journeys</h4>
-      </li>
-      <template v-for="(journey, idx) in journeys">
-        <router-link :to="'/conversation/' + journey.conversationID" 
-                     class="collection-item"
-                     :key="idx">
-          <h6>{{ journey.title }}</h6>
-          <template v-if="createdByUser(journey)">
+
+          <!-- <template v-if="createdByUser(journey)">
             <div class="delete-button-wrapper">
               <span @click.stop="$emit('delete', journey)" class='btn-floating btn-small red right top'>
                 <i class='material-icons delete-button'>delete_outline</i>
               </span>
             </div>
-          </template>
-        </router-link>
-      </template>
-    </div> -->
+          </template> -->
+
     <div class="journey-wrapper">
-      <collection-list 
-        title="Recorded discussions"
-        :listItems="journeys"
-        itemName="title"
-        @entire-click="journey => redirect(journey)"
-      />
+      <!-- <template v-if="createdByUser(journey)"> -->
+      <template v-if="true">
+        <collection-list title="Recorded discussions"
+                         :listItems="journeys"
+                         itemName="title"
+                         @entire-click="journey => redirect(journey)"
+                         actionIcon="delete"
+                         @item-click="journey => $emit('delete', journey)"/>
+      </template>
+      <template v-else>
+        <collection-list title="Recorded discussions"
+                        :listItems="journeys"
+                        itemName="title"
+                        @entire-click="journey => redirect(journey)"/>
+      </template>
+  
     </div>
     <div class="classmates-wrapper">
       <classmates/>

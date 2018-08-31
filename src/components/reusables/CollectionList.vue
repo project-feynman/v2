@@ -8,9 +8,11 @@
         <a @click="$emit('entire-click', item)" class="collection-item" :key="idx">
           <div>
             {{ item[itemName] }}
-            <a @click.stop="$emit('item-click', item)" class="secondary-content">
-              <i class="material-icons">send</i>
-            </a>
+            <template v-if="actionIcon">
+              <a @click.stop="$emit('item-click', item)" class="secondary-content">
+                <i class="material-icons">{{ actionIcon }}</i>
+              </a>
+            </template>
           </div>
         </a>
       </template>
@@ -23,7 +25,8 @@ export default {
   props: {
     title: String,
     listItems: Array,
-    itemName: String
+    itemName: String,
+    actionIcon: String
   }
 }
 </script>
