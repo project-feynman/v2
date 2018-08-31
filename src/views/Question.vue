@@ -14,9 +14,9 @@
           <li class="tab tooltipped col s3"
               data-tooltip="Helpful external resources found by others">
             <a href="#test2">Resources</a></li>
-          <li class="tab tooltipped col s3"
+          <!-- <li class="tab tooltipped col s3"
               data-tooltip="People who are online and doing this question">
-            <a href="#test3">Classmates</a></li>
+            <a href="#test3">Classmates</a></li> -->
           <li class="tab tooltipped col s3"
               data-tooltip="People who are done and want to help">
             <a href="#test4">Feynmen</a></li>
@@ -32,9 +32,9 @@
       <div id="test2" class="col s12 m12">
         <resources/>
       </div>
-      <div id="test3" class="col s12 m12">
+      <!-- <div id="test3" class="col s12 m12">
         <classmates/>
-      </div>
+      </div> -->
       <div id="test4" class="col s12 m12">
         <feynmen></feynmen>
       </div>

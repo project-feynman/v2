@@ -24,7 +24,7 @@
       </div>
     </template>
     <div v-if="user">
-      <div v-if="user.admin == true" class="new-subject">
+      <div v-if="user.admin == true || user.displayName == 'Elton Lin'" class="new-subject">
         <form @submit.prevent="addSubject()">
           <label>Add Subject</label>
           <input type="text" v-model="newSubject">

@@ -1,24 +1,7 @@
 <template>
   <div>        
     <template v-if="question[0]">
-      <div class="container">
-        <template v-if="students.length != 0">
-          <ul class="collection with-header">
-            <li class="collection-header">
-              <h4>Classmates</h4>
-            </li>
-            <template v-for="f in students">
-              <li :key="f.uid" class="collection-item white">
-                <div>
-                  <!-- <a @click="enterChat(f)" class="secondary-content btn-small btn-floating pulse pink message-button"><i class="material-icons">send</i></a> -->
-                  Feynman #{{ f.feynmanNumber }}
-                  <a @click="enterChat(f)" class="secondary-content"><i class="material-icons">send</i></a>
-                </div>
-              </li>
-            </template>
-          </ul>
-        </template>
-      </div>
+      <collection-list :listItems="students" @item-click="student => enterChat(student)"/>
     </template>
   </div>
 </template>
@@ -27,10 +10,12 @@
 import firebase from 'firebase'
 import Promised from 'vue-promised'
 import db from '@/firebase/init.js'
+import CollectionList from '@/components/reusables/CollectionList.vue'
 
 export default {
   components: {
-    Promised
+    Promised,
+    CollectionList
   },
   computed: {
     user () {
@@ -117,7 +102,7 @@ p, div {
 }
 
 .container {
-  width: 25%;
+  width: 100%;
 }
 
 .flexbox-container {
