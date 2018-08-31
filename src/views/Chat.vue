@@ -2,8 +2,9 @@
   <div>
     <h2 contenteditable 
         @keydown="updateTitle($event)" 
-        @keydown.enter.prevent="doNothing()" 
-    >{{ title }}</h2>
+        @keydown.enter.prevent="doNothing()">
+      {{ title }}
+    </h2>
     <div class="center">
       <base-button @click="shareJourney()">Share Journey</base-button>
     </div>
@@ -51,18 +52,21 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    isLoggedIn () {
+      return this.user != null && this.user != 'undetermined'
     }
   },
   watch: {
     // don't want to execute this more than twice
     user () {
-      if (this.user != null && this.user != 'undetermined') {
+      if (this.isLoggedIn) {
         this.addToRecentChat()
       }
     }
   },
   async created () {
-    if (this.user != null && this.user != 'undetermined') {
+    if (this.isLoggedIn) {
       this.addToRecentChat()
     }
     let roomID = this.$route.params.room_id
@@ -134,7 +138,6 @@ export default {
       }
       // associate journey with the participants themselves
       await this.saveConversation(conversationID)
-      // redirect to the explanations page
       this.$router.push(this.forQuestion)
     },
     async saveConversation (conversationID) {
