@@ -1,7 +1,9 @@
 <template>
   <div>
+    <div class="center">
+      <base-button @click="resetBoard()">Reset Board</base-button>
+    </div>
     <canvas id="whiteboard" resize></canvas>
-    <base-button @click="resetBoard()">Reset Board</base-button>
   </div>
 </template>
 

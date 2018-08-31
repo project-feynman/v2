@@ -10,7 +10,7 @@
           Feynman #{{ item.feynmanNumber }}
         </template>
       </collection-list>
-      <collection-list title="Classmates who finished and would help"
+      <collection-list title="Classmates who finished and want to help"
                        :listItems="activeFeynmen" 
                        @entire-click="student => handleEntireClick(student)"
                        actionIcon="message"

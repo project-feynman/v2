@@ -4,6 +4,10 @@
         @keydown="updateTitle($event)" 
         @keydown.enter.prevent="doNothing()" 
     >{{ title }}</h2>
+    <div class="center">
+      <base-button @click="shareJourney()">Share Journey</base-button>
+    </div>
+    <p v-if="feedback">{{ feedback }}</p>
     <div class="card">
       <div class="card-content">
         <ul class="messages" v-chat-scroll>
@@ -19,8 +23,6 @@
       </div>
     </div>
     <whiteboard></whiteboard>
-    <base-button @click="shareJourney()">Share Journey</base-button>
-    <p v-if="feedback">{{ feedback }}</p>
   </div>
 </template>
 
@@ -169,6 +171,10 @@ export default {
 <style lang="scss" scoped>
 h2 {
   @extend .center;
+}
+
+.button-wrapper {
+  margin: auto;
 }
 
 span {
