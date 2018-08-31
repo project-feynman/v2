@@ -3,7 +3,7 @@
     <template v-if="question[0]">
       <collection-list title="Classmates doing this question right now"
                        :listItems="students" 
-                       itemName="displayName"
+                       @entire-click="student => enterChat(student)"
                        actionIcon="chat"
                        @item-click="student => enterChat(student)">
         <template slot-scope="{ item }">

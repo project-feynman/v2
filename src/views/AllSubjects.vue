@@ -2,21 +2,18 @@
   <div>
     <div class="custom-offset"></div>
     <h2>All Subjects</h2>
-    <div v-if="loading" 
-         class="spinner-wrapper">
-      <base-spinner></base-spinner>
+    <div v-if="loading" class="spinner-wrapper">
+      <base-spinner/>
     </div>
     <template v-if="subjects && !loading">
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
             <h4>{{ subject.subjectNumber }}</h4>
-            <base-button 
-              @click="redirectToPset(subject)">
+            <base-button @click="redirectToPset(subject)">
               Start p-set {{ getCurrentPset(subject) }}
             </base-button>
-            <base-button 
-              @click="$router.push(`${subject.subjectNumber}`)">
+            <base-button @click="$router.push(`${subject.subjectNumber}`)">
               View all p-sets
             </base-button>
           </base-card>

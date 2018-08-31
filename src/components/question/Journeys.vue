@@ -1,42 +1,45 @@
 <template>
-  <div class="flexbox-container">
-    <div class="journey-wrapper">
-      <!-- <template v-if="createdByUser(journey)"> -->
-      <template v-if="true">
-        <collection-list title="Recorded discussions"
-                         :listItems="journeys"
-                         @entire-click="journey => redirect(journey)"
-                         actionIcon="delete"
-                         @item-click="journey => $emit('delete', journey)">
-          <template slot-scope="{ item }">
-            <!-- Define a custom template for todo items, using -->
-            <!-- `slotProps` to customize each todo.            -->
-            {{ item.title }}
-          </template>
-        </collection-list>
-      </template>
-      <template v-else>
-        <collection-list title="Recorded discussions"
-                        :listItems="journeys"
-                        itemName="title"
-                        @entire-click="journey => redirect(journey)"/>
-      </template>
+  <div>
+    <div class="flexbox-container">
+      <div class="journey-wrapper">
+        <!-- <template v-if="createdByUser(journey)"> -->
+        <template v-if="true">
+          <collection-list title="Recorded discussions"
+                          :listItems="journeys"
+                          @entire-click="journey => redirect(journey)"
+                          actionIcon="delete"
+                          @item-click="journey => processDeleteAttempt(journey)">
+            <template slot-scope="{ item }">
+              {{ item.title }}
+            </template>
+          </collection-list>
+        </template>
+        <template v-else>
+          <collection-list title="Recorded discussions"
+                          :listItems="journeys"
+                          itemName="title"
+                          @entire-click="journey => redirect(journey)"/>
+        </template>
+      </div>
+      <div class="classmates-wrapper">
+        <classmates/>
+      </div>
     </div>
-    <div class="classmates-wrapper">
-      <classmates/>
-    </div>
+    <feynmen/>
   </div>
 </template>
 
 <script>
 import Classmates from './Classmates.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
+import Feynmen from './Feynmen.vue'
 
 export default {
   props: ['journeys', 'user'],
   components: {
     Classmates,
-    CollectionList
+    CollectionList,
+    Feynmen
   },
   methods: {
     createdByUser ({ participants }) {
@@ -52,6 +55,11 @@ export default {
       console.log(`journey = ${journey}`)
       const url = '/conversation/' + journey.conversationID
       this.$router.push(url)
+    },
+    processDeleteAttempt (journey) {
+      if (this.createdByUser(journey)) {
+        this.$emit('delete', journey)
+      }
     }
   }
 }

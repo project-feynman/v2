@@ -8,18 +8,13 @@
       <div class="col s12">
         <ul id="tabs" class="tabs">
           <li class="tab tooltipped col s3" 
-              data-tooltip="See how your classmates' questions were answered">
-            <a href="#test1">Journeys</a>
+              data-tooltip="When you're in a chat session with a classmate, 
+                            you can save and share the interaction for others to see">
+            <a href="#test1">Classroom</a>
           </li>
           <li class="tab tooltipped col s3"
               data-tooltip="Helpful external resources found by others">
             <a href="#test2">Resources</a></li>
-          <!-- <li class="tab tooltipped col s3"
-              data-tooltip="People who are online and doing this question">
-            <a href="#test3">Classmates</a></li> -->
-          <!-- <li class="tab tooltipped col s3"
-              data-tooltip="People who are done and want to help">
-            <a href="#test4">Feynmen</a></li> -->
         </ul>
       </div>
       <div id="test1" class="col s12 m12">

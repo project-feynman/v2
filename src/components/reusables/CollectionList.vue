@@ -13,7 +13,7 @@
             </slot>
             <template v-if="actionIcon">
               <a @click.stop="$emit('item-click', item)" class="secondary-content">
-                <i class="material-icons">{{ actionIcon }}</i>
+                  <i class="material-icons">{{ actionIcon }}</i>
               </a>
             </template>
           </div>

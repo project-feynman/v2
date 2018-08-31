@@ -13,28 +13,6 @@
       </big-red-button>
     </div>
     <div v-if="questions[0]">
-      <div class="container">
-        <ul v-if="activeFeynmen.length != 0" class="collection with-header black">
-          <li class="collection-header">
-            <h4>Feynmen</h4>
-          </li>
-          <template v-for="f in activeFeynmen">
-            <li :key="f.uid" class="collection-item avatar white">
-              <i class="material-icons circle grey">person</i>
-              <span class="title">Feynman #{{ f.feynmanNumber }}</span>
-              <p v-if="f.finished">Finished</p>
-              <Promised :promise="checkOnline(f)">
-                <p>Fetching online status...</p>
-                <p slot-scope="data" class="green-text">{{ data }}</p>
-                <p slot="catch" slot-scope="error">Error: {{ error.message }}</p>
-              </Promised>
-              <a @click="enterChat(f)" class="secondary-content btn-floating pulse pink">
-                <i class="material-icons white-text">email</i>
-              </a>
-            </li>
-          </template>
-        </ul>
-      </div>
       <template v-for="(group, idx) in chainReactionGroups">
         <chain-reaction :list-of-nodes="getParticipants(group)" :groupNumber="idx" :key="idx"></chain-reaction>
       </template>
