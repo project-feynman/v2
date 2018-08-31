@@ -5,7 +5,7 @@
       <base-spinner v-if="loading"></base-spinner>
     </div>
     <div id="firebaseui-auth-container"></div>
-    <template v-if="user != 'undetermined' && user != null">
+    <template v-if="isLoggedIn">
       <div class="dashboard-button center">
         <router-link to="/subjects">
           <a class="btn-floating pulse pink btn-large">
@@ -47,11 +47,14 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    isLoggedIn () {
+      return this.user != 'undetermined' && this.user != null
     }
   },
   watch: {
     user () {
-      if (this.user == null) {
+      if (!this.isLoggedIn) {
         this.loading = false 
         // sign up user to Firebase - register in Firestore immediately after redirect
         var ui = new firebaseui.auth.AuthUI(firebase.auth())
@@ -66,7 +69,7 @@ export default {
     }
   },
   mounted () {
-    if (this.user != null && this.user != 'undetermined') {
+    if (this.isLoggedIn) {
       this.loading = false
     }
   }

@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="custom-offset"></div>
-    <h2 class="center">{{ $route.params.subject_id }}</h2>
+    <h2>{{ $route.params.subject_id }}</h2>
     <div v-if="loading" class="spinner-wrapper">
-      <base-spinner></base-spinner>
+      <base-spinner/>
     </div>
     <div v-if="subject && !loading" class="pset-card">
       <template v-for="(pset, i) in subject.psets">
-        <base-card  :key="i" class="pset-card" @click="redirectToPset(pset)">
+        <base-card :key="i" class="pset-card" @click="redirectToPset(pset)">
           <p class="black-text">Enter P-Set {{ pset }}</p>
           <span v-if="user.displayName == 'Elton Lin'" @click="deletePset(pset)" class='btn-floating btn-large halfway-fab red'>
             <i class='material-icons right'>delete_outline</i>
@@ -72,12 +72,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .custom-offset {
   padding-top: 60px;
 }
 
 h2 {
+  @extend .center;
   padding-bottom: 50px;
 }
 

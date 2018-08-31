@@ -3,9 +3,9 @@
     <div class="custom-offset"></div>
     <h2 class="center">{{ $route.params.subject_id }} P-Set {{ $route.params.pset_number }}</h2>
     <div v-if="loading" class="spinner-wrapper">
-      <base-spinner></base-spinner>
+      <base-spinner/>
     </div>
-    <template v-if="allQuestions && !loading && user != null && user != 'undetermined'">
+    <template v-if="allQuestions && !loading && isLoggedIn">
       <div class="question-card">
         <base-card v-for="(question, i) in allQuestions" :key="i">
           <h5>{{ getLastChar(question.questionID) }}. {{ question.content }}</h5>
@@ -210,7 +210,6 @@ export default {
       return submitted 
     },
     async addToRecentPset () {
-      console.log('addToRecentPset()')
       if (!this.isLoggedIn) {
         return 
       }

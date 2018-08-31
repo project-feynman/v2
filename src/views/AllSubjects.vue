@@ -55,12 +55,17 @@ export default {
   methods: {
     async addSubject () {
       const newObject = {
-        subjectNumber: this.newSubject
+        subjectNumber: this.newSubject,
+        psets: [1]
       }
       const ref = db.collection('subjects').doc(this.newSubject)
+      this.newSubject = ''
       await ref.set(newObject)
     },
     getCurrentPset ({ psets }) {
+      if (psets.length == 0) {
+        return 
+      }
       const lastPset = psets[psets.length - 1]
       return lastPset 
     },

@@ -17,7 +17,6 @@
         <template v-else>
           <collection-list title="Recorded discussions"
                           :listItems="journeys"
-                          itemName="title"
                           @entire-click="journey => redirect(journey)"/>
         </template>
       </div>
@@ -52,7 +51,6 @@ export default {
       return output 
     },
     redirect (journey) {
-      console.log(`journey = ${journey}`)
       const url = '/conversation/' + journey.conversationID
       this.$router.push(url)
     },

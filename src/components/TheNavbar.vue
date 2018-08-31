@@ -64,9 +64,7 @@ import db from '@/firebase/init.js'
 export default {
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
-    console.log(`dropdown element = ${elem}`)
     M.Dropdown.init(elem)
-    console.log('dropdown initialized')
   },
   computed: {
     user () {
