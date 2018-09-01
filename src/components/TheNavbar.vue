@@ -107,14 +107,17 @@ export default {
       this.$router.push('/')
     },
     async markNotifAsRead () {
+      // mark notification as read 
       this.newNotif = false 
       const notifs = this.user.notifications
       notifs[notifs.length - 1].new = false 
-      console.log(`notifs = ${notifs}`)
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         notifications: notifs 
       })
+      // redirect to chat 
+      const roomId = notifs[notifs.length - 1].roomId 
+      this.$router.push(`/chat/${roomId}`)
     }
   }
 }
