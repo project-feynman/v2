@@ -61,8 +61,7 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
-import 'firebase/firestore'
+import 'firebase/storage'
 import db from '@/firebase/init.js'
 import NewExplanation from './NewExplanation.vue'
 

@@ -29,7 +29,7 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
+import 'firebase/firestore'
 import Promised from 'vue-promised'
 import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'
