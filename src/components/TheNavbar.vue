@@ -105,7 +105,9 @@ export default {
       this.$router.push('/')
     },
     async markNotifAsRead () {
-      // mark notification as read 
+      // mark notification as read
+      const roomId = notifs[notifs.length - 1].roomId 
+      this.$router.push(`/chat/${roomId}`) 
       this.newNotif = false 
       const notifs = this.user.notifications
       notifs[notifs.length - 1].new = false 
@@ -114,8 +116,6 @@ export default {
         notifications: notifs 
       })
       // redirect to chat 
-      const roomId = notifs[notifs.length - 1].roomId 
-      this.$router.push(`/chat/${roomId}`)
     }
   }
 }
