@@ -112,7 +112,7 @@ export default {
         return 
       }
       // create question object 
-      const questionID = this.$route.path + '/' + this.newQuestionNumber 
+      var questionID = this.$route.path + '/' + this.newQuestionNumber 
       const questionObject = {
         content: this.newQuestion,
         fromPset: this.$route.path,
@@ -124,12 +124,13 @@ export default {
           finished: false
         }]
       }
+      questionID = questionID.split('/').join('-')
       this.newQuestion = null
       this.newQuestiomNumber = null
       this.feedback = null 
       // upload it to Firestore
-      const ref = db.collection('questions')
-      await ref.add(questionObject)
+      const ref = db.collection('questions').doc(questionID)
+      await ref.set(questionObject)
     },
     async deleteQuestion (id) {
       const ref = db.collection('questions').doc(id)

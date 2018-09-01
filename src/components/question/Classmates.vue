@@ -1,7 +1,7 @@
 <template>
   <div>        
     <template v-if="question[0]">
-      <collection-list title="Classmates doing this question right now"
+      <collection-list :title="`${students.length} classmates doing this question right now`"
                        :listItems="students" 
                        @entire-click="student => enterChat(student)"
                        actionIcon="chat"
@@ -10,7 +10,7 @@
           Feynman #{{ item.feynmanNumber }}
         </template>
       </collection-list>
-      <collection-list title="Classmates who finished and want to help"
+      <collection-list :title="`${activeFeynmen.length} classmates finished and want to help`"
                        :listItems="activeFeynmen" 
                        @entire-click="student => enterChat(student)"
                        actionIcon="message"
@@ -19,9 +19,9 @@
           Feynman #{{ item.feynmanNumber }}
         </template>
       </collection-list> 
-      <collection-list title="Teaching Assistants">
+      <collection-list title="0 Teaching Assistants">
       </collection-list>
-      <collection-list title="Professors">
+      <collection-list title="0 Professors">
       </collection-list>
     </template>
   </div>
