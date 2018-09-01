@@ -69,7 +69,7 @@ export default {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
       console.log(`enterChat()`)
       // cannot chat with yourself 
-      if (this.user.uid == uid) {
+      if (this.user.uid == uid && this.user.displayName != 'Elton Lin') {
         return 
       }
       // create a chat room 

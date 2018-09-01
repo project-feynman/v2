@@ -1,8 +1,29 @@
 <template>
   <div class="big-red-button">
-    <button @click="$emit('click')">EUREKA</button>
+    <button @click="$emit('click')"
+            class="tooltipped" 
+            data-tooltip =
+              "<ul>
+                <li></li>
+                <li>If you want to help someone, press the button</li>
+              </ul>">
+      EUREKA
+    </button>
   </div>
 </template>
+
+<script>
+export default {
+  mounted () {
+    const elems = document.querySelectorAll('.tooltipped')
+    const options = {
+      html: true
+    }
+    var instances = M.Tooltip.init(elems, options)
+  }
+}
+
+</script>
 
 <style scoped lang="scss">
 $brand: rgb(203, 4, 4);

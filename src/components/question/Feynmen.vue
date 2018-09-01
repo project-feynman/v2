@@ -2,13 +2,10 @@
   <div>
     <div class="center">
       <big-red-button 
-        class="tooltipped" 
+
         @click="handleEureka()"
-        data-tooltip =
-        "<ul>
-          <li></li>
-          <li>If you want to help someone, press the button</li>
-        </ul>">
+  
+      >
       </big-red-button>
     </div>
     <div v-if="questions[0]">
@@ -40,11 +37,11 @@ export default {
   },
   async mounted () {
     // initialize tooltips 
-    const elems = document.querySelectorAll('.tooltipped')
-    const options = {
-      html: true
-    }
-    var instances = M.Tooltip.init(elems, {})
+    // const elems = document.querySelectorAll('.tooltipped')
+    // const options = {
+    //   html: true
+    // }
+    // var instances = M.Tooltip.init(elems, options)
     const ref = db.collection('questions').where('questionID', '==', this.$route.path)
     await this.$bind('questions', ref)
     this.loading = false
