@@ -32,9 +32,6 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/database'
-import 'firebase/firestore'
 import db from '@/firebase/init.js'
 
 export default {
