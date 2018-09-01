@@ -12,16 +12,14 @@
 
           <div class="modal-body black-text">
             <slot name="body">
-              default body
             </slot>
           </div>
 
-          <div class="modal-footer black-text">
+          <div class="modal-footer black-text center">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
+              <base-button class="modal-default-button" @click="$emit('close')">
                 Enter Chat
-              </button>
+              </base-button>
             </slot>
           </div>
         </div>
@@ -29,6 +27,17 @@
     </div>
   </transition>
 </template>
+
+<script>
+import BaseButton from '@/components/reusables/BaseButton.vue'
+
+export default {
+  components: {
+    BaseButton
+  }
+}
+
+</script>
 
 <style scoped>
 .modal-mask {
@@ -49,7 +58,7 @@
 }
 
 .modal-container {
-  width: 300px;
+  width: 400px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -68,18 +77,9 @@
   margin: 20px 0;
 }
 
-.modal-default-button {
+/* .modal-default-button {
   float: right;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
+} */
 
 .modal-enter {
   opacity: 0;

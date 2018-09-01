@@ -72,15 +72,15 @@ export default {
       if (this.user.uid == uid && this.user.displayName != 'Elton Lin') {
         return 
       }
-      // create a chat room 
+      // check if room exists 
       const sortedUIDs = [this.user.uid, uid].sort() 
       const joinedUIDs = sortedUIDs.join('-')
       var questionID = this.$route.path.split('/').join('-')
       const roomId = joinedUIDs + questionID 
-      // const doc = db.collection('chatRooms').doc(roomId)
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
       if (!chatRoom.exists) {
+        // create a chat room 
         const currentUser = {
           displayName: this.user.displayName,
           uid: this.user.uid 
@@ -89,15 +89,6 @@ export default {
           displayName,
           uid
         }
-        // notify feynman
-        const notif = {
-          roomId,
-          new: true 
-        }
-        const feynmanRef = db.collection('users').doc(uid) 
-        feynmanRef.update({
-          notifications: firebase.firestore.FieldValue.arrayUnion(notif)
-        })
         await doc.set({
           title: 'Click to edit title (ENTER to save)',
           messages: [],
@@ -109,6 +100,15 @@ export default {
           allPaths: []
         })
       }
+      // notify feynman
+      const notif = {
+        roomId,
+        new: true 
+      }
+      const feynmanRef = db.collection('users').doc(uid) 
+      feynmanRef.update({
+        notifications: firebase.firestore.FieldValue.arrayUnion(notif)
+      })
       this.$router.push('/chat/' + roomId)
       // TODO: notify user 
     },

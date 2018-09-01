@@ -36,12 +36,6 @@ export default {
     }
   },
   async mounted () {
-    // initialize tooltips 
-    // const elems = document.querySelectorAll('.tooltipped')
-    // const options = {
-    //   html: true
-    // }
-    // var instances = M.Tooltip.init(elems, options)
     const ref = db.collection('questions').where('questionID', '==', this.$route.path)
     await this.$bind('questions', ref)
     this.loading = false
