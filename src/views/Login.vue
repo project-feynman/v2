@@ -23,8 +23,7 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
-import 'firebase/firestore'
+import 'firebase/auth'
 import firebaseui from 'firebaseui'
 import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'
