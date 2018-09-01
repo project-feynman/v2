@@ -1,8 +1,8 @@
 <template>
   <div>        
-    <template v-if="question[0]">
-      <collection-list :title="`${students.length} classmates doing this question right now`"
-                       :listItems="students" 
+    <template v-if="question[0] && studentsWorking && activeFeynmen">
+      <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
+                       :listItems="studentsWorking" 
                        @entire-click="student => enterChat(student)"
                        actionIcon="chat"
                        @item-click="student => enterChat(student)">
@@ -43,8 +43,34 @@ export default {
     user () {
       return this.$store.state.user 
     },
+    // uses "statusOfClassmates" and "students" to compute output 
+    studentsWorking () { 
+      console.log(`this.students = ${this.students}`)
+      if (this.students == []) {
+        return 
+      }
+      if (this.students.length == 0) {
+        return 
+      }
+      if (this.statusOfClassmates == []) {
+        return 
+      }
+    var output = []
+      // filter the old fashion way 
+      console.log('status of classmates =', this.statusOfClassmates)
+      var n = this.students.length 
+      for (var i = 0; i < n; i++) {
+        const isOnline = this.statusOfClassmates[i]
+        console.log(`i = ${i}, isOnline = ${isOnline}`)
+        if (isOnline) {
+          const student = this.students[i]
+          output.push(student)
+        }
+      }
+      return output 
+    },
     students () {
-      var output = this.question[0].feynmen
+      const output = this.question[0].feynmen
       return output.filter(f => f.chainReactionCreatorUID == null)
     },
     activeFeynmen () {
@@ -61,7 +87,8 @@ export default {
   data () {
     return { 
       question: [],
-      loading: true 
+      loading: true,
+      statusOfClassmates: [] 
     }
   },
   async mounted () {
@@ -69,6 +96,28 @@ export default {
     await this.$bind('question', ref)
     this.loading = false
      // TODO: one-way bind "isOnline" for each user 
+  },
+  watch: {
+    loading () { // uses "this.students" to compute "this.statusOfClassmates"
+      if (this.loading == false) {
+        // set up snapshot listeners - and bind them to "statusOfClassmates"
+        const students = this.students 
+        const n = students.length 
+        this.statusOfClassmates = new Array(n).fill(false)
+        for (var i = 0; i < n; i++) {
+          const student = students[i]
+          console.log(`student = ${student}`)
+          const ref = db.collection('users').doc(student.uid)
+          ref.onSnapshot(doc => {
+            if (doc.exists) {
+              // console.log(`doc data = ${JSON.stringify(doc.data())}`)
+              this.statusOfClassmates[i] = doc.data().isOnline 
+            }
+          })
+        }
+        console.log(`after initially snapshots, status of classmates = ${this.statusOfClassmates}`)
+      }
+    }
   },
   methods: {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {

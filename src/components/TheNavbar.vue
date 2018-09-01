@@ -115,7 +115,6 @@ export default {
       await ref.update({
         notifications: notifs 
       })
-      // redirect to chat 
     }
   }
 }
