@@ -78,7 +78,6 @@ export default {
         const notifs = this.user.notifications
         const latestNotif = notifs[notifs.length - 1]
         if (latestNotif.new) {
-          console.log('setting newNotif to true')
           this.newNotif = true 
         }
       }

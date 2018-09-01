@@ -18,6 +18,10 @@
         <template slot-scope="{ item }">
           Feynman #{{ item.feynmanNumber }}
         </template>
+      </collection-list> 
+      <collection-list title="Teaching Assistants">
+      </collection-list>
+      <collection-list title="Professors">
       </collection-list>
     </template>
   </div>

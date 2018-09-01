@@ -102,6 +102,10 @@ export default {
       await userRef.update({
         recentChatID: this.$route.params.room_id
       })
+      // set is talking to false 
+      await userRef.update({
+        isTalking: true 
+      })
     },
     async shareJourney () {
       this.feedback = 'Saving the doodle as an animation...'

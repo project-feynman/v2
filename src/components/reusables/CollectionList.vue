@@ -1,5 +1,5 @@
 <template>
-  <div v-if="listItems">
+  <div>
     <ul class="collection with-header">
       <li class="collection-header">
         <h6>{{ title }}</h6>
@@ -13,7 +13,7 @@
             </slot>
             <template v-if="actionIcon">
               <a @click.stop="$emit('item-click', item)" class="secondary-content">
-                  <i class="material-icons">{{ actionIcon }}</i>
+                <i class="material-icons">{{ actionIcon }}</i>
               </a>
             </template>
           </div>
@@ -30,7 +30,10 @@ export default {
     listItems: Array,
     itemName: String,
     actionIcon: String
-  }
+  },
+  mounted () {
+    console.log(`title = ${this.title}`)
+  },
 }
 </script>
 
