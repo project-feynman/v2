@@ -8,7 +8,7 @@
     <div class="center">
       <base-button @click="shareJourney()">Share Journey</base-button>
     </div>
-    <p v-if="feedback">{{ feedback }}</p>
+    <p v-if="feedback" class="red-text">{{ feedback }}</p>
     <div class="card">
       <div class="card-content">
         <ul class="messages" v-chat-scroll>
@@ -73,13 +73,7 @@ export default {
     let doc = db.collection('chatRooms').doc(roomID)
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
-      await doc.set({
-        messages: [],
-      })
-      const whiteboardRef = db.collection('whiteboards').doc(roomID)
-      await whiteboardRef.set({
-        allPaths: []
-      })
+      this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
     }
     // fetch messages from Firestore and set up syncing 
     doc.onSnapshot(snapshot => {

@@ -1,4 +1,5 @@
 <template>
+<div>
   <nav>
     <ul id="dropdown1" class="dropdown-content">
       <li>
@@ -55,13 +56,19 @@
       </ul>
     </div>
   </nav>
+  <popup-modal v-if="newNotif" @close="newNotif = false"/>
+</div>
 </template>
 
 <script>
 import firebase from 'firebase'
 import db from '@/firebase/init.js'
+import PopupModal from '@/components/reusables/PopupModal.vue'
 
 export default {
+  components: {
+    PopupModal
+  },
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
     M.Dropdown.init(elem)
@@ -72,6 +79,11 @@ export default {
     },
     isLoggedIn () {
       return this.user != null && this.user != 'undetermined'
+    }
+  },
+  data () {
+    return {
+      newNotif: true
     }
   },
   methods: {

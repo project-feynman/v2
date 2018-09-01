@@ -12,7 +12,7 @@
       </collection-list>
       <collection-list title="Classmates who finished and want to help"
                        :listItems="activeFeynmen" 
-                       @entire-click="student => handleEntireClick(student)"
+                       @entire-click="student => enterChat(student)"
                        actionIcon="message"
                        @item-click="student => enterChat(student)">
         <template slot-scope="{ item }">
@@ -67,13 +67,17 @@ export default {
   },
   methods: {
     async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
+      console.log(`enterChat()`)
       // cannot chat with yourself 
       if (this.user.uid == uid) {
         return 
       }
       // create a chat room 
       const sortedUIDs = [this.user.uid, uid].sort() 
-      const roomId = sortedUIDs.join('')
+      const joinedUIDs = sortedUIDs.join('-')
+      var questionID = this.$route.path.split('/').join('-')
+      const roomId = joinedUIDs + questionID 
+      // const doc = db.collection('chatRooms').doc(roomId)
       const doc = db.collection('chatRooms').doc(roomId)
       const chatRoom = await doc.get()
       if (!chatRoom.exists) {
@@ -85,8 +89,17 @@ export default {
           displayName,
           uid
         }
+        // notify feynman
+        const notif = {
+          roomId,
+          new: true 
+        }
+        const feynmanRef = db.collection('users').doc(uid) 
+        feynmanRef.update({
+          notifications: firebase.firestore.FieldValue.arrayUnion(notif)
+        })
         await doc.set({
-          title: 'Click to edit title (press ENTER to save)',
+          title: 'Click to edit title (ENTER to save)',
           messages: [],
           participants: [currentUser, feynman],
           forQuestion: this.$route.path,
