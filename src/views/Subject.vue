@@ -31,14 +31,10 @@ export default {
       return this.$store.state.user
     }
   },
-  mounted () {
-  this.$bind('subject', db.collection('subjects').doc(this.$route.params.subject_id))
-    .then(doc => {
-      this.loading = false 
-    })
-    .catch(error => {
-      console.log('error in loading: ', error)
-    })
+  async created () {
+    const ref = db.collection('subjects').doc(this.$route.params.subject_id)
+    await this.$bind('subject', ref)
+    this.loading = false 
   },
   data () {
     return {
