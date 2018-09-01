@@ -6,9 +6,9 @@
 </template>
 
 <script>
+import M from 'materialize-css'
 import store from '@/store/index.js'
 import TheNavbar from '@/components/TheNavbar.vue'
-import M from 'materialize-css'
 
 export default {
   name: 'App',

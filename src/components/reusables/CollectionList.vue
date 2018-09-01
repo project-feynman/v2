@@ -30,10 +30,7 @@ export default {
     listItems: Array,
     itemName: String,
     actionIcon: String
-  },
-  mounted () {
-    console.log(`title = ${this.title}`)
-  },
+  }
 }
 </script>
 

@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/database'
+import 'firebase/firestore'
 import firebaseui from 'firebaseui'
 import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'

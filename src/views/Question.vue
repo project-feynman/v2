@@ -15,6 +15,9 @@
           <li class="tab tooltipped col s3"
               data-tooltip="Helpful external resources found by others">
             <a href="#test2">Resources</a></li>
+          <li class="tab tooltipped col s3"
+              data-tooltip="Actionable insights for staff members">
+            <a href="#test3">Statistics</a></li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">
@@ -27,18 +30,17 @@
       <div id="test2" class="col s12 m12">
         <resources/>
       </div>
-      <!-- <div id="test3" class="col s12 m12">
-        <classmates/>
-      </div> -->
-      <!-- <div id="test4" class="col s12 m12">
-        <feynmen></feynmen>
-      </div> -->
+      <div id="test3" class="col s12 m12">
+       <h2>Coming soon!</h2>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/database'
+import 'firebase/firestore'
 import db from '@/firebase/init.js'
 import Explanations from '@/components/question/Explanations.vue'
 import Resources from '@/components/question/Resources.vue'
