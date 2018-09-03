@@ -50,7 +50,6 @@ async function startApp () {
   console.log(`store.state.user = ${store.state.user}`)
 }
 
-
 startApp()
 
 // actually, I think I want to go with solution 1 because it's a good idea to separate the user logic into the store
