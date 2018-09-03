@@ -110,7 +110,8 @@ export default {
       tool.onMouseUp = async event => {
         console.log('onMouseUp()')
         PATH.add(event.point)
-        PATH.simplify()
+        // PATH.simplify()
+        
         // const segments = this.path.getSegments()
         const segments = PATH.getSegments()
         // save the "path" that the user has just drawn
