@@ -25,7 +25,6 @@ export default {
     }
   },
   async mounted () {
-    console.log(`project  = ${project}`)
     this.paper.setup('video')
     const myDoodles = await this.$bind('doodles', db.collection('doodles'))
     this.drawAllPaths()
@@ -38,7 +37,7 @@ export default {
       }
       const paths = this.doodles[0].paths
       const n = paths.length 
-      for (var i=0; i<n; i++) {
+      for (var i = 0; i < n; i++) {
         this.drawPath(paths[i])
         await timeout(500)
       }
