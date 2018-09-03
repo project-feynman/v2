@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueFire from 'vuefire'
 import VueResource from 'vue-resource'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 import VueChatScroll from 'vue-chat-scroll'
 
 import App from './App.vue'

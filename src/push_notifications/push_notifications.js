@@ -1,4 +1,5 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 import axios from 'axios'
 import db from '@/firebase/init.js'
 
