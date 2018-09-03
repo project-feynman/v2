@@ -48,8 +48,6 @@ async function startApp () {
   const user = await store.dispatch('fetchUser')
   console.log(`user = ${user}`)
   console.log(`store.state.user = ${store.state.user}`)
-  // fuck, still not working, why 
-  // shit
 }
 
 
