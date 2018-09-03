@@ -3,10 +3,7 @@
     <button @click="$emit('click')"
             class="tooltipped" 
             data-tooltip =
-              "<ul>
-                <li></li>
-                <li>If you want to help someone, press the button</li>
-              </ul>">
+              "If you want to help someone, press the button">
       EUREKA
     </button>
   </div>
@@ -16,10 +13,7 @@
 export default {
   mounted () {
     const elems = document.querySelectorAll('.tooltipped')
-    const options = {
-      html: true
-    }
-    var instances = M.Tooltip.init(elems, options)
+    var instances = M.Tooltip.init(elems)
   }
 }
 

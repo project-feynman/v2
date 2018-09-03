@@ -51,9 +51,20 @@ export default {
       }
       const strokes = this.allStrokes
       const n = strokes.length 
+      // determine drawing speed 
+      var strokePeriod = 0 
+      if (n < 10) {
+        strokePeriod = 600 
+      } else if (n < 20) {
+        strokePeriod = 300 
+      } else if (n < 40) {
+        strokePeriod = 150
+      } else {
+        strokePeriod = 50 
+      }
       for (var i = 0; i < n; i++) {
         this.drawPath(strokes[i])
-        await timeout(500)
+        await timeout(strokePeriod)
       }
       this.loadedPreviousDrawings = true 
     },
