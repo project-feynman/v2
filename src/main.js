@@ -36,7 +36,9 @@ Vue.use(router)
 
 Vue.config.productionTip = false
 
-store.dispatch('fetchUser') // purposely omit using 'await' so App renders in parallel 
+const dispatch = async () => { await store.dispatch('fetchUser') } // purposely omit using 'await' so App renders in parallel 
+dispatch()
+console.log(store.state.user)
 new Vue({
   router,
   store,

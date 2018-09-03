@@ -17,11 +17,11 @@ const askForPermissionToReceiveNotifications = async () => {
   }
 }
 
-//const sendTokenToFirestore = () => {
-  //if(!currentTokenInDb) {
-//
-  //}
-//}
+const sendTokenToFirestore = () => {
+  if(!currentTokenInDb) {
+
+  }
+}
 
 const sendNotification = async (title, body) => {
   const requestBody = {
