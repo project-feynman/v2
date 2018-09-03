@@ -72,7 +72,7 @@ export default {
     PopupModal
   },
   watch: {
-    user () {
+    async user () {
       if (this.isLoggedIn) {
         // display notifications, if there are any 
         const notifs = this.user.notifications

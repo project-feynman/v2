@@ -46,42 +46,29 @@ export default {
     user () {
       return this.$store.state.user 
     },
-    studentsWorking () { 
-      if (this.students) {
-        var output = [] 
-        const n = this.students.length 
-        for (var i = 0; i < n; i++) {
-          if (this.statusOfClassmates[i] == true) {
-            console.log('student is online, his name is', this.students[i].displayName)
-            output.push(this.students[i])
-          }
-        }
-        return output
+    allOnlineStudents () {
+      if (!this.question) {
+        return 
       }
-    },
-    students () {
-      if (this.question && this.question[0]) {
-        const output = this.question[0].feynmen
-        return output.filter(f => f.chainReactionCreatorUID == null)
-      }
-    },
-    onlineActiveFeynmen () {
-      if (this.activeFeynmen) {
-        var output = [] 
-        const n = this.activeFeynmen.length 
+      if (this.question[0]) {
+        var output = []
+        const n = this.question[0].feynmen.length 
         for (var i = 0; i < n; i++) {
-          if (this.statusOfActiveFeynmen[i] == true) {
-            const feynman = this.activeFeynmen[i]
-            console.log('feynman is online, his name is', feynman.displayName)
-            output.push(feynman)
+          if (this.allStudentStatuses[i] == true) {
+            output.push(this.question[0].feynmen[i])
           }
         }
         return output 
       }
     },
-    activeFeynmen () {
-      if (this.question && this.question[0]) {
-        var output = this.question[0].feynmen 
+    studentsWorking () {
+      if (this.allOnlineStudents) {
+        return this.allOnlineStudents.filter(student => student.chainReactionCreatorUID == null)
+      }
+    },
+    onlineActiveFeynmen () {
+      if (this.allOnlineStudents) {
+        var output = this.allOnlineStudents
         output = output.filter(f => f.chainReactionCreatorUID != null)
         output = output.filter(f => f.retired != true || f.retired == null)
         return output 
@@ -92,8 +79,7 @@ export default {
     return { 
       question: [],
       loading: true,
-      statusOfClassmates: [],
-      statusOfActiveFeynmen: [] 
+      allStudentStatuses: []
     }
   },
   async mounted () {
@@ -108,49 +94,24 @@ export default {
   watch: {
     async loading () { // uses "this.students" to compute "this.statusOfClassmates"
       if (this.loading == false) {
-        if (this.students != null) {
-          const students = this.students 
-          const n = students.length 
-          this.statusOfClassmates = new Array(n).fill(0)
-          for (var i = 0; i < n; i++) {
-            const student = students[i]
-            const ref = db.collection('users').doc(student.uid)
-            const idx = i // necessary line, because the snapshot hook reads the latest value of i (which is likely to be when i has finished iterating and is equal to n)
-            await ref.onSnapshot(doc => {
-              // check if online and not talking 
-              if (!doc.exists) {
-                return 
-              }
-              const data = doc.data()
-              if (data.isTalking != null) {
-                const available = data.isOnline && !data.isTalking 
-                this.statusOfClassmates.splice(idx, 1, available)
-              } else {
-                this.statusOfClassmates.splice(idx, 1, data.isOnline)
-              }
-            })
-          }
-        }
-        if (this.activeFeynmen != null) {
-          const n = this.activeFeynmen.length 
-          this.statusOfActiveFeynmen = new Array(n).fill(0)
-          for (var i = 0; i < n; i++) {
-            const feynman = this.activeFeynmen[i] 
-            const ref = db.collection('users').doc(feynman.uid) 
-            const idx = i
-            await ref.onSnapshot(doc => {
-              if (!doc.exists) {
-                return 
-              }
-              const data = doc.data()
-              if (data.isTalking != null) {
-                const available = data.isOnline && !data.isTalking
-                this.statusOfActiveFeynmen.splice(idx, 1, available)
-              } else {
-                this.statusOfActiveFeynmen.splice(idx, 1, data.isOnline)
-              }
-            })
-          }
+        const feynmen = this.question[0].feynmen 
+        const n = feynmen.length 
+        this.allStudentStatuses = new Array(n).fill(0)
+        for (var i = 0; i < n; i++) {
+          const ref = db.collection('users').doc(feynmen[i].uid)
+          const idx = i
+          await ref.onSnapshot(doc => {
+            if (!doc.exists) {
+              return 
+            }
+            const data = doc.data()
+            if (data.isTalking != null) {
+              const available = data.isOnline && !data.isTalking
+              this.allStudentStatuses.splice(idx, 1, available)
+            } else {
+              this.allStudentStatuses.splice(idx, 1, data.isOnline)
+            }
+          })
         }
       }
     }
