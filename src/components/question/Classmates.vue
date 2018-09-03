@@ -3,7 +3,7 @@
     <!-- <p v-if="question" class="white-text">students: {{ students }}</p>
     <p v-if="question" class="white-text">statusOfStudents: {{ statusOfClassmates }}</p>
     <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p> -->
-    <template v-if="question[0] && studentsWorking && activeFeynmen">
+    <template v-if="question[0] && studentsWorking && onlineActiveFeynmen">
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
                        @entire-click="student => enterChat(student)"
@@ -13,8 +13,8 @@
           Feynman #{{ item.feynmanNumber }}
         </template>
       </collection-list>
-      <collection-list :title="`${activeFeynmen.length} classmates finished and want to help`"
-                       :listItems="activeFeynmen" 
+      <collection-list :title="`${onlineActiveFeynmen.length} classmates finished and want to help`"
+                       :listItems="onlineActiveFeynmen" 
                        @entire-click="student => enterChat(student)"
                        actionIcon="message"
                        @item-click="student => enterChat(student)">
@@ -26,6 +26,9 @@
       </collection-list>
       <collection-list title="0 Professors">
       </collection-list>
+    </template>
+    <template v-else>
+      <h5 class="center white-text">Nobody is online currently - get your friends to join so it's not so lonely</h5>
     </template>
   </div>
 </template>
@@ -62,14 +65,29 @@ export default {
     students () {
       if (this.question && this.question[0]) {
         const output = this.question[0].feynmen
+        return output.filter(f => f.chainReactionCreatorUID == null)
+      }
+    },
+    onlineActiveFeynmen () {
+      // the problem with computing online users is that 
+      // it might be an expensive operation 
+      // perhaps, might it be better to use a 'where' query for all the users who are online 
+      if (this.activeFeynmen) {
+        var output = [] 
+        const n = this.activeFeynmen.length 
+        for (var i = 0; i < n; i++) {
+          if (this.statusOfActiveFeynmen[i] == true) {
+            const feynman = this.activeFeynmen[i]
+            console.log('feynman is onlien, his name is', feynman.displayName)
+            output.push(feynman)
+          }
+        }
         return output 
-        // return output.filter(f => f.chainReactionCreatorUID == null)
       }
     },
     activeFeynmen () {
-      if (!this.question[0]) {
-        return []
-      } else if (this.question[0]) {
+      if (this.question && this.question[0]) {
+        // get people who are online first - then filter them 
         var output = this.question[0].feynmen 
         output = output.filter(f => f.chainReactionCreatorUID != null)
         output = output.filter(f => f.retired != true || f.retired == null)
@@ -81,7 +99,8 @@ export default {
     return { 
       question: [],
       loading: true,
-      statusOfClassmates: [] 
+      statusOfClassmates: [],
+      statusOfActiveFeynmen: [] 
     }
   },
   async mounted () {
@@ -96,21 +115,33 @@ export default {
   watch: {
     async loading () { // uses "this.students" to compute "this.statusOfClassmates"
       if (this.loading == false) {
-        if (this.students == null) {
-          return 
+        if (this.students != null) {
+          const students = this.students 
+          const n = students.length 
+          this.statusOfClassmates = new Array(n).fill(0)
+          for (var i = 0; i < n; i++) {
+            const student = students[i]
+            const ref = db.collection('users').doc(student.uid)
+            const idx = i // necessary line, because the snapshot hook reads the latest value of i (which is likely to be when i has finished iterating and is equal to n)
+            await ref.onSnapshot(doc => {
+              this.statusOfClassmates.splice(idx, 1, doc.data().isOnline)
+            })
+          }
         }
-        // set up snapshot listeners - and bind them to "statusOfClassmates"
-        const students = this.students 
-        const n = students.length 
-        this.statusOfClassmates = new Array(n).fill(0)
-        for (var i = 0; i < n; i++) {
-          const student = students[i]
-          const ref = db.collection('users').doc(student.uid)
-          const idx = i // necessary line, because the snapshot hook reads the latest value of i (which is likely to be when i has finished iterating and is equal to n)
-          await ref.onSnapshot(doc => {
-            this.statusOfClassmates.splice(idx, 1, doc.data().isOnline)
-          })
+        if (this.activeFeynmen != null) {
+          const n = this.activeFeynmen.length 
+          this.statusOfActiveFeynmen = new Array(n).fill(0)
+          for (var i = 0; i < n; i++) {
+            const feynman = this.activeFeynmen[i] 
+            const ref = db.collection('users').doc(feynman.uid) 
+            const idx = i
+            await ref.onSnapshot(doc => {
+              this.statusOfActiveFeynmen.splice(idx, 1, doc.data().isOnline )
+            })
+          }
         }
+        // set up snapshot listeners for students - and bind them to "statusOfClassmates"
+        
       }
     }
   },
