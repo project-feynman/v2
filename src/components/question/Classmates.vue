@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- <p v-if="question" class="white-text">students: {{ students }}</p>
-    <p v-if="question" class="white-text">statusOfStudents: {{ statusOfClassmates }}</p>
-    <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p> -->
-    <!-- <p v-if="question" class="white-text">activeFeynmen: {{ activeFeynmen }}</p>
-    <p v-if="question" class="white-text">onlineActiveFeynmen: {{ onlineActiveFeynmen }}</p> -->
     <template v-if="question[0] && studentsWorking && onlineActiveFeynmen">
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
@@ -71,9 +66,6 @@ export default {
       }
     },
     onlineActiveFeynmen () {
-      // the problem with computing online users is that 
-      // it might be an expensive operation 
-      // perhaps, might it be better to use a 'where' query for all the users who are online 
       if (this.activeFeynmen) {
         var output = [] 
         const n = this.activeFeynmen.length 
@@ -89,7 +81,6 @@ export default {
     },
     activeFeynmen () {
       if (this.question && this.question[0]) {
-        // get people who are online first - then filter them 
         var output = this.question[0].feynmen 
         output = output.filter(f => f.chainReactionCreatorUID != null)
         output = output.filter(f => f.retired != true || f.retired == null)
@@ -161,8 +152,6 @@ export default {
             })
           }
         }
-        // set up snapshot listeners for students - and bind them to "statusOfClassmates"
-        
       }
     }
   },

@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="center">
-      <big-red-button 
-
-        @click="handleEureka()"
-  
-      >
-      </big-red-button>
+      <big-red-button @click="handleEureka()"/>
     </div>
     <div v-if="questions[0]">
       <template v-for="(group, idx) in chainReactionGroups">

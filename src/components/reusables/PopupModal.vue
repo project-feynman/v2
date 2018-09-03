@@ -77,10 +77,6 @@ export default {
   margin: 20px 0;
 }
 
-/* .modal-default-button {
-  float: right;
-} */
-
 .modal-enter {
   opacity: 0;
 }
