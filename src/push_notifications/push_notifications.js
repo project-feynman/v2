@@ -1,16 +1,26 @@
 import firebase from 'firebase'
 import axios from 'axios'
+import db from '@/firebase/init.js'
 
-const messaging = firebase.messaging()
-messaging.usePublicVapidKey("BJ0Ou0MdMi6KAqeA8BOcmsFkzYCX0Uw5WmXZorqcgZX1Uf55bpJjbvb-Hq5eFajOXwI-j-w-D-o7X7J5FWJ34y4")
+var currentTokenInDb = false
+//const messaging = firebase.messaging()
+//messaging.usePublicVapidKey("BJ0Ou0MdMi6KAqeA8BOcmsFkzYCX0Uw5WmXZorqcgZX1Uf55bpJjbvb-Hq5eFajOXwI-j-w-D-o7X7J5FWJ34y4")
 
 const askForPermissionToReceiveNotifications = async () => {
   try {
-    await messaging.requestPermission()
+    await firebase.messaging().requestPermission()
+    console.log(true)
   } catch (error) {
     console.error(error)
+    console.log(false)
   }
 }
+
+//const sendTokenToFirestore = () => {
+  //if(!currentTokenInDb) {
+//
+  //}
+//}
 
 const sendNotification = async (title, body) => {
   const requestBody = {
