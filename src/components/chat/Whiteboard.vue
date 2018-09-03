@@ -28,7 +28,6 @@ export default {
     user () {
       if (this.user != null && this.user != 'undetermined') {
         if (!this.onMouseUpInitialized) {
-          console.log('initializing onMouseUp from watcher')
           this.initOnMouseUp() 
         } 
       }
@@ -50,7 +49,6 @@ export default {
       PATH = new Path()
       PATH.strokeColor = 'black'
     }
-    console.log('initialized onMouseDown successfully')
     tool.onMouseDrag = event => {
       PATH.add(event.point)
     }
@@ -110,7 +108,6 @@ export default {
     initOnMouseUp () {
       this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
-        console.log('onMouseUp()')
         PATH.add(event.point)
         // const segments = this.path.getSegments()
         const segments = PATH.getSegments()
