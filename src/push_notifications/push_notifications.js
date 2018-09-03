@@ -17,9 +17,9 @@ const askForPermissionToReceiveNotifications = async () => {
   }
 }
 
-const sendTokenToFirestore = () => {
+const sendTokenToFirestore = (db, uid) => {
   if(!currentTokenInDb) {
-
+    db.collection('users').doc(uid)
   }
 }
 

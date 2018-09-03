@@ -72,13 +72,25 @@ export default {
     PopupModal
   },
   watch: {
-    user () {
+    async user () {
       if (this.isLoggedIn) {
+        // display notifications, if there are any 
         const notifs = this.user.notifications
         const latestNotif = notifs[notifs.length - 1]
         if (latestNotif.new) {
           this.newNotif = true 
         }
+        // generate tokens if the user is new 
+        console.log(`user = ${this.user}`)
+        // you can import push_notifications.js and then call the function here 
+        const realToken = await push_notifications.generateToken 
+        var fakeToken = 'fake_token'
+        // if you are storing the token in the user document, then the ref wil be 
+        const ref = db.collection('users').doc(this.user.uid)
+        // you can do a update 
+        await ref.update({
+          token: fakeToken
+        })
       }
     }
   },

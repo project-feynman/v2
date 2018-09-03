@@ -52,11 +52,12 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
 }
 
 const actions = {  
-  fetchUser: async context => {
+  fetchUser: async context => { 
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()
+        var firstTime = true 
         if (mirror.exists) {
           ref.onSnapshot(mirror => {
             context.commit('setUser', mirror.data())
