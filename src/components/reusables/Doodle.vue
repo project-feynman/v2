@@ -38,6 +38,7 @@ export default {
   },
   watch: {
     allStrokes () {
+      console.log(`allStrokes = ${JSON.stringify(this.allStrokes)}`)
       this.drawAllPaths()
     }
   },

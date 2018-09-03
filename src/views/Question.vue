@@ -58,7 +58,16 @@ export default {
     }
   },
   created () {
-    this.addToRecentQuestion() // set is talking to false too 
+    if (this.isLoggedIn) {
+      this.addToRecentQuestion() // set is talking to false too 
+    }
+  },
+  watch: {
+    isLoggedIn () {
+      if (this.isLoggedIn) {
+        this.addToRecentQuestion() 
+      }
+    }
   },
   mounted () {
     // initialize tabs
@@ -78,7 +87,8 @@ export default {
   },
   data () {
     return {
-      question: []
+      question: [],
+      initialized: false 
     }
   },
   firestore () {
@@ -88,7 +98,11 @@ export default {
   },
   methods: {
     async addToRecentQuestion () {
+      console.log('addToRecentQuestion()')
       if (!this.isLoggedIn) {
+        return 
+      }
+      if (this.initialized) {
         return 
       }
       const userRef = db.collection('users').doc(this.user.uid)
@@ -96,6 +110,8 @@ export default {
         recentQuestionID: this.$route.path,
         isTalking: false 
       })
+      this.initialized = true 
+      console.log('updated isTalking to false')
     },
     async deleteJourney (journey) {
       const questionRef = db.collection('questions').doc(this.question[0].id)

@@ -101,7 +101,9 @@ export default {
       this.whiteboard.allPaths.forEach(stroke => {
         var path = new Path()
         path.strokeColor = 'pink'
-        stroke.points.forEach(p => path.add(new Point(p.x, p.y)))
+        stroke.points.forEach(p => {
+          path.add(new Point(p.x, p.y))
+        })
       })
       this.loadedPreviousDrawings = true
     },
@@ -110,8 +112,7 @@ export default {
       tool.onMouseUp = async event => {
         console.log('onMouseUp()')
         PATH.add(event.point)
-        // PATH.simplify()
-        
+        PATH.simplify()
         // const segments = this.path.getSegments()
         const segments = PATH.getSegments()
         // save the "path" that the user has just drawn

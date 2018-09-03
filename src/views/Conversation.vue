@@ -1,8 +1,14 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
-    <doodle v-if="doodle" :allStrokes="doodle"/>
-    <message-history v-if="messages" :messages="messages"/>
+    <template v-if="!doodle">
+      <p>Fetching doodle...</p>
+    </template>
+    <doodle v-else :allStrokes="doodle"/>
+    <template v-if="!messages">
+      <p>Fetching messages...</p>
+    </template>
+    <message-history v-else :messages="messages"/>
   </div>
 </template>
 
