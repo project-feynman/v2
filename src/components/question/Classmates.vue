@@ -1,5 +1,8 @@
 <template>
-  <div>        
+  <div>
+    <p v-if="question" class="white-text">students: {{ students }}</p>
+    <p v-if="question" class="white-text">statusOfStudents: {{ statusOfClassmates }}</p>
+    <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p>
     <template v-if="question[0] && studentsWorking && activeFeynmen">
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
@@ -43,35 +46,25 @@ export default {
     user () {
       return this.$store.state.user 
     },
-    // uses "statusOfClassmates" and "students" to compute output 
     studentsWorking () { 
-      console.log(`this.students = ${this.students}`)
-      if (this.students == []) {
-        return 
-      }
-      if (this.students.length == 0) {
-        return 
-      }
-      if (this.statusOfClassmates == []) {
-        return 
-      }
-    var output = []
-      // filter the old fashion way 
-      console.log('status of classmates =', this.statusOfClassmates)
-      var n = this.students.length 
-      for (var i = 0; i < n; i++) {
-        const isOnline = this.statusOfClassmates[i]
-        console.log(`i = ${i}, isOnline = ${isOnline}`)
-        if (isOnline) {
-          const student = this.students[i]
-          output.push(student)
+      if (this.students) {
+        var output = [] 
+        const n = this.students.length 
+        for (var i = 0; i < n; i++) {
+          if (this.statusOfClassmates[i] == true) {
+            console.log('student is online, his name is', this.students[i].displayName)
+            output.push(this.students[i])
+          }
         }
+        return output
       }
-      return output 
     },
     students () {
-      const output = this.question[0].feynmen
-      return output.filter(f => f.chainReactionCreatorUID == null)
+      if (this.question && this.question[0]) {
+        const output = this.question[0].feynmen
+        return output 
+        // return output.filter(f => f.chainReactionCreatorUID == null)
+      }
     },
     activeFeynmen () {
       if (!this.question[0]) {
@@ -93,35 +86,39 @@ export default {
   },
   async mounted () {
     const ref = db.collection('questions').where('questionID', '==', this.$route.path)
-    await this.$bind('question', ref)
-    this.loading = false
-     // TODO: one-way bind "isOnline" for each user 
+    try {
+      await this.$bind('question', ref)
+      this.loading = false
+    } catch (e) {
+      console.log('internet connection is sketchy...cannot fetch data reliably')
+    }
   },
   watch: {
-    loading () { // uses "this.students" to compute "this.statusOfClassmates"
+    async loading () { // uses "this.students" to compute "this.statusOfClassmates"
       if (this.loading == false) {
+        if (this.students == null) {
+          return 
+        }
         // set up snapshot listeners - and bind them to "statusOfClassmates"
         const students = this.students 
         const n = students.length 
-        this.statusOfClassmates = new Array(n).fill(false)
+        this.statusOfClassmates = new Array(n).fill(0)
         for (var i = 0; i < n; i++) {
           const student = students[i]
-          console.log(`student = ${student}`)
           const ref = db.collection('users').doc(student.uid)
-          ref.onSnapshot(doc => {
-            if (doc.exists) {
-              // console.log(`doc data = ${JSON.stringify(doc.data())}`)
-              this.statusOfClassmates[i] = doc.data().isOnline 
-            }
+          const idx = i // necessary line, because the snapshot hook reads the latest value of i (which is likely to be when i has finished iterating and is equal to n)
+          await ref.onSnapshot(doc => {
+            this.statusOfClassmates.splice(idx, 1, doc.data().isOnline)
           })
         }
-        console.log(`after initially snapshots, status of classmates = ${this.statusOfClassmates}`)
       }
     }
   },
   methods: {
-    async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) {
-      console.log(`enterChat()`)
+    setStatus (idx, isOnline) {
+      this.statusOfClassmates[idx] = isOnline 
+    },
+    async enterChat ({ uid, finished, displayName, chainReactionCreatorUID }) { 
       // cannot chat with yourself 
       if (this.user.uid == uid && this.user.displayName != 'Elton Lin') {
         return 
@@ -144,7 +141,7 @@ export default {
           uid
         }
         await doc.set({
-          title: 'Click to edit title (ENTER to save)',
+          title: 'Edit title (ENTER to save)',
           messages: [],
           participants: [currentUser, feynman],
           forQuestion: this.$route.path,
@@ -164,7 +161,6 @@ export default {
         notifications: firebase.firestore.FieldValue.arrayUnion(notif)
       })
       this.$router.push('/chat/' + roomId)
-      // TODO: notify user 
     },
     async checkOnline ({ uid }) {
       const ref = db.collection('users').doc(uid)
@@ -177,10 +173,7 @@ export default {
           return 'online'
         } 
       }
-    },
-    handleEntireClick () {
-      console.log('entire item was clicked (rather than the action button on the rightmost side')
-    },
+    }
   }
 }
 </script>
