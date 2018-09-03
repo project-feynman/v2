@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p v-if="question" class="white-text">students: {{ students }}</p>
+    <!-- <p v-if="question" class="white-text">students: {{ students }}</p>
     <p v-if="question" class="white-text">statusOfStudents: {{ statusOfClassmates }}</p>
-    <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p>
+    <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p> -->
     <template v-if="question[0] && studentsWorking && activeFeynmen">
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
