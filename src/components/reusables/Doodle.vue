@@ -28,6 +28,7 @@ export default {
     }
   },
   created () {
+    console.log('Doodle component has been created')
     this.paper = new paper.PaperScope()
     this.paper.install(window)
   },
