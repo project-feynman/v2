@@ -3,6 +3,8 @@
     <!-- <p v-if="question" class="white-text">students: {{ students }}</p>
     <p v-if="question" class="white-text">statusOfStudents: {{ statusOfClassmates }}</p>
     <p v-if="question" class="white-text">studentsWorking: {{ studentsWorking }}</p> -->
+    <!-- <p v-if="question" class="white-text">activeFeynmen: {{ activeFeynmen }}</p>
+    <p v-if="question" class="white-text">onlineActiveFeynmen: {{ onlineActiveFeynmen }}</p> -->
     <template v-if="question[0] && studentsWorking && onlineActiveFeynmen">
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
@@ -78,7 +80,7 @@ export default {
         for (var i = 0; i < n; i++) {
           if (this.statusOfActiveFeynmen[i] == true) {
             const feynman = this.activeFeynmen[i]
-            console.log('feynman is onlien, his name is', feynman.displayName)
+            console.log('feynman is online, his name is', feynman.displayName)
             output.push(feynman)
           }
         }
@@ -124,7 +126,17 @@ export default {
             const ref = db.collection('users').doc(student.uid)
             const idx = i // necessary line, because the snapshot hook reads the latest value of i (which is likely to be when i has finished iterating and is equal to n)
             await ref.onSnapshot(doc => {
-              this.statusOfClassmates.splice(idx, 1, doc.data().isOnline)
+              // check if online and not talking 
+              if (!doc.exists) {
+                return 
+              }
+              const data = doc.data()
+              if (data.isTalking != null) {
+                const available = data.isOnline && !data.isTalking 
+                this.statusOfClassmates.splice(idx, 1, available)
+              } else {
+                this.statusOfClassmates.splice(idx, 1, data.isOnline)
+              }
             })
           }
         }
@@ -136,7 +148,16 @@ export default {
             const ref = db.collection('users').doc(feynman.uid) 
             const idx = i
             await ref.onSnapshot(doc => {
-              this.statusOfActiveFeynmen.splice(idx, 1, doc.data().isOnline )
+              if (!doc.exists) {
+                return 
+              }
+              const data = doc.data()
+              if (data.isTalking != null) {
+                const available = data.isOnline && !data.isTalking
+                this.statusOfActiveFeynmen.splice(idx, 1, available)
+              } else {
+                this.statusOfActiveFeynmen.splice(idx, 1, data.isOnline)
+              }
             })
           }
         }

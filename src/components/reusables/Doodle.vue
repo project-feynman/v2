@@ -53,7 +53,7 @@ export default {
       const n = strokes.length 
       for (var i = 0; i < n; i++) {
         this.drawPath(strokes[i])
-        await timeout(5)
+        await timeout(500)
       }
       this.loadedPreviousDrawings = true 
     },

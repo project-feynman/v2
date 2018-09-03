@@ -58,7 +58,7 @@ export default {
     }
   },
   created () {
-    this.addToRecentQuestion()
+    this.addToRecentQuestion() // set is talking to false too 
   },
   mounted () {
     // initialize tabs
@@ -93,7 +93,8 @@ export default {
       }
       const userRef = db.collection('users').doc(this.user.uid)
       await userRef.update({
-        recentQuestionID: this.$route.path
+        recentQuestionID: this.$route.path,
+        isTalking: false 
       })
     },
     async deleteJourney (journey) {

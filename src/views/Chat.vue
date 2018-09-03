@@ -68,7 +68,7 @@ export default {
   },
   async created () {
     if (this.isLoggedIn) {
-      this.addToRecentChat()
+      this.addToRecentChat() // this does more than just addToRecentChat()
     }
     let roomID = this.$route.params.room_id
     let doc = db.collection('chatRooms').doc(roomID)
@@ -103,7 +103,7 @@ export default {
       await userRef.update({
         recentChatID: this.$route.params.room_id
       })
-      // set is talking to false 
+      // we set isTalking to false when the user visits the Question page again 
       await userRef.update({
         isTalking: true 
       })

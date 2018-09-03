@@ -106,10 +106,12 @@ export default {
     },
     async markNotifAsRead () {
       // mark notification as read
+      const notifs = this.user.notifications
+      // console.log(`notifs = ${notifs}`)
       const roomId = notifs[notifs.length - 1].roomId 
       this.$router.push(`/chat/${roomId}`) 
       this.newNotif = false 
-      const notifs = this.user.notifications
+      console.log(`notifs = ${notifs}`)
       notifs[notifs.length - 1].new = false 
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
