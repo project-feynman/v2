@@ -92,28 +92,29 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const senderName = message.author.displayName
 	const senderUid = message.author.uid
 	firestore.doc('/users/' + senderUid).get().then(async snapshot => {
-		var receiverToken = snapshot.data().token
-
-		const payload = {
-			notification : {
-				title: senderName + ' sent you a message...',
-				body: message.content,
-				click_action: 'https://feynman-village.firebaseapp.com',
-				sound: 'default'
-			},
-			to: receiverToken
+		var receiverTokens = snapshot.data().tokens
+		receiverTokens.forEach(token => {
+			const payload = {
+				notification : {
+					title: senderName + ' sent you a message...',
+					body: message.content,
+					click_action: 'https://feynman-village.firebaseapp.com',
+					sound: 'default'
+				},
+				to: token
+			}
+			const headers = {
+				'Content-type': 'application/json',
+				'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
+			}
+			axios.create({
+				headers
+			})
+			console.log(payload)
+			.post('https://fcm.googleapis.com/fcm/send', payload)
+			.then(response => console.log(response.statusText))
+			.catch(error => console.log(error))
 		}
-		const headers = {
-			'Content-type': 'application/json',
-			'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
-		}
-		axios.create({
-			headers
-		})
-		console.log(payload)
-		.post('https://fcm.googleapis.com/fcm/send', payload)
-		.then(response => console.log(response.statusText))
-		.catch(error => console.log(error))
 	})
 	return null;
 })
