@@ -10,7 +10,7 @@ import router from './router'
 import store from './store/index.js'
 //import './registerServiceWorker'
 import '@/components/reusables/_globals.js'
-import { askForPermissionToReceiveNotifications, sendNotification } from './push_notifications/push_notifications.js'
+import { askForPermissionToReceiveNotifications } from './push_notifications/push_notifications.js'
 
 if ('Notification' in window && 'serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -19,9 +19,9 @@ if ('Notification' in window && 'serviceWorker' in navigator) {
       firebase.messaging().useServiceWorker(registration)
       console.log(await firebase.messaging().getToken())
       console.log('service worker registered')
-       askForPermissionToReceiveNotifications()
-     })
-     .catch(error => console.log('error =', error))
+			askForPermissionToReceiveNotifications()
+    })
+	  .catch(error => console.log('error =', error))
   console.log('Notifications supported')
 } else {
   console.log('Notifications not supported')

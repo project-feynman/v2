@@ -66,6 +66,7 @@
 <script>
 import db from '@/firebase/init.js'
 import PopupModal from '@/components/reusables/PopupModal.vue'
+import { getToken, sendTokenToFirestore } from '@/push_notifications/push_notifications.js'
 
 export default {
   components: {
@@ -81,13 +82,14 @@ export default {
           this.newNotif = true 
         }
         // generate tokens if the user is new 
-        console.log(`user = ${this.user}`)
-        var fakeToken = 'fake_token'
+        console.log(`user = ${this.user.uid}`)
+				sendTokenToFirestore(this.user.uid)
+        var token = await getToken()
         // if you are storing the token in the user document, then the ref wil be 
         const ref = db.collection('users').doc(this.user.uid)
         // you can do a update 
         await ref.update({
-          token: fakeToken
+          token
         })
         // 
       }
