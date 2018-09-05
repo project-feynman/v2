@@ -84,12 +84,12 @@ export default {
         // generate tokens if the user is new 
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
-        // if you are storing the token in the user document, then the ref wil be 
-        const ref = db.collection('users').doc(this.user.uid)
-        // you can do a update 
-        await ref.update({
-          token
-        })
+        if (token) {
+          const ref = db.collection('users').doc(this.user.uid)
+          await ref.update({
+            token
+          })
+        }
       }
     }
   },
