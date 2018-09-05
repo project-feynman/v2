@@ -54,7 +54,7 @@ Feynman is:
 
 9) Education must be 'result dependent' but 'method independent'.  
 
-10) [When you see someone in hell, get ice cream with them.](./doc/never_abandon.md)
+10) [When you see someone in hell, get ice cream with them.](./doc/never_abandoned.md)
 
 11) You go to MIT to learn how to think - you learn how to think by 
 
