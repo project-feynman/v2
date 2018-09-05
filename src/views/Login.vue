@@ -2,7 +2,7 @@
   <div>
     <h1 class="center">Feynman Project</h1>
     <div class="spinner-wrapper">
-      <base-spinner v-if="loading"></base-spinner>
+      <base-spinner v-if="loading"/>
     </div>
     <div id="firebaseui-auth-container"></div>
     <template v-if="isLoggedIn">

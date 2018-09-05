@@ -24,6 +24,8 @@
 
 <script>
 import db from '@/firebase/init.js'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 export default {
   computed: {
@@ -38,29 +40,28 @@ export default {
   },
   data () {
     return {
-      newPset: null,
+      newPset: '',
       subject: null,
       loading: true
     }
   },
   methods: {
     async addPset () {
-      var psets = this.subject.psets 
-      if (!psets) {
-        psets = [] 
-      } 
-      psets.push(this.newPset)
-      this.newPset = ''
       const ref = db.collection('subjects').doc(this.$route.params.subject_id)
+      const newObj = this.newPset
+      this.newPset = ''
       await ref.update({
-        psets
+        psets: firebase.firestore.FieldValue.arrayUnion(newObj)
       })
     },
-    async deletePset (psetNumber) {
-      // this reflects the pset number
+    async deletePset (pset) {
+      const ref = db.collection('subjects').doc(this.$route.params.subject_id)
+      await ref.update({
+        psets: firebase.firestore.FieldValue.arrayRemove(pset)
+      })
     },
     redirectToPset (pset) {
-      const URL = this.$route.path + '/' + `${pset}`
+      const URL = this.$route.path + '/' + pset
       this.$router.push(URL)
     }
   }

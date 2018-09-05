@@ -82,7 +82,6 @@ export default {
           this.newNotif = true 
         }
         // generate tokens if the user is new 
-        console.log(`user = ${this.user.uid}`)
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
         // if you are storing the token in the user document, then the ref wil be 
@@ -91,7 +90,6 @@ export default {
         await ref.update({
           token
         })
-        // 
       }
     }
   },
