@@ -29,42 +29,40 @@ export default {
   methods: {
     async addTime () {
       const ref = db.collection('questions').doc(this.questionID)
-      ref.get().then(doc => {
-        if (doc.exists) {
-          const question = doc.data()
-          // find user 
-          var user = null 
-          question.feynmen.forEach(f => {
-            if (f.uid == this.userUID) {
-              user = f 
-            }
-          })
-          // compute new average 
-          const newTime = parseFloat(this.sliderHourValue)
-          var total = question.total 
-          if (!total) {
-            total = newTime 
-          } else {
-            total = total + newTime 
+      const doc = await ref.get() 
+      if (doc.exists) {
+        const question = doc.data()
+        // find user 
+        var user = null 
+        question.feynmen.forEach(f => {
+          if (f.uid == this.userUID) {
+            user = f 
           }
-          ref.update({
-            total
-          }).then(() => {
-            // mark user as submitted 
-            question.feynmen.forEach(f => {
-              if (f.uid == user.uid) {
-                f.submitted = true 
-                f.submittedTime = newTime
-              }
-            })
-            ref.update({
-              feynmen: question.feynmen
-            })
-          })
+        })
+        // compute new average 
+        const newTime = parseFloat(this.sliderHourValue)
+        var total = question.total 
+        if (!total) {
+          total = newTime 
         } else {
-          console.log('Document does not exist')
+          total = total + newTime 
         }
-      })
+        await ref.update({
+          total
+        })
+        // mark user as submitted 
+        question.feynmen.forEach(f => {
+          if (f.uid == user.uid) {
+            f.submitted = true 
+            f.submittedTime = newTime
+          }
+        })
+        ref.update({
+          feynmen: question.feynmen
+        })
+      } else {
+        console.log('Document does not exist')
+      }
     }
   }
 }
