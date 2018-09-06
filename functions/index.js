@@ -114,7 +114,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			.post('https://fcm.googleapis.com/fcm/send', payload)
 			.then(response => console.log(response.statusText))
 			.catch(error => console.log(error))
-		}
+		})
 	})
 	return null;
 })
