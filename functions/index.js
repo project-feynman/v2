@@ -113,7 +113,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 				notification : {
 					title: senderName + ' sent you a message...',
 					body: message.content,
-					click_action: 'https://feynman-village.firebaseapp.com',
+					click_action: 'https://feynman.online',
 					sound: 'default'
 				},
 				to: token
