@@ -29,7 +29,7 @@
              class="brand-logo" 
              href="#!" 
              data-target="dropdown1">
-            Resume
+            Recent
             <i class="material-icons right">menu</i>
           </a>
      

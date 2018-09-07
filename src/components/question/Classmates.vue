@@ -2,7 +2,7 @@
   <div>
     <template v-if="question[0] && studentsWorking && onlineActiveFeynmen">
       <div class="center">
-        <base-button @click="$router.push('/study-group')">Create/Join a Study Group</base-button>
+        <base-button @click="$router.push(`/study-groups/${$route.params.subject_id}`)">Create/Join a Study Group</base-button>
       </div>
       <collection-list title="Your study group"
                        :listItems="friends">
