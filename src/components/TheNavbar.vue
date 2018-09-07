@@ -24,17 +24,14 @@
         </template>
       </ul>
       <div class="nav-wrapper grey lighten-5">
-        <router-link to="/">
-          <a class="brand-logo"><i class="material-icons">home</i>Home</a>
-        </router-link>
+
+          <a id="dropdown-trigger" 
+            class="dropdown-trigger brand-logo" 
+            href="#!" 
+            data-target="dropdown1">
+            Resume<i class="material-icons right">arrow_drop_down</i></a>
+     
         <ul class="right hide-on-med-and-down">
-          <li>
-            <a id="dropdown-trigger" 
-              class="dropdown-trigger" 
-              href="#!" 
-              data-target="dropdown1">
-              Resume<i class="material-icons right">arrow_drop_down</i></a>
-          </li>
           <template v-if="isLoggedIn">
             <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">

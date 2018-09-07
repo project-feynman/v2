@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h1 class="center">Feynman Project</h1>
-    <div class="spinner-wrapper">
-      <base-spinner v-if="loading"/>
-    </div>
+    <h1 class="center">Feynman</h1>
+    <h4 class="center">If you can't explain it simply, you don't understand it.</h4>
+    <p v-if="loading" class="white-text center">Retrieving your information...</p>
     <div id="firebaseui-auth-container"></div>
     <template v-if="isLoggedIn">
       <div class="dashboard-button center">

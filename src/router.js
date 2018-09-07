@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Login from '@/views/Login.vue'
-// import Subject from '@/views/Subject.vue'
-// import Pset from '@/views/Pset.vue'
-// import AllSubjects from '@/views/AllSubjects.vue'
 
 Vue.use(Router)
 
@@ -17,6 +13,7 @@ const Profile = () => import('@/views/Profile.vue')
 const Conversation = () => import('@/views/Conversation.vue')
 const Chat = () => import('@/views/Chat.vue')
 const NewStudyGroup = () => import('@/views/NewStudyGroup.vue')
+const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
 
 export default new Router({
   mode: 'history', 
@@ -41,6 +38,10 @@ export default new Router({
     {
       path: '/chat/:room_id',
       component: Chat
+    },
+    {
+      path: '/study-groups/:subject_id',
+      component: AllStudyGroups
     },
     {
       path: '/conversation/:convo_id',

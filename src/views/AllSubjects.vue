@@ -13,7 +13,10 @@
             <base-button @click="redirectToPset(subject)">
               Start p-set {{ getCurrentPset(subject) }}
             </base-button>
-            <base-button @click="$router.push(`${subject.subjectNumber}`)">
+            <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)" buttonColor="pink">
+              Study groups
+            </base-button>
+            <base-button @click="$router.push(`${subject.subjectNumber}`)" buttonColor="pink">
               View all p-sets
             </base-button>
           </base-card>
