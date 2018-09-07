@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Simple search select component -->
-    <search-box/>
+    <search-box v-if="objectOfStudents" :allResults="objectOfStudents"/>
     <h2>Nearest classmates</h2>
     <!-- Obtain location of classmates and the current user -->
     <h2>Classmates with most similar habits</h2>
@@ -10,11 +10,40 @@
 </template>
 
 <script>
+import db from '@/firebase/init.js'
 import SearchBox from '@/components/reusables/SearchBox.vue'
 
 export default {
   components: {
     SearchBox
+  },
+  data () {
+    return {
+      allStudents: [],
+      objectOfStudents: null
+    }
+  },
+  async created () {
+    const ref = db.collection('users')
+    await this.$bind('allStudents', ref)
+    const object = {}
+    this.allStudents.forEach(student => {
+      object[student.displayName] = null
+    })
+    this.objectOfStudents = object
+    console.log(`object of students = ${JSON.stringify(this.objectOfStudents)}`) 
+
+    // const objects = this.arrayToObject(this.allStudents, 'displayName')
+    // console.log(`objects = ${objects}`)
+  },
+  methods: {
+    arrayToObject (array, keyField) {
+      array.reduce((obj, item) => {
+        // obj[item[keyField]] = item
+        obj[item[keyField]] = null 
+        return obj
+      }, {})
+    }
   }
 }
 </script>
