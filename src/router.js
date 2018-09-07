@@ -13,6 +13,7 @@ const Profile = () => import('@/views/Profile.vue')
 const Conversation = () => import('@/views/Conversation.vue')
 const Chat = () => import('@/views/Chat.vue')
 const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
+const Dashboard = () => import('@/views/Dashboard.vue')
 
 export default new Router({
   mode: 'history', 
@@ -21,6 +22,10 @@ export default new Router({
     {
       path: '/',
       component: Login
+    },
+    {
+      path: '/dashboard',
+      component: Dashboard
     },
     {
       path: '/subjects',

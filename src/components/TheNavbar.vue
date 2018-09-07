@@ -24,15 +24,13 @@
         </template>
       </ul>
       <div class="nav-wrapper grey lighten-5">
-
-          <a id="dropdown-trigger" 
-             class="brand-logo" 
-             href="#!" 
-             data-target="dropdown1">
-            Recent
+        <a id="dropdown-trigger" 
+            class="brand-logo" 
+            href="#!" 
+            data-target="dropdown1">
             <i class="material-icons right">menu</i>
-          </a>
-     
+          Recent
+        </a>
         <ul class="right hide-on-med-and-down">
           <template v-if="isLoggedIn">
             <li>
@@ -82,10 +80,10 @@ export default {
           this.newNotif = true 
         }
         // generate tokens if the user is new 
-	console.log(this.user.uid)
+	      console.log(this.user.uid)
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
-	console.log(token)
+	      console.log(token)
         if (token) {
           const ref = db.collection('users').doc(this.user.uid)
           await ref.update({
@@ -147,8 +145,8 @@ a {
 li {
   color: white;
 }
-/* 
+
 .brand-logo {
   margin-left: 10px;
-} */
+}
 </style>
