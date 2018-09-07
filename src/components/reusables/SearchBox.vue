@@ -21,19 +21,18 @@ export default {
     if (this.allResults) {
       var elems = document.querySelectorAll('.autocomplete')
       const options = {
-        data: this.allResults 
+        data: this.allResults,
+        onAutocomplete: this.handleResultSelect
       }
-      // const options = {
-      //   data: {
-      //     "Apple": null,
-      //     "Microsoft": null,
-      //     "Google": 'https://placehold.it/250x250'
-      //   }
-      // }
       console.log(`options = ${JSON.stringify(options)}`)
       var instances = M.Autocomplete.init(elems, options)
       console.log(`initialized instances`)
     }
+  },
+  methods: {
+    handleResultSelect (payload) {
+      this.$emit('select', payload)
+    },
   }
 }
 </script>
