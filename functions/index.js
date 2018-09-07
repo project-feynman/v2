@@ -84,6 +84,9 @@ exports.onStatusChange = functions.database.ref('/status/{uid}').onUpdate( async
 	})
 })
 exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roomID}').onUpdate((change, context) => {
+	if(change.after.data().messages == change.before.data().messages)
+		return;
+
 	const roomID = context.params.roomID;
 
 	const messages = change.after.data().messages
@@ -93,6 +96,11 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const senderUid = message.author.uid
 	firestore.doc('/users/' + senderUid).get().then(async snapshot => {
 		var receiverTokens = snapshot.data().tokens
+		console.log(senderUid)
+		console.log(snapshot.data())
+		if(!receiverTokens) {
+			return;
+		}
 		receiverTokens.forEach(token => {
 			const payload = {
 				notification : {
@@ -114,7 +122,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 			.post('https://fcm.googleapis.com/fcm/send', payload)
 			.then(response => console.log(response.statusText))
 			.catch(error => console.log(error))
-		}
+		})
 	})
 	return null;
 })
