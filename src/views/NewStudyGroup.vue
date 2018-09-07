@@ -31,19 +31,6 @@ export default {
       object[student.displayName] = null
     })
     this.objectOfStudents = object
-    console.log(`object of students = ${JSON.stringify(this.objectOfStudents)}`) 
-
-    // const objects = this.arrayToObject(this.allStudents, 'displayName')
-    // console.log(`objects = ${objects}`)
-  },
-  methods: {
-    arrayToObject (array, keyField) {
-      array.reduce((obj, item) => {
-        // obj[item[keyField]] = item
-        obj[item[keyField]] = null 
-        return obj
-      }, {})
-    }
   }
 }
 </script>
