@@ -9,7 +9,7 @@
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
-            <h4>{{ subject.subjectNumber }}</h4>
+            <h4 class="teal-text">{{ subject.subjectNumber }}</h4>
             <base-button @click="redirectToPset(subject)" buttonColor="pink">
               P-set {{ getCurrentPset(subject) }}
             </base-button>

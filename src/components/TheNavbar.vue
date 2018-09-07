@@ -26,10 +26,12 @@
       <div class="nav-wrapper grey lighten-5">
 
           <a id="dropdown-trigger" 
-            class="dropdown-trigger brand-logo" 
-            href="#!" 
-            data-target="dropdown1">
-            Resume<i class="material-icons right">arrow_drop_down</i></a>
+             class="brand-logo" 
+             href="#!" 
+             data-target="dropdown1">
+            Resume
+            <i class="material-icons right">menu</i>
+          </a>
      
         <ul class="right hide-on-med-and-down">
           <template v-if="isLoggedIn">
@@ -145,8 +147,8 @@ a {
 li {
   color: white;
 }
-
+/* 
 .brand-logo {
   margin-left: 10px;
-}
+} */
 </style>
