@@ -74,7 +74,8 @@ export default {
   },
   watch: {
     async user () {
-      if (this.isLoggedIn) {
+      if (this.isLoggedIn && !this.hasFetchedToken) {
+        this.hasFetchedToken = true 
         // display notifications, if there are any 
         const notifs = this.user.notifications
         const latestNotif = notifs[notifs.length - 1]
@@ -107,7 +108,8 @@ export default {
   },
   data () {
     return {
-      newNotif: false
+      newNotif: false,
+      hasFetchedToken: false
     }
   },
   methods: {
