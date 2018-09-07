@@ -17,6 +17,7 @@ if ('Notification' in window && 'serviceWorker' in navigator) {
     .register('/firebase-messaging-sw.js')
     .then(async registration => {
       firebase.messaging().useServiceWorker(registration)
+			askForPermissionToReceiveNotifications()
       console.log(await firebase.messaging().getToken())
       console.log('service worker registered')
 			askForPermissionToReceiveNotifications()

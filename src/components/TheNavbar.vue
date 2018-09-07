@@ -82,8 +82,10 @@ export default {
           this.newNotif = true 
         }
         // generate tokens if the user is new 
+	console.log(this.user.uid)
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
+	console.log(token)
         if (token) {
           const ref = db.collection('users').doc(this.user.uid)
           await ref.update({
