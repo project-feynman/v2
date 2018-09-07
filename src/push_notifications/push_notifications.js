@@ -37,9 +37,8 @@ const askForPermissionToReceiveNotifications = async () => {
 
 const sendTokenToFirestore = async uid => {
   if(!currentTokenInDb) {
-		console.log(uid)
 		const ref = db.collection('users').doc(uid)
-    const snapshot = await ref.get()
+		const snapshot = await ref.get()
 		const doc = snapshot.data()
 		const token = await getToken()
 		if(!doc.tokens) {
