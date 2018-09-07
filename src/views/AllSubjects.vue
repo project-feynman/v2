@@ -10,14 +10,14 @@
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
             <h4>{{ subject.subjectNumber }}</h4>
-            <base-button @click="redirectToPset(subject)">
-              Start p-set {{ getCurrentPset(subject) }}
+            <base-button @click="redirectToPset(subject)" buttonColor="pink">
+              P-set {{ getCurrentPset(subject) }}
             </base-button>
             <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)" buttonColor="pink">
-              Study groups
+              Groups
             </base-button>
             <base-button @click="$router.push(`${subject.subjectNumber}`)" buttonColor="pink">
-              View all p-sets
+              P-sets
             </base-button>
           </base-card>
         </template>

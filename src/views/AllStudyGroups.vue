@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="white-text center">All Study Groups For Subject</h2>
+    <new-study-group/>
+    <h2 class="white-text center">Join Existing Groups</h2>
     <template v-if="subject && subject.studyGroups">
       <div class="flexbox-container">
         <template v-for="(group, idx) in subject.studyGroups">
@@ -16,15 +17,18 @@
 <script>
 import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'
+import NewStudyGroup from '@/components/groups/NewStudyGroup.vue'
 
 export default {
   components: {
-    CollectionList
+    NewStudyGroup,
+    CollectionList,
   },
   data () {
     return {
       subject: {},
-      studyGroups: [] 
+      studyGroups: [],
+      showForm: false
     }
   },
   async created () {

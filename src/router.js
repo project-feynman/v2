@@ -12,7 +12,6 @@ const Question = () => import('@/views/Question.vue')
 const Profile = () => import('@/views/Profile.vue')
 const Conversation = () => import('@/views/Conversation.vue')
 const Chat = () => import('@/views/Chat.vue')
-const NewStudyGroup = () => import('@/views/NewStudyGroup.vue')
 const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
 
 export default new Router({
@@ -22,10 +21,6 @@ export default new Router({
     {
       path: '/',
       component: Login
-    },
-    {
-      path: '/study-group',
-      component: NewStudyGroup
     },
     {
       path: '/subjects',

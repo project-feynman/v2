@@ -4,8 +4,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">textsms</i>
-          <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search for your friend">
-          <label for="autocomplete-input">Classmate Directory</label>
+          <input type="text" id="autocomplete-input" class="autocomplete">
+          <label for="autocomplete-input">Search Friend</label>
         </div>
       </div>
     </div>
