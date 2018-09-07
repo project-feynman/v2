@@ -4,8 +4,8 @@
       <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">textsms</i>
-          <input type="text" id="autocomplete-input" class="autocomplete">
-          <label for="autocomplete-input">Autocomplete</label>
+          <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search for your friend">
+          <label for="autocomplete-input">Classmate Directory</label>
         </div>
       </div>
     </div>
@@ -24,9 +24,7 @@ export default {
         data: this.allResults,
         onAutocomplete: this.handleResultSelect
       }
-      console.log(`options = ${JSON.stringify(options)}`)
       var instances = M.Autocomplete.init(elems, options)
-      console.log(`initialized instances`)
     }
   },
   methods: {

@@ -4,6 +4,7 @@
     <search-box v-if="objectOfStudents" 
                 :allResults="objectOfStudents" 
                 @select="payload => addFriend(payload)"/>
+    <p class="yellow-text">{{ feedback }}</p>
     <h2>Nearest classmates</h2>
     <!-- Obtain location of classmates and the current user -->
     <h2>Classmates who study at the same time</h2>
@@ -29,7 +30,8 @@ export default {
   data () {
     return {
       allStudents: [],
-      objectOfStudents: null
+      objectOfStudents: null,
+      feedback: ''
     }
   },
   async created () {
@@ -43,12 +45,13 @@ export default {
   },
   methods: {
     async addFriend (student) {
-      console.log('addFriend()')
-      console.log(`student = ${student}`)
+      this.feedback = 'Adding him/her to the study group'
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         friends: firebase.firestore.FieldValue.arrayUnion(student)
       })
+      this.feedback = `Successfully added ${student}`
+      setTimeout(() => this.feedback = '', 2000)
     }
   },
 }
