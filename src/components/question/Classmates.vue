@@ -1,6 +1,12 @@
 <template>
   <div>
     <template v-if="question[0] && studentsWorking && onlineActiveFeynmen">
+      <div class="center">
+        <base-button @click="$router.push('/study-group')">Create/Join a Study Group</base-button>
+      </div>
+      <collection-list title="Your study group"
+                       :listItems="friends">
+      </collection-list>
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
                        @entire-click="student => enterChat(student)"
@@ -46,6 +52,9 @@ export default {
     user () {
       return this.$store.state.user 
     },
+    isLoggedIn () {
+      return this.user != null && this.user != 'undetermined'
+    },
     allOnlineStudents () {
       if (!this.question) {
         return 
@@ -79,7 +88,8 @@ export default {
     return { 
       question: [],
       loading: true,
-      allStudentStatuses: []
+      allStudentStatuses: [],
+      friends: []
     }
   },
   async mounted () {
@@ -89,6 +99,9 @@ export default {
       this.loading = false
     } catch (e) {
       console.log('internet connection is sketchy...cannot fetch data reliably')
+    }
+    if (this.isLoggedIn) {
+      this.friends = this.user.friends 
     }
   },
   watch: {
