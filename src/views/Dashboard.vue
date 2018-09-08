@@ -67,13 +67,11 @@ export default {
         this.$router.push('add-classes')
       } else {
         this.user.enrolledSubjects.forEach(async subj => {
-          console.log('in the for each loop')
           const ref = db.collection('subjects').doc(subj)
           const subjDoc = await ref.get() 
           this.subjects.push(subjDoc.data())
         })
         this.loading = false 
-        console.log(`this.subjects = ${this.subjects}`)
       }
     }
   },
@@ -120,7 +118,7 @@ h4 {
 
 <style scoped>
 .custom-offset {
-  padding-top: 40px;
+  padding-top: 30px;
 }
 
 .subject-card {
