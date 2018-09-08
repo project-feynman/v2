@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2 class="white-text center">Class Directory</h2>
-    <search-box v-if="classes" :allResults="objectOfClasses" label="Search classes"/>
+    <search-box v-if="classes" 
+                label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="objectOfClasses">{{ objectOfClasses }}</p>
     <h2 v-if="isLoggedIn">user = {{ user.enrolledSubjects }}</h2>
@@ -9,11 +10,14 @@
     <!-- <ul>
       <li v-for="(subject, idx) in classes" :key="idx">{{ subject }}</li>
     </ul> -->
+    <base-button @click="$router.push('/subjects')">Return to dashboard</base-button>
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import SearchBox from '@/components/reusables/SearchBox.vue'
 
 export default {
@@ -52,6 +56,17 @@ export default {
     //   this.feedabck = 'You are not logged in (somehow)'
     // }
   },
+  methods: {
+    async addClass (subjectNumber) {
+      if (this.isLoggedIn) {
+        const ref = db.collection('users').doc(this.user.uid)
+        await ref.update({
+          enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
+        })
+        console.log('successfully added subject')
+      }
+    }
+  }
   // watch: {
   //   user () {
   //     if (this.isLoggedIn && !this.hasFetchedClasses) {
