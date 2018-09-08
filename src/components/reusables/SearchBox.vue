@@ -5,7 +5,7 @@
         <div class="input-field col s12">
           <i class="material-icons prefix">textsms</i>
           <input type="text" id="autocomplete-input" class="autocomplete">
-          <label for="autocomplete-input">Search Friend</label>
+          <label for="autocomplete-input">{{ label }}</label>
         </div>
       </div>
     </div>
@@ -15,6 +15,12 @@
 <script>
 export default {
   props: {
+    label: {
+      type: String,
+      default () {
+        return 'Search Friend'
+      }
+    },
     allResults: Object
   },
   mounted () {

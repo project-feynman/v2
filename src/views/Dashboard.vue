@@ -4,7 +4,7 @@
     <template v-if="isLoggedIn"> 
       <div class="collection-list-wrapper">
         <collection-list title="Classes" :listItems="user.enrolledSubjects"/>
-      </div>
+    </div>
     </template> 
     <!-- Show what friends are doing -->
   </div>
