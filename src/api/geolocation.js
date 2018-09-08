@@ -3,26 +3,37 @@ import db from '@/firebase/init.js'
 var permission = false
 var position = undefined
 
+
 const getPermissionForGeolocation = () => {
 	if('geolocation' in navigator) {
-		navigator.geolocation.getCurrentPosition((position) => { this.position = position })
-		permission = true
+		navigator.geolocation.getCurrentPosition((_position) => { 
+			position = _position 
+			permission = true
+		})
 	}
 }
 
-var getGeolocation = () => {
+var getPosition = () => {
 	if(permission) {
 		return position
 	} else {
 		return undefined
 	}
 }
-
+const updatePosition = () => {
+	if(permission) {
+		navigator.geolocation.getCurrentPosition((_position) => { position = _position })
+	}
+}
 const sendPositionToFirestore = async uid => {
-	if(!positionSent && permission) {
+	if(permission) {
 		const ref = db.collection('users').doc('uid')
-		const doc = await ref.get().data()
+		const snapshot = await ref.get()
+		const doc = snapshot.data()
 		doc.position = position
 		ref.set(doc)
 	}
 }
+
+getPermissionForGeolocation()
+sendPositionToFirestore()
