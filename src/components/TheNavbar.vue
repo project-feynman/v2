@@ -3,7 +3,7 @@
     <nav>
       <ul id="dropdown1" class="dropdown-content">
         <li>
-          <router-link to="/subjects">Subjects</router-link>
+          <router-link to="/subjects">Dashboard</router-link>
         </li>
         <template v-if="isLoggedIn">
           <li v-if="user.recentPsetID">
