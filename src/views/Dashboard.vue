@@ -11,7 +11,8 @@
           <base-card :key="i">
             <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
             <p class="black-text">Study group: Joe, Karina, Matt</p>
-            <p class="green-text">34 classmates p-setting</p>
+            <p class="pink-text">Joe and Karina are p-setting</p>
+            <p class="green-text">{{ parseInt(100 * Math.random()) }} classmates p-setting</p>
             <base-button @click="redirectToPset(subject)" buttonColor="pink">
               Start P-set {{ getCurrentPset(subject) }}
             </base-button>
@@ -119,7 +120,7 @@ h4 {
 
 <style scoped>
 .custom-offset {
-  padding-top: 60px;
+  padding-top: 40px;
 }
 
 .subject-card {

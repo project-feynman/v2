@@ -2,9 +2,9 @@
   <div>
     <new-study-group/>
     <h2 class="white-text center">Join Existing Groups</h2>
-    <template v-if="subject && subject.studyGroups">
+    <template v-if="studyGroups">
       <div class="flexbox-container">
-        <template v-for="(group, idx) in subject.studyGroups">
+        <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
             <collection-list :title="group.groupName" :listItems="group.participants"></collection-list>
           </div>
@@ -33,9 +33,27 @@ export default {
   },
   async created () {
     // obtain the study group from there
-    const id = this.$route.params.subject_id
-    const ref = db.collection('subjects').doc(id)
-    await this.$bind('subject', ref)
+    console.log('created()')
+    const subject_id = this.$route.params.subject_id
+    const ref = db.collection('studyGroups').where('forSubject', '==', subject_id)
+    await this.$bind('studyGroups', ref)
+    console.log(`study groups = ${JSON.stringify(this.studyGroups)}`)
+    // ref
+    // .get()
+    // .then(function(querySnapshot) {
+    //     querySnapshot.forEach(function(doc) {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+    //     });
+    // })
+    // const docs = await ref.get() 
+    // console.log(`docs = ${docs}`)
+    // docs.forEach(doc => {
+    //   console.log(`doc = ${JSON.stringify(doc.data())}`)
+    // })
+    // const id = this.$route.params.subject_id
+    // const ref = db.collection('subjects').doc(id)
+    // await this.$bind('subject', ref)
   } 
 }
 </script>
