@@ -83,6 +83,7 @@ export default {
       await ref.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
+      // update the user 
     },
     async leaveGroup ({ id }) {
       const ref = db.collection('studyGroups').doc(id)
@@ -93,6 +94,8 @@ export default {
       await ref.update({
         participants: firebase.firestore.FieldValue.arrayRemove(simplifiedUser)
       })
+      // update the user 
+      // nest the document from within? Given a class and the user info, display his study group mates
     },
     flattenArrayOfObjects (array) {
       var output = [] 
