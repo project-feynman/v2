@@ -10,23 +10,8 @@ import router from './router'
 import store from './store/index.js'
 //import './registerServiceWorker'
 import '@/components/reusables/_globals.js'
-import { askForPermissionToReceiveNotifications } from './push_notifications/push_notifications.js'
-
-if ('Notification' in window && 'serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/firebase-messaging-sw.js')
-    .then(async registration => {
-      firebase.messaging().useServiceWorker(registration)
-			askForPermissionToReceiveNotifications()
-      console.log(await firebase.messaging().getToken())
-      console.log('service worker registered')
-			askForPermissionToReceiveNotifications()
-    })
-	  .catch(error => console.log('error =', error))
-  console.log('Notifications supported')
-} else {
-  console.log('Notifications not supported')
-}
+import '@/api/push_notifications.js'
+import '@/api/geolocation.js'
 
 Vue.use(VueChatScroll)
 Vue.use(VueResource)

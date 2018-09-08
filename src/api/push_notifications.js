@@ -9,6 +9,16 @@ var token = undefined
 //const messaging = firebase.messaging()
 //messaging.usePublicVapidKey("BJ0Ou0MdMi6KAqeA8BOcmsFkzYCX0Uw5WmXZorqcgZX1Uf55bpJjbvb-Hq5eFajOXwI-j-w-D-o7X7J5FWJ34y4")
 
+if ('Notification' in window && 'serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/firebase-messaging-sw.js')
+    .then(async registration => {
+      firebase.messaging().useServiceWorker(registration)
+			askForPermissionToReceiveNotifications()
+    })
+	  .catch(error => console.log('error =', error))
+}
+
 const getToken = async () => {
 	if(token) {
 		return token;
@@ -28,10 +38,8 @@ const getToken = async () => {
 const askForPermissionToReceiveNotifications = async () => {
   try {
     await firebase.messaging().requestPermission()
-    console.log(true)
   } catch (error) {
-    console.error(error)
-    console.log(false)
+    console.log(`error in getting permission = ${error}`)
   }
 }
 
