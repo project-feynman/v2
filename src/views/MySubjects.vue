@@ -7,14 +7,16 @@
     </div>
     <template v-if="subjects && !loading && isLoggedIn">
       <div class="subject-card">
-        <template v-for="(subject, i) in user.enrolledSubjects">
+        <template v-for="(subject, i) in subjects">
           <base-card :key="i">
-            <h4 class="teal-text text-darken-2">{{ subject }}</h4>
+            <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
+            <p class="black-text">Study group: Joe, Karina, Matt</p>
+            <p class="green-text">34 classmates p-setting</p>
             <base-button @click="redirectToPset(subject)" buttonColor="pink">
-              P-set {{ getCurrentPset(subject) }}
+              Start P-set {{ getCurrentPset(subject) }}
             </base-button>
             <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)" buttonColor="pink">
-              Groups
+              Manage Group
             </base-button>
             <base-button @click="$router.push(`${subject.subjectNumber}`)" buttonColor="pink">
               P-sets
@@ -23,6 +25,9 @@
         </template>
       </div>
     </template>
+    <div class="center">
+      <base-button @click="$router.push('/add-classes')">Add classes</base-button>
+    </div>
     <!-- <div v-if="user">
       <div v-if="user.admin == true || user.displayName == 'Elton Lin'" class="new-subject">
         <form @submit.prevent="addSubject()">
@@ -35,6 +40,7 @@
 </template>
 
 <script>
+// get the corresponding document for each subject the user is taking
 import db from '@/firebase/init.js'
 
 export default {
@@ -54,11 +60,19 @@ export default {
     }
   },
   async created () {
-    await this.$bind('subjects', db.collection('subjects'))
-    this.loading = false 
+    // await this.$bind('subjects', db.collection('subjects'))
     if (this.isLoggedIn) {
       if (this.user.enrolledSubjects.length == 0) {
         this.$router.push('add-classes')
+      } else {
+        this.user.enrolledSubjects.forEach(async subj => {
+          console.log('in the for each loop')
+          const ref = db.collection('subjects').doc(subj)
+          const subjDoc = await ref.get() 
+          this.subjects.push(subjDoc.data())
+        })
+        this.loading = false 
+        console.log(`this.subjects = ${this.subjects}`)
       }
     }
   },

@@ -4,13 +4,10 @@
     <search-box v-if="classes" 
                 label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
-    <p v-if="objectOfClasses">{{ objectOfClasses }}</p>
-    <h2 v-if="isLoggedIn">user = {{ user.enrolledSubjects }}</h2>
-    <p v-if="classes">{{ classes }}</p>
-    <!-- <ul>
-      <li v-for="(subject, idx) in classes" :key="idx">{{ subject }}</li>
-    </ul> -->
-    <base-button @click="$router.push('/subjects')">Return to dashboard</base-button>
+    <h2 v-if="isLoggedIn">Your classes: {{ user.enrolledSubjects }}</h2>
+    <div class="center">
+      <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
+    </div>
   </div>
 </template>
 
