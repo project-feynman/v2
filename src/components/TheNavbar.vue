@@ -23,21 +23,51 @@
           </li>
         </template>
       </ul>
+      <ul id="dropdown2" class="dropdown-content">
+        <li>
+          This is a test!
+        </li>
+      </ul>
       <div class="nav-wrapper grey lighten-5">
-        <a id="dropdown-trigger" 
+        <a id="dropdown-trigger-1" 
             class="brand-logo" 
             href="#!" 
             data-target="dropdown1">
             <i class="material-icons right">menu</i>
           Menu
         </a>
+        <!-- <a id="dropdown-trigger" 
+            class="brand-logo" 
+            href="#!" 
+            data-target="dropdown2">
+            <i class="material-icons right">menu 2</i>
+          Menu
+        </a> -->
         <ul class="right hide-on-med-and-down">
+          <li>
+            <a id="dropdown-trigger-2" 
+              href="#!" 
+              data-target="dropdown2">
+              <i class="material-icons right">chat</i>
+              Group Chats
+            </a>
+          </li>
           <template v-if="isLoggedIn">
             <li>
+              <div v-if="user.enrolledSubjects">
+                <ul >
+                  <li v-for="(subject, idx) in user.enrolledSubjects" 
+                      :key="idx" class="black-text">
+                    {{ subject }}
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <!-- <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
                 About
               </a>
-            </li>
+            </li> -->
             <li>
               <router-link class="black-text" to="/profile">
                 Hi, Feynman #{{ user.feynmanNumber }}
@@ -93,8 +123,10 @@ export default {
     }
   },
   mounted () {
-    const elem = document.getElementById('dropdown-trigger')
-    M.Dropdown.init(elem)
+    const elem1 = document.getElementById('dropdown-trigger-1')
+    const elem2 = document.getElementById('dropdown-trigger-2')
+    M.Dropdown.init(elem1)
+    M.Dropdown.init(elem2)
   },
   computed: {
     user () {

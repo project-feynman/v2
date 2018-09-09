@@ -2,7 +2,6 @@
   <div>
     <div class="flexbox-container">
       <div class="journey-wrapper">
-        <!-- <template v-if="createdByUser(journey)"> -->
         <template v-if="true">
           <collection-list title="Recorded discussions"
                           :listItems="journeys"
@@ -65,7 +64,7 @@ export default {
       if (this.createdByUser(journey)) {
         this.$emit('delete', journey)
       } else {
-        this.feedback = 'You cannot delete this journey because you do not own it' 
+        this.feedback = "You cannot delete someone else's journey" 
         setTimeout(() => this.feedback = '', 2000)
       }
     }
