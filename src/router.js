@@ -10,7 +10,7 @@ const Login = () => import('@/views/Login.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
 const Question = () => import('@/views/Question.vue')
 const Profile = () => import('@/views/Profile.vue')
-const Conversation = () => import('@/views/Conversation.vue')
+const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
 const AllSubjects = () => import('@/views/AllSubjects.vue')
@@ -45,7 +45,7 @@ export default new Router({
     },
     {
       path: '/conversation/:convo_id',
-      component: Conversation
+      component: Journey
     },
     {
       path: '/:subject_id',
