@@ -13,11 +13,13 @@
               {{ item.title }}
             </template>
           </collection-list>
+          <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
         </template>
         <template v-else>
           <collection-list title="Recorded discussions"
                           :listItems="journeys"
                           @entire-click="journey => redirect(journey)"/>
+          <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
         </template>
       </div>
       <div class="classmates-wrapper">
@@ -40,6 +42,11 @@ export default {
     CollectionList,
     Feynmen
   },
+  data () {
+    return {
+      feedback: ''
+    }
+  },
   methods: {
     createdByUser ({ participants }) {
       var output = false 
@@ -57,6 +64,9 @@ export default {
     processDeleteAttempt (journey) {
       if (this.createdByUser(journey)) {
         this.$emit('delete', journey)
+      } else {
+        this.feedback = 'You cannot delete this journey because you do not own it' 
+        setTimeout(() => this.feedback = '', 2000)
       }
     }
   }

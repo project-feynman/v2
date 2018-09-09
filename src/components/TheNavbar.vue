@@ -38,7 +38,7 @@
                 About
               </a>
             </li>
-            <li v-if="user">
+            <li>
               <router-link class="black-text" to="/profile">
                 Hi, Feynman #{{ user.feynmanNumber }}
               </router-link>
