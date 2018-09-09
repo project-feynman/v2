@@ -92,6 +92,9 @@ export default {
       if (this.loading == false) {
         return 
       }
+      if (!this.user.enrolledSubjects) {
+        this.$router.push('add-classes')
+      }
       if (this.user.enrolledSubjects.length == 0) {
         this.$router.push('add-classes')
       } else {
