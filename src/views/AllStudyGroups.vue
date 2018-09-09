@@ -61,6 +61,7 @@ export default {
       if (!this.isLoggedIn) {
         return 
       }
+      // 1) Create the study group 
       const ref = db.collection('studyGroups')
       const subject_id = this.$route.params.subject_id
       const simplifiedUser = {
@@ -72,7 +73,29 @@ export default {
         participants: [simplifiedUser]
       }
       await ref.add(newGroup)
-      console.log('Successfully added new study group')
+      
+      // 2) designate a chatroom for it (and the associated whiteboard)
+      const chatRef = db.collection('chatRooms')
+      const result = await chatRef.add({
+        messages: [],
+        participants: [simplifiedUser],
+        title: `${subject_id} Study Group`
+      })
+      const chatroomID = result.id 
+      const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
+      await whiteboardRef.set({
+        allPaths: []  
+      })
+      // 3) create the reference for the user 
+      const userRef = db.collection('users').doc(this.user.uid) 
+      const newSubject = {
+        subjectID: subject_id,
+        studyGroup: [simplifiedUser],
+        chatroomID
+      }
+      await userRef.update({
+        enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
+      })
     },
     async joinGroup ({ id }) {
       const ref = db.collection('studyGroups').doc(id)

@@ -26,7 +26,10 @@
       <ul id="dropdown2" class="dropdown-content">
         <template v-if="isLoggedIn && user.enrolledSubjects">
           <li v-for="(subject, idx) in user.enrolledSubjects" :key="idx">
-            {{ subject }}
+            <!-- there should be a chat ID associated with each group chat -->
+            <router-link :to="'/chat/' + subject.chatroomID">
+              {{ subject.subjectID }}'s Chat
+            </router-link>
           </li>
         </template>
       </ul>
@@ -48,16 +51,6 @@
             </a>
           </li>
           <template v-if="isLoggedIn">
-            <li>
-              <div v-if="user.enrolledSubjects">
-                <ul >
-                  <li v-for="(subject, idx) in user.enrolledSubjects" 
-                      :key="idx" class="black-text">
-                    {{ subject }}
-                  </li>
-                </ul>
-              </div>
-            </li>
             <!-- <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
                 About
