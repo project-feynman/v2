@@ -65,19 +65,8 @@ export default {
     }
   },
   async created () {
-    // await this.$bind('subjects', db.collection('subjects'))
     if (this.isLoggedIn) {
       this.loadSubjects()
-      // if (this.user.enrolledSubjects.length == 0) {
-      //   this.$router.push('add-classes')
-      // } else {
-      //   this.user.enrolledSubjects.forEach(async subj => {
-      //     const ref = db.collection('subjects').doc(subj)
-      //     const subjDoc = await ref.get() 
-      //     this.subjects.push(subjDoc.data())
-      //   })
-      //   this.loading = false 
-      // }
     }
   },
   watch: {
@@ -100,9 +89,7 @@ export default {
       } else {
         this.user.enrolledSubjects.forEach(async subj => {
           const ref = db.collection('subjects').doc(subj.subjectID)
-          console.log('bug occurs after this')
           const subjDoc = await ref.get() 
-          console.log('bug occurs before this')
           this.subjects.push(subjDoc.data())
         })
         this.loading = false 
