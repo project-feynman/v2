@@ -99,8 +99,10 @@ export default {
         this.$router.push('add-classes')
       } else {
         this.user.enrolledSubjects.forEach(async subj => {
-          const ref = db.collection('subjects').doc(subj)
+          const ref = db.collection('subjects').doc(subj.subjectID)
+          console.log('bug occurs after this')
           const subjDoc = await ref.get() 
+          console.log('bug occurs before this')
           this.subjects.push(subjDoc.data())
         })
         this.loading = false 

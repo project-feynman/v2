@@ -24,9 +24,11 @@
         </template>
       </ul>
       <ul id="dropdown2" class="dropdown-content">
-        <li>
-          This is a test!
-        </li>
+        <template v-if="isLoggedIn && user.enrolledSubjects">
+          <li v-for="(subject, idx) in user.enrolledSubjects" :key="idx">
+            {{ subject }}
+          </li>
+        </template>
       </ul>
       <div class="nav-wrapper grey lighten-5">
         <a id="dropdown-trigger-1" 
@@ -36,13 +38,6 @@
             <i class="material-icons right">menu</i>
           Menu
         </a>
-        <!-- <a id="dropdown-trigger" 
-            class="brand-logo" 
-            href="#!" 
-            data-target="dropdown2">
-            <i class="material-icons right">menu 2</i>
-          Menu
-        </a> -->
         <ul class="right hide-on-med-and-down">
           <li>
             <a id="dropdown-trigger-2" 
