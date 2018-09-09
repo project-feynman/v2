@@ -1,14 +1,19 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
-    <template v-if="!doodle">
-      <p>Fetching doodle...</p>
-    </template>
-    <doodle v-else :allStrokes="doodle"/>
-    <template v-if="!messages">
-      <p>Fetching messages...</p>
-    </template>
-    <message-history v-else :messages="messages"/>
+    <div class="flexbox-container">
+      <div class="doodle-wrapper">
+        <template v-if="!doodle">
+          <p>Fetching doodle...</p>
+        </template>
+        <template v-else>
+          <doodle :allStrokes="doodle"/>
+        </template>
+      </div>
+      <div class="messages-wrapper">
+        <message-history v-if="messages" :messages="messages"/>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,5 +79,14 @@ export default {
 <style lang="scss" scoped>
 h2 {
   @extend .center;
+}
+
+.flexbox-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.doodle-wrapper, .messages-wrapper {
+  width: 45%;
 }
 </style>
