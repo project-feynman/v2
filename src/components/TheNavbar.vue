@@ -66,6 +66,7 @@
 import db from '@/firebase/init.js'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import { getToken, sendTokenToFirestore } from '@/api/push_notifications.js'
+import { getPermissionForGeolocation, sendPositionToFirestore } from '@/api/geolocation.js'
 
 export default {
   components: {
@@ -81,7 +82,18 @@ export default {
         if (latestNotif.new) {
           this.newNotif = true 
         }
-        // generate tokens if the user is new 
+				//sending the current location to Firestore
+				getPermissionForGeolocation((position) => { 
+					sendPositionToFirestore(this.user.uid, 
+					{ 
+						accuracy: position.coords.accuracy,
+						longitude: position.coords.longitude,
+						latitude: position.coords.latitude,
+						timestamp: position.timestamp
+					})
+				})
+
+				//sending the messaging token to Firestore
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
         if (token) {

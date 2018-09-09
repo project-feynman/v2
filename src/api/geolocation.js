@@ -4,17 +4,18 @@ var permission = false
 var position = undefined
 
 
-const getPermissionForGeolocation = () => {
+const getPermissionForGeolocation = (success = ((_) => { }), error = ((_) => { })) => {
 	if('geolocation' in navigator) {
-		navigator.geolocation.getCurrentPosition((_position) => { 
-			position = _position 
-			permission = true
-		})
+		permission = true
+		navigator.geolocation.getCurrentPosition((pos) => { 
+			position = pos
+			success(pos)
+		}, error)
 	}
 }
 
 var getPosition = () => {
-	if(permission) {
+	if(permission){
 		return position
 	} else {
 		return undefined
@@ -25,15 +26,14 @@ const updatePosition = () => {
 		navigator.geolocation.getCurrentPosition((_position) => { position = _position })
 	}
 }
-const sendPositionToFirestore = async uid => {
+const sendPositionToFirestore = async (uid, pos = position) => {
 	if(permission) {
-		const ref = db.collection('users').doc('uid')
+		const ref = db.collection('users').doc(uid)
 		const snapshot = await ref.get()
 		const doc = snapshot.data()
-		doc.position = position
+		doc.position = pos
 		ref.set(doc)
 	}
 }
 
-getPermissionForGeolocation()
-sendPositionToFirestore()
+export { getPermissionForGeolocation, sendPositionToFirestore }
