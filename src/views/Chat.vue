@@ -8,7 +8,7 @@
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
-    <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
+    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
         <div class="card">
@@ -160,16 +160,18 @@ export default {
         })
       })
     },
-    updateTitle (event) {
+    async updateTitle (event) {
       if (event.key == 'Enter') {
+        this.feedback = 'Saving title...'
+        document.activeElement.blur()
         this.title = event.target.innerText
         // update title for the chatRoom
         const roomID = this.$route.params.room_id
         const docRef = db.collection('chatRooms').doc(roomID)
-        docRef.update({
+        await docRef.update({
           title: this.title 
         })
-        console.log('updated title')
+        this.feedback = ''
       }
     },
     doNothing () {
