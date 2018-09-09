@@ -29,7 +29,7 @@
             href="#!" 
             data-target="dropdown1">
             <i class="material-icons right">menu</i>
-          Recent
+          Menu
         </a>
         <ul class="right hide-on-med-and-down">
           <template v-if="isLoggedIn">
@@ -80,7 +80,6 @@ export default {
           this.newNotif = true 
         }
         // generate tokens if the user is new 
-	      console.log(this.user.uid)
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
 	      console.log(token)

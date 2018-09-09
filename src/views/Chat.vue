@@ -6,24 +6,30 @@
       {{ title }}
     </h2>
     <div class="center">
-      <base-button @click="shareJourney()">Share Journey</base-button>
+      <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
-    <p v-if="feedback" class="red-text">{{ feedback }}</p>
-    <div class="card">
-      <div class="card-content">
-        <ul class="messages" v-chat-scroll>
-          <li v-for="message in messages" :key="message.id">
-            <span class="teal-text">{{ message.author.displayName }}: </span>
-            <span class="grey-text text-darken-3">{{ message.content }}</span>
-            <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
-          </li>
-        </ul>
+    <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
+    <div class="flexbox-container">
+      <div class="chat-wrapper">
+        <div class="card">
+          <div class="card-content">
+            <ul class="messages" v-chat-scroll>
+              <li v-for="message in messages" :key="message.id">
+                <span class="teal-text">{{ message.author.displayName }}: </span>
+                <span class="grey-text text-darken-3">{{ message.content }}</span>
+                <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card-action">
+            <chat-new-message/>
+          </div>
+        </div>
       </div>
-      <div class="card-action">
-        <chat-new-message/>
+      <div class="whiteboard-wrapper">
+        <whiteboard/>
       </div>
     </div>
-    <whiteboard></whiteboard>
   </div>
 </template>
 
@@ -33,12 +39,15 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
 import Whiteboard from '@/components/chat/Whiteboard.vue'
+import PulseButton from '@/components/reusables/PulseButton.vue'
 import db from '@/firebase/init.js'
+
 
 export default {
   components: {
     ChatNewMessage,
-    Whiteboard
+    Whiteboard,
+    PulseButton
   },
   data () {
     return {
@@ -188,9 +197,23 @@ span {
   font-size: 0.8em;
 }
 
+.whiteboard-wrapper {
+  margin: auto;
+  width: 70%;
+}
+
+.chat-wrapper {
+  margin: auto;
+  width: 70%;
+}
+
 .messages {
   max-height: 300px;
   overflow: auto;
+}
+
+.flexbox-container {
+  display: flex;
 }
 
 .messages::-webkit-scrollbar {

@@ -14,21 +14,25 @@
             <p class="pink-text">Joe and Karina are p-setting</p>
             <p class="green-text">{{ parseInt(100 * Math.random()) }} classmates p-setting</p>
             <base-button @click="redirectToPset(subject)" buttonColor="pink">
-              Start P-set {{ getCurrentPset(subject) }}
+              P-set {{ getCurrentPset(subject) }}
             </base-button>
-            <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)" buttonColor="pink">
+            <base-button buttonColor="pink">
+              Group Chat 
+            </base-button>
+            <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)">
               Manage Group
             </base-button>
-            <base-button @click="$router.push(`${subject.subjectNumber}`)" buttonColor="pink">
-              P-sets
+            <base-button @click="$router.push(`${subject.subjectNumber}`)">
+              Manage P-sets
             </base-button>
           </base-card>
         </template>
       </div>
+      <div class="center">
+        <base-button @click="$router.push('/add-classes')">Add classes</base-button>
+      </div>
     </template>
-    <div class="center">
-      <base-button @click="$router.push('/add-classes')">Add classes</base-button>
-    </div>
+ 
     <!-- <div v-if="user">
       <div v-if="user.admin == true || user.displayName == 'Elton Lin'" class="new-subject">
         <form @submit.prevent="addSubject()">
@@ -63,6 +67,31 @@ export default {
   async created () {
     // await this.$bind('subjects', db.collection('subjects'))
     if (this.isLoggedIn) {
+      this.loadSubjects()
+      // if (this.user.enrolledSubjects.length == 0) {
+      //   this.$router.push('add-classes')
+      // } else {
+      //   this.user.enrolledSubjects.forEach(async subj => {
+      //     const ref = db.collection('subjects').doc(subj)
+      //     const subjDoc = await ref.get() 
+      //     this.subjects.push(subjDoc.data())
+      //   })
+      //   this.loading = false 
+      // }
+    }
+  },
+  watch: {
+    user () {
+      if (this.isLoggedIn) {
+        this.loadSubjects()
+      }
+    }
+  },
+  methods: {
+    async loadSubjects () {
+      if (this.loading == false) {
+        return 
+      }
       if (this.user.enrolledSubjects.length == 0) {
         this.$router.push('add-classes')
       } else {
@@ -73,9 +102,7 @@ export default {
         })
         this.loading = false 
       }
-    }
-  },
-  methods: {
+    },
     async addSubject () {
       const newObject = {
         subjectNumber: this.newSubject,
