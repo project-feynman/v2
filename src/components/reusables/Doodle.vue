@@ -73,6 +73,7 @@ export default {
     drawPath (data) {
       var path = new Path()
       path.strokeColor = 'pink'
+      path.strokeWidth = 7 
       data.points.forEach(point => {
         path.add(new Point(this.scaleFactor * point.x, this.scaleFactor * point.y))
       })
