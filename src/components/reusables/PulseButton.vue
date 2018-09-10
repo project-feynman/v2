@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     handleClick () {
-      if (this.instance) {
+      if (this.instance != null) {
         this.instance.close()
       }
       this.$emit('click')

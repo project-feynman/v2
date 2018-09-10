@@ -24,6 +24,7 @@
                 <base-button @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
               </div>
             </base-card>
+            <!-- potentially message individuals -->
             <!-- <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
             </collection-list> -->
           </div>
@@ -85,35 +86,27 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        title: `${subject_id} Study Group`
+        title: `${subject_id} Study Group`,
+        forSubject: subject_id
       })
       const chatroomID = result.id 
       const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
       await whiteboardRef.set({
         allPaths: []  
       })
-      // create the study group document
-      const ref = db.collection('studyGroups')
-      const newGroup = {
-        forSubject: subject_id,
-        participants: [simplifiedUser],
-        chatroomID
-      }
-      await ref.add(newGroup)
       // 3) store a reference to the group chat for the user 
       const userRef = db.collection('users').doc(this.user.uid) 
       const newSubject = {
         subjectID: subject_id,
-        studyGroup: [simplifiedUser],
         chatroomID
       }
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
-      // quickfix 
-      await userRef.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
-      })
+      // quickfix // now just update the chatroomID if they already have a newSubject without a matching ID 
+      // await userRef.update({
+      //   enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
+      // })
       this.feedback = 'Successfully created a study group'
       setTimeout(() => this.feedback = '', 1000)
     },
