@@ -25,7 +25,9 @@
       </ul>
       <ul id="dropdown2" class="dropdown-content">
         <template v-if="isLoggedIn && user.enrolledSubjects">
-          <li v-for="(subject, idx) in user.enrolledSubjects" :key="idx">
+          <li v-if="user.enrolledSubjects.length == 0">You haven't joined a study group yet</li>
+          <li v-else 
+              v-for="(subject, idx) in user.enrolledSubjects" :key="idx">
             <!-- there should be a chat ID associated with each group chat -->
             <router-link :to="'/chat/' + subject.chatroomID">
               {{ subject.subjectID }}'s Chat
