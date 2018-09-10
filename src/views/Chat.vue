@@ -201,13 +201,12 @@ span {
 }
 
 .whiteboard-wrapper {
-  margin: auto;
-  width: 70%;
+  width: 50%;
+  min-height: 1000px;
 }
 
 .chat-wrapper {
-  margin: auto;
-  width: 70%;
+  width: 50%;
 }
 
 .messages {

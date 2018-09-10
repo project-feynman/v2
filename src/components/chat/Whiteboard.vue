@@ -16,7 +16,6 @@ var PATH = null
 
 export default {
   created () {
-    console.log('created()')
     paper.install(window)
   },
   computed: {
@@ -141,7 +140,7 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
-  height: 100%;
+  height: 500px;
   width: 100%;
   background: white;
 }

@@ -56,7 +56,6 @@ export default {
     this.classes.forEach(c => {
       this.objectOfClasses[c.subjectNumber] = null 
     })
-
     // if (this.isLoggedIn) {
     //   this.classes = this.user.classes 
     //   this.hasFetchedClasses = true 
