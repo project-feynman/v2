@@ -12,19 +12,16 @@
             <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
             <!-- <p class="black-text">Study group: Joe, Karina, Matt</p>
             <p class="pink-text">Joe and Karina are p-setting</p> -->
-            <p class="green-text">{{ parseInt(100 * Math.random()) }} classmates p-setting</p>
+            <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p>
             <base-button @click="redirectToPset(subject)" buttonColor="pink">
               P-set {{ getCurrentPset(subject) }}
-            </base-button>
-            <base-button buttonColor="pink">
-              Group Chat 
             </base-button>
             <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)">
               Manage Group
             </base-button>
-            <base-button @click="$router.push(`${subject.subjectNumber}`)">
-              Manage P-sets
-            </base-button>
+            <!-- <base-button @click="$router.push(`${subject.subjectNumber}`)">
+              View past material
+            </base-button> -->
           </base-card>
         </template>
       </div>

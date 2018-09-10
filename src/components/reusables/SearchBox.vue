@@ -28,7 +28,8 @@ export default {
       var elems = document.querySelectorAll('.autocomplete')
       const options = {
         data: this.allResults,
-        onAutocomplete: this.handleResultSelect
+        onAutocomplete: this.handleResultSelect,
+        minLength: 0
       }
       var instances = M.Autocomplete.init(elems, options)
     }

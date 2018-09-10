@@ -2,8 +2,10 @@
   <div>
     <h2 class="white-text center">Class Directory</h2>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <search-box v-if="classes" 
-                label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
+    <div class="searchbox-wrapper">
+      <search-box v-if="classes"
+        label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
+    </div>
     <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
     <div class="center">
@@ -43,10 +45,8 @@ export default {
     const ref = db.collection('subjects')
     await this.$bind('classes', ref)
     this.classes.forEach(c => {
-      console.log(`class = ${c}`)
       this.objectOfClasses[c.subjectNumber] = null 
     })
-    console.log(`object of classes = ${JSON.stringify(this.objectOfClasses)}`)
 
     // if (this.isLoggedIn) {
     //   this.classes = this.user.classes 
@@ -91,4 +91,11 @@ export default {
   // }
 }
 </script>
+
+<style scoped lang="scss">
+.searchbox-wrapper {
+  width: 50%;
+  margin: auto;
+}
+</style>
 
