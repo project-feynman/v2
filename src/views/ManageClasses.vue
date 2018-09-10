@@ -7,7 +7,8 @@
     <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
     <div class="center">
-      <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
+      <base-button @click="resetClasses()" buttonColor="red darken-4">Reset classes</base-button>
+      <base-button @click="$router.push('/subjects')" buttonColor="pink">Back to dashboard</base-button>
     </div>
   </div>
 </template>
@@ -63,6 +64,12 @@ export default {
         })
         console.log('successfully added subject')
       }
+    },
+    async resetClasses () {
+      const ref = db.collection('users').doc(this.user.uid) 
+      await ref.update({
+        enrolledSubjects: [] 
+      })
     }
   },
   watch: {
