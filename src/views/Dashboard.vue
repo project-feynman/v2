@@ -16,9 +16,9 @@
             <pulse-button iconName="input" 
                           :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                           @click="redirectToPset(subject)"/>
-            <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)">
-              Study Groups
-            </base-button>
+            <pulse-button iconName="people_outline" 
+                          :tooltipText="`Join or create a study group`"
+                          @click="$router.push(`/study-groups/${subject.subjectNumber}`)"/>
             <!-- <base-button @click="$router.push(`${subject.subjectNumber}`)">
               View past material
             </base-button> -->

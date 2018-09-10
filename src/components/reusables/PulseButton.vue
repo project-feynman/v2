@@ -1,6 +1,6 @@
       
 <template>
-  <span @click="$emit('click')" ref="tooltipped-button" class='btn-floating btn-large pink pulse tooltipped' :data-tooltip="tooltipText">
+  <span @click="handleClick()" ref="tooltipped-button" class='btn-floating btn-large pink pulse tooltipped' :data-tooltip="tooltipText">
     <i class="material-icons">{{ iconName }}</i>
   </span>
 </template>
@@ -8,12 +8,27 @@
 <script>
 export default {
   props: ['iconName', 'tooltipText'],
+  data () {
+    return {
+      instance: null 
+    }
+  },
   mounted () {
     if (this.tooltipText) {
       const elem = this.$refs['tooltipped-button']
-      console.log(`elem = ${elem}`)
-      const elems = document.querySelectorAll('.tooltipped')
-      var instances = M.Tooltip.init(elem)
+      const options = {
+        enterDelay: 100,
+        outDuration: 0 
+      }
+      this.instance = M.Tooltip.init(elem)
+      console.log('initialized tooltipped component')
+    }
+  },
+  methods: {
+    handleClick () {
+      this.instance.close()
+      console.log('tooltip message should be hidden')
+      this.$emit('click')
     }
   }
 }
