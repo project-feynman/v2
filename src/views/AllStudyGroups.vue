@@ -120,18 +120,23 @@ export default {
         participants: [], // have to update everywhere though 
         chatroomID
       }
-      // 1) reference to group 
+      // 1) user should have a reference to group 
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
-      // quickfix 
+      // quickfix
       await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
       // 2) update the participants of the chatroom 
       const chatRef = db.collection('chatRooms').doc(chatroomID)  
       await chatRef.update({
+        participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
+      })
+      // 3) update the participants of the group
+      const groupRef = db.collection('studyGroups').doc(id) 
+      await groupRef.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
     },
