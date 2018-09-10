@@ -6,19 +6,19 @@
           <router-link to="/subjects">Dashboard</router-link>
         </li>
         <template v-if="isLoggedIn">
-          <li v-if="user.recentPsetID">
+          <!-- <li v-if="user.recentPsetID">
             <router-link :to="user.recentPsetID">
               Pset
             </router-link>
-          </li>
-          <li v-if="user.recentQuestionID">
+          </li> -->
+          <!-- <li v-if="user.recentQuestionID">
             <router-link :to="user.recentQuestionID">
-              Question
+              Recent Question
             </router-link>
-          </li>
+          </li> -->
           <li v-if="user.recentChatID">
             <router-link :to="`/chat/${user.recentChatID}`">
-              Chat
+              Resume Chat
             </router-link>
           </li>
         </template>
@@ -32,6 +32,11 @@
                 {{ subject.subjectID }}'s Chat
               </router-link>
             </li>
+            <!-- <li v-else :key="idx">
+              <router-link :to="'/study-groups/' + subject.subjectID">
+                Join group for {{ subject.subjectID }}
+              </router-link>
+            </li> -->
           </template>
         </template>
       </ul>
@@ -53,11 +58,11 @@
             </a>
           </li>
           <template v-if="isLoggedIn">
-            <!-- <li>
+            <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
                 About
               </a>
-            </li> -->
+            </li>
             <!-- <li>
               <router-link class="black-text" to="/profile">
                 Hi, Feynman #{{ user.feynmanNumber }}
@@ -102,7 +107,7 @@ export default {
         // generate tokens if the user is new 
 				sendTokenToFirestore(this.user.uid)
         var token = await getToken()
-	      console.log(token)
+	      console.log('token =', token)
         if (token) {
           const ref = db.collection('users').doc(this.user.uid)
           await ref.update({

@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     async addToRecentQuestion () {
-      console.log('addToRecentQuestion()')
       if (!this.isLoggedIn) {
         return 
       }

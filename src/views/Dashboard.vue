@@ -17,7 +17,7 @@
               P-set {{ getCurrentPset(subject) }}
             </base-button>
             <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)">
-              Manage Group
+              Study Group
             </base-button>
             <!-- <base-button @click="$router.push(`${subject.subjectNumber}`)">
               View past material

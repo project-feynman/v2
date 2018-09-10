@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
+    <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
       <pulse-button @click="createGroup()" iconName="add"></pulse-button> 
     </div>
@@ -48,7 +49,8 @@ export default {
     return {
       subject: {},
       studyGroups: [],
-      showForm: false
+      showForm: false,
+      feedback: ''
     }
   },
   async created () {
@@ -62,6 +64,7 @@ export default {
       if (!this.isLoggedIn) {
         return 
       }
+      this.feedback = 'Creating a new study group...'
       const subject_id = this.$route.params.subject_id
       // designate a chatroom for it (and the associated whiteboard)
       const simplifiedUser = {
@@ -97,8 +100,15 @@ export default {
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
+      // quickfix 
+      await userRef.update({
+        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
+      })
+      this.feedback = 'Successfully created a study group'
+      setTimeout(() => this.feedback = '', 1000)
     },
     async joinGroup ({ id, chatroomID, forSubject, participants }) {
+      const subject_id = this.$route.params.subject_id
       const simplifiedUser = {
         displayName: this.user.displayName,
         uid: this.user.uid,
@@ -114,13 +124,17 @@ export default {
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
-        // enrolledSubjects: firebase.firestore.FieldValue.arrayUnion({hello: 'hello, world!'})
+      })
+      // quickfix 
+      await userRef.update({
+        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
       // 2) update the participants of the chatroom 
       const chatRef = db.collection('chatRooms').doc(chatroomID)  
       await chatRef.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
+
     },
     async leaveGroup ({ id, chatroomID, participants, forSubject }) {
       const ref = db.collection('studyGroups').doc(id)

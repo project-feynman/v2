@@ -4,9 +4,9 @@
       <!-- <div class="center">
         <base-button @click="$router.push(`/study-groups/${$route.params.subject_id}`)">Create/Join a Study Group</base-button>
       </div> -->
-      <collection-list title="Your study group"
+      <!-- <collection-list title="Your study group"
                        :listItems="friends">
-      </collection-list>
+      </collection-list> -->
       <collection-list :title="`${studentsWorking.length} classmates doing this question right now`"
                        :listItems="studentsWorking" 
                        @entire-click="student => enterChat(student)"
@@ -25,10 +25,10 @@
           {{ item.displayName }}
         </template>
       </collection-list> 
-      <collection-list title="0 Teaching Assistants">
+      <!-- <collection-list title="0 Teaching Assistants">
       </collection-list>
       <collection-list title="0 Professors">
-      </collection-list>
+      </collection-list> -->
     </template>
     <template v-else>
       <h5 class="center white-text">Nobody is online currently - get your friends to join so it's not so lonely</h5>
