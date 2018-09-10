@@ -8,6 +8,16 @@
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
+    <template v-if="journeys">
+      <collection-list title="Recorded discussions"
+                    :listItems="journeys"
+                    @entire-click="journey => redirect(journey)">
+      <template slot-scope="{ item }">
+        {{ item.title }}
+      </template>
+    </collection-list>
+    </template>
+
     <p v-if="participants" class="center">Participants: {{ participants }}</p>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
@@ -41,14 +51,15 @@ import 'firebase/firestore'
 import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
 import Whiteboard from '@/components/chat/Whiteboard.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+import CollectionList from '@/components/reusables/CollectionList.vue'
 import db from '@/firebase/init.js'
-
 
 export default {
   components: {
     ChatNewMessage,
     Whiteboard,
-    PulseButton
+    PulseButton,
+    CollectionList
   },
   data () {
     return {
@@ -57,6 +68,8 @@ export default {
       whiteboard: {},
       participants: [],
       forQuestion: '',
+      forSubject: '', 
+      journeys: [],
       feedback: ''
     }
   },
@@ -93,7 +106,9 @@ export default {
         this.title = data.title 
         this.messages = data.messages
         this.participants = data.participants
-        this.forQuestion = data.forQuestion 
+        this.forQuestion = data.forQuestion
+        this.forSubject = data.forSubject
+        this.journeys = data.journeys
       }
     })
     // fetch drawing from Firestore and set up syncing 
@@ -118,6 +133,10 @@ export default {
         isTalking: true 
       })
     },
+    redirect (journey) {
+      const url = '/conversation/' + journey.conversationID
+      this.$router.push(url)
+    },
     async shareJourney () {
       this.feedback = 'Saving the doodle as an animation...'
       // upload the journey to Firestore 
@@ -131,23 +150,32 @@ export default {
       var conversationID = await convoRef.add(conversation)
       conversationID = conversationID.id
       // associate the journey with the question
-      const query = db.collection('questions').where('questionID', '==', this.forQuestion)
-      const results = await query.get() 
-      if (results) {
-        const doc = results.docs[0]
-        const convoObj = {
-          title: this.title,
-          participants: this.participants,
-          conversationID
+      const convoObj = {
+        title: this.title,
+        participants: this.participants,
+        conversationID
+      }
+      if (this.forQuestion) {
+        const query = db.collection('questions').where('questionID', '==', this.forQuestion)
+        const results = await query.get() 
+        if (results) {
+          const doc = results.docs[0]
+          const ref = db.collection('questions').doc(doc.id) 
+          await ref.update({
+            journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
+          })
         }
-        const ref = db.collection('questions').doc(doc.id) 
+        this.$router.push(this.forQuestion)
+      } else {
+        let roomID = this.$route.params.room_id
+        const ref = db.collection('chatRooms').doc(roomID) 
         await ref.update({
           journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
         })
+        // save the collection on the chatroom itself - and see where that leads 
       }
       // associate journey with the participants themselves
-      await this.saveConversation(conversationID)
-      this.$router.push(this.forQuestion)
+      // await this.saveConversation(conversationID)
     },
     async saveConversation (conversationID) {
       this.participants.forEach(async person => {
