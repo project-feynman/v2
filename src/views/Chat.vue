@@ -8,6 +8,7 @@
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
+    <p v-if="participants" class="center">Participants: {{ participants }}</p>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">

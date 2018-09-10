@@ -1,6 +1,9 @@
 <template>
   <div>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
+    <div class="center">
+      <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
+    </div>
     <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
       <pulse-button @click="createGroup()" iconName="add"></pulse-button> 

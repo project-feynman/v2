@@ -14,10 +14,12 @@
           </li>
           <li class="tab tooltipped col s3"
               data-tooltip="Helpful external resources found by others">
-            <a href="#test2">Resources</a></li>
+            <a href="#test2">Resources</a>
+          </li>
           <li class="tab tooltipped col s3"
               data-tooltip="Actionable insights for staff members">
-            <a href="#test3">Statistics</a></li>
+            <a href="#test3">Statistics</a>
+          </li>
         </ul>
       </div>
       <div id="test1" class="col s12 m12">

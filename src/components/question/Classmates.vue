@@ -13,7 +13,7 @@
                        actionIcon="chat"
                        @item-click="student => enterChat(student)">
         <template slot-scope="{ item }">
-          Feynman #{{ item.displayName }}
+          {{ item.displayName }}
         </template>
       </collection-list>
       <collection-list :title="`${onlineActiveFeynmen.length} classmates finished and want to help`"
