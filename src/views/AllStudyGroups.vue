@@ -126,7 +126,7 @@ export default {
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
       // quickfix 
-      await userRef.update({
+      await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
       // 2) update the participants of the chatroom 
