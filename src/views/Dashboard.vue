@@ -16,10 +16,9 @@
             <!-- <base-button @click="redirectToPset(subject)" buttonColor="pink">
               P-set {{ getCurrentPset(subject) }}
             </base-button> -->
-            <div class="tooltipped" data-tooltip="Hello, world!">
-              <pulse-button iconName="input" 
-                            @click="redirectToPset(subject)"/>
-            </div>
+            <pulse-button iconName="input" 
+                          tooltipText="Hello, world!"
+                          @click="redirectToPset(subject)"/>
             <base-button @click="$router.push(`/study-groups/${subject.subjectNumber}`)">
               Study Groups
             </base-button>
@@ -50,6 +49,10 @@ import db from '@/firebase/init.js'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 
 export default {
+  mounted () {
+    const elems = document.querySelectorAll('.tooltipped')
+    var instances = M.Tooltip.init(elems)
+  },
   components: {
     PulseButton
   },
