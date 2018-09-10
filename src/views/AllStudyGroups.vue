@@ -134,7 +134,6 @@ export default {
       await chatRef.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
-
     },
     async leaveGroup ({ id, chatroomID, participants, forSubject }) {
       const ref = db.collection('studyGroups').doc(id)

@@ -96,23 +96,25 @@ export default {
   },
   watch: {
     async user () {
-      if (this.isLoggedIn && !this.hasFetchedToken) {
-        this.hasFetchedToken = true 
+      if (this.isLoggedIn) {
         // display notifications, if there are any 
         const notifs = this.user.notifications
         const latestNotif = notifs[notifs.length - 1]
         if (latestNotif.new) {
           this.newNotif = true 
         }
-        // generate tokens if the user is new 
-				sendTokenToFirestore(this.user.uid)
-        var token = await getToken()
-	      console.log('token =', token)
-        if (token) {
-          const ref = db.collection('users').doc(this.user.uid)
-          await ref.update({
-            token
-          })
+        if (!this.hasFetchedToken) {
+          // generate tokens if the user is new 
+          this.hasFetchedToken = true 
+          sendTokenToFirestore(this.user.uid)
+          var token = await getToken()
+          console.log('token =', token)
+          if (token) {
+            const ref = db.collection('users').doc(this.user.uid)
+            await ref.update({
+              token
+            })
+          }
         }
       }
     }
