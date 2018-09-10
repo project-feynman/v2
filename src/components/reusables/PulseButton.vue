@@ -17,17 +17,17 @@ export default {
     if (this.tooltipText) {
       const elem = this.$refs['tooltipped-button']
       const options = {
-        enterDelay: 100,
+        enterDelay: 0,
         outDuration: 0 
       }
       this.instance = M.Tooltip.init(elem)
-      console.log('initialized tooltipped component')
     }
   },
   methods: {
     handleClick () {
-      this.instance.close()
-      console.log('tooltip message should be hidden')
+      if (this.instance) {
+        this.instance.close()
+      }
       this.$emit('click')
     }
   }

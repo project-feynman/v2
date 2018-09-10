@@ -6,7 +6,6 @@
       <search-box v-if="classes"
         label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     </div>
-    <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
     <div class="center">
       <base-button @click="resetClasses()" buttonColor="red darken-4">Reset classes</base-button>
@@ -31,6 +30,16 @@ export default {
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
+    },
+    isNewUser () {
+      if (!isLoggedIn) {
+        return 
+      } 
+      if (!this.user.enrolledSubjects) {
+        this.feedback = "Welcome - to get started, select classes you're taking this term"
+      } else {
+        this.feedback = 'Now, join a study group within that class to access the group chat'
+      }
     }
   },
   data () {
@@ -74,8 +83,10 @@ export default {
   },
   watch: {
     isLoggedIn () {
-      if (this.isLoggedIn && this.user.enrolledSubjects) {
-        if (this.user.enrolledSubjects.length == 0) {
+      if (this.isLoggedIn) {
+        if (!this.user.enrolledSubjects) {
+          this.feedback = "Welcome - to get started, select classes you're taking this term" 
+        } else if (this.user.enrolledSubjects.length == 0) {
           this.feedback = "Welcome - to get started, select classes you're taking this term" 
         }
       }

@@ -12,13 +12,20 @@
       <div class="flexbox-container">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
-            <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
-            </collection-list>
-            <div class="flexbox-button-container center">
-              <base-button @click="joinGroup(group)">Join</base-button>
-              <base-button @click="leaveGroup(group)" buttonColor="yellow">Leave</base-button>
-              <base-button @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
-            </div>
+            <base-card>
+              <ul>
+                <template v-for="(student, idx) in group.participants">
+                  <li :key="idx" class="black-text">{{ student.displayName }}</li>
+                </template>
+              </ul>
+              <div class="flexbox-button-container center">
+                <base-button @click="joinGroup(group)">Join</base-button>
+                <base-button @click="leaveGroup(group)" buttonColor="yellow">Leave</base-button>
+                <base-button @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
+              </div>
+            </base-card>
+            <!-- <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
+            </collection-list> -->
           </div>
         </template>
       </div>
