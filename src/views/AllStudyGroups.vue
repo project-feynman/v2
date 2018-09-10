@@ -89,19 +89,19 @@ export default {
         title: `${subject_id} Study Group`,
         forSubject: subject_id
       })
+      this.feedback = 'Initializing the whiteboard...'
       const chatroomID = result.id 
       const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
       await whiteboardRef.set({
         allPaths: []  
       })
       // 3) store a reference to the group chat for the user 
+      this.feedback = 'Adding you to the group chat...'
       const userRef = db.collection('users').doc(this.user.uid) 
       const newSubject = {
         subjectID: subject_id,
         chatroomID
       }
-      this.feedback = 'Successfully created a study group'
-      setTimeout(() => this.feedback = '', 1000)
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
@@ -109,6 +109,8 @@ export default {
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
+      this.feedback = 'Success'
+      setTimeout(() => this.feedback = '', 500)
     },
     async joinGroup ({ id, forSubject, participants }) {
       const subject_id = this.$route.params.subject_id
