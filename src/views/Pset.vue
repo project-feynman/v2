@@ -18,11 +18,10 @@
           <duration-form v-if="user.uid && getUserProgress(question) && !didUserSubmitATimeAlready(question)" 
                              :questionID="question.id" 
                              :userUID="user.uid"
-                             class="question-duration"
-                             ></duration-form>
+                             class="question-duration"></duration-form>
           <span v-else-if="didUserSubmitATimeAlready(question)" class="green-text">
             Time submission recorded
-           </span>
+          </span>
           <BaseCheckBox 
             :value="getUserProgress(question)"
             @toggle="toggle(question, $event)">
@@ -53,7 +52,7 @@
         </div>
       </form>
       <p v-if="feedback" class="red-text center">{{ feedback }}</p>
-      <div class="right-align">
+      <div class="center">
         <base-button @click="addQuestion()">Submit New Question</base-button>
       </div>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="custom-offset"></div>
-    <h2>Classes</h2>
+    <h2>Dashboard</h2>
     <div v-if="loading" class="spinner-wrapper">
       <base-spinner/>
     </div>
@@ -29,10 +29,9 @@
         </template>
       </div>
       <div class="center">
-        <base-button @click="$router.push('/add-classes')">Add classes</base-button>
+        <base-button @click="$router.push('/add-classes')">Manage classes</base-button>
       </div>
     </template>
- 
     <!-- <div v-if="user">
       <div v-if="user.admin == true || user.displayName == 'Elton Lin'" class="new-subject">
         <form @submit.prevent="addSubject()">

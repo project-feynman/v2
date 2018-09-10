@@ -1,10 +1,11 @@
 <template>
   <div>
     <h2 class="white-text center">Class Directory</h2>
+    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <search-box v-if="classes" 
                 label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
-    <h2 v-if="isLoggedIn">Your classes: {{ user.enrolledSubjects }}</h2>
+    <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
     <div class="center">
       <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
     </div>
@@ -61,6 +62,15 @@ export default {
           enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
         })
         console.log('successfully added subject')
+      }
+    }
+  },
+  watch: {
+    isLoggedIn () {
+      if (this.isLoggedIn && this.user.enrolledSubjects) {
+        if (this.user.enrolledSubjects.length == 0) {
+          this.feedback = "Welcome - to get started, select classes you're taking this term" 
+        }
       }
     }
   }

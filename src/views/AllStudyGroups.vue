@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="white-text center">Study Groups</h2>
+    <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <div class="center">
       <pulse-button @click="createGroup()" iconName="add"></pulse-button> 
     </div>
@@ -110,8 +110,6 @@ export default {
         participants: [], // have to update everywhere though 
         chatroomID
       }
-      console.log(`new subject = ${JSON.stringify(newSubject)}`)
-      console.log(`simplifiedUser = ${JSON.stringify(simplifiedUser)}`)
       // 1) reference to group 
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
@@ -145,13 +143,14 @@ export default {
       })
     },
     async deleteGroup ({ id, chatroomID, participants, forSubject }) {
-      // update the user himself 
       const deleteObj = {
         chatroomID, 
         studyGroup: participants,
         subjectID: forSubject,
       }
-      const userRef = db.collection('users').doc(this.user.uid) 
+      const userRef = db.collection('users').doc(this.user.uid)
+      // update all users associated with the group 
+
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
       })

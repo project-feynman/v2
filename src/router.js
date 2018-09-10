@@ -13,7 +13,7 @@ const Profile = () => import('@/views/Profile.vue')
 const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
-const AllSubjects = () => import('@/views/AllSubjects.vue')
+const ManageClasses = () => import('@/views/ManageClasses.vue')
 
 export default new Router({
   mode: 'history', 
@@ -29,7 +29,7 @@ export default new Router({
     },
     {
       path: '/add-classes',
-      component: AllSubjects
+      component: ManageClasses
     },
     {
       path: '/profile',
