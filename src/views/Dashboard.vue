@@ -17,7 +17,6 @@
               P-set {{ getCurrentPset(subject) }}
             </base-button> -->
             <div class="tooltipped" data-tooltip="Hello, world!">
-              {{ initializeTooltips() }}
               <pulse-button iconName="input" 
                             @click="redirectToPset(subject)"/>
             </div>
