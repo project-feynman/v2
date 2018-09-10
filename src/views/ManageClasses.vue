@@ -32,12 +32,16 @@ export default {
       return this.user != 'undetermined' && this.user != null 
     },
     isNewUser () {
-      if (!isLoggedIn) {
+      console.log(`enrolledSubjects changed - recomputing isNewUser`)
+      if (!this.isLoggedIn) {
         return 
       } 
       if (!this.user.enrolledSubjects) {
         this.feedback = "Welcome - to get started, select classes you're taking this term"
+      } else if (this.user.enrolledSubjects.length == 0) {
+        this.feedback = "Welcome - to get started, select classes you're taking this term"
       } else {
+        console.log('this.user.enrolledSubjects =', this.user.enrolledSubjects)
         this.feedback = 'Now, join a study group within that class to access the group chat'
       }
     }

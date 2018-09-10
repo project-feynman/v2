@@ -67,7 +67,7 @@ export default {
   async created () {
     // obtain the study group from there
     const subject_id = this.$route.params.subject_id
-    const ref = db.collection('studyGroups').where('forSubject', '==', subject_id)
+    const ref = db.collection('chatRooms').where('forSubject', '==', subject_id)
     await this.$bind('studyGroups', ref)
   },
   methods: {
@@ -100,17 +100,17 @@ export default {
         subjectID: subject_id,
         chatroomID
       }
+      this.feedback = 'Successfully created a study group'
+      setTimeout(() => this.feedback = '', 1000)
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
-      // quickfix // now just update the chatroomID if they already have a newSubject without a matching ID 
-      // await userRef.update({
-      //   enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
-      // })
-      this.feedback = 'Successfully created a study group'
-      setTimeout(() => this.feedback = '', 1000)
+      // quickfix 
+      await userRef.update({
+        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
+      })
     },
-    async joinGroup ({ id, chatroomID, forSubject, participants }) {
+    async joinGroup ({ id, forSubject, participants }) {
       const subject_id = this.$route.params.subject_id
       const simplifiedUser = {
         displayName: this.user.displayName,
@@ -120,31 +120,25 @@ export default {
       oldGroup.push(simplifiedUser)
       const newSubject = {
         subjectID: forSubject,
-        participants: [], // have to update everywhere though 
-        chatroomID
+        chatroomID: id
       }
       // 1) user should have a reference to group 
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
-      // quickfix
-      await ref.update({
+      await ref.update({ // quickfix
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
       // 2) update the participants of the chatroom 
-      const chatRef = db.collection('chatRooms').doc(chatroomID)  
+      const chatRef = db.collection('chatRooms').doc(id)  
       await chatRef.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
-      // 3) update the participants of the group
-      const groupRef = db.collection('studyGroups').doc(id) 
-      await groupRef.update({
-        participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
-      })
     },
-    async leaveGroup ({ id, chatroomID, participants, forSubject }) {
-      const ref = db.collection('studyGroups').doc(id)
+    async leaveGroup ({ id, participants, forSubject }) {
+      // update participants in the group document 
+      const ref = db.collection('chatRooms').doc(id)
       const simplifiedUser = {
         displayName: this.user.displayName,
         uid: this.user.uid
@@ -154,8 +148,7 @@ export default {
       })
       // update the user himself 
       const deleteObj = {
-        chatroomID, 
-        studyGroup: participants,
+        chatroomID: id,
         subjectID: forSubject
       }
       const userRef = db.collection('users').doc(this.user.uid) 
@@ -163,27 +156,28 @@ export default {
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
       })
     },
-    async deleteGroup ({ id, chatroomID, participants, forSubject }) {
+    async deleteGroup ({ id, participants, forSubject }) {
       const deleteObj = {
-        chatroomID, 
-        studyGroup: participants,
+        chatroomID: id, 
         subjectID: forSubject,
       }
-      const userRef = db.collection('users').doc(this.user.uid)
-      // update all users associated with the group 
-
-      await userRef.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
+      participants.forEach(async person => {
+        console.log('person =', person)
+        const userRef = db.collection('users').doc(person.uid)
+        await userRef.update({
+          enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
+        })
       })
-      // now safely delete the user document 
-      const ref = db.collection('studyGroups').doc(id) 
+      console.log('removed reference to the group for all participants')
+      // now safely delete the study group document 
+      const ref = db.collection('chatRooms').doc(id) 
       await ref.delete()  
     },
-    flattenArrayOfObjects (array) {
-      var output = [] 
-      array.forEach(elem => output.push(elem.displayName))
-      return output 
-    }
+    // flattenArrayOfObjects (array) {
+    //   var output = [] 
+    //   array.forEach(elem => output.push(elem.displayName))
+    //   return output 
+    // }
   }
 }
 </script>
