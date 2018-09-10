@@ -88,7 +88,8 @@
 <script>
 import db from '@/firebase/init.js'
 import PopupModal from '@/components/reusables/PopupModal.vue'
-import { getToken, sendTokenToFirestore } from '@/push_notifications/push_notifications.js'
+import { getToken, sendTokenToFirestore } from '@/api/push_notifications.js'
+import { getPermissionForGeolocation, sendPositionToFirestore } from '@/api/geolocation.js'
 
 export default {
   components: {
@@ -108,7 +109,6 @@ export default {
           this.hasFetchedToken = true 
           sendTokenToFirestore(this.user.uid)
           var token = await getToken()
-          console.log('token =', token)
           if (token) {
             const ref = db.collection('users').doc(this.user.uid)
             await ref.update({
@@ -116,6 +116,16 @@ export default {
             })
           }
         }
+				//sending the current location to Firestore
+				getPermissionForGeolocation((position) => { 
+					sendPositionToFirestore(this.user.uid, 
+					{ 
+						accuracy: position.coords.accuracy,
+						longitude: position.coords.longitude,
+						latitude: position.coords.latitude,
+						timestamp: position.timestamp
+					})
+				})
       }
     }
   },

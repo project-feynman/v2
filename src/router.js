@@ -14,6 +14,7 @@ const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
 const ManageClasses = () => import('@/views/ManageClasses.vue')
+const MapOfStudents = () => import('@/components/reusables/MapOfStudents.vue')
 
 export default new Router({
   mode: 'history', 
@@ -22,6 +23,10 @@ export default new Router({
     {
       path: '/',
       component: Login
+    },
+    {
+      path: '/geolocation',
+      component: MapOfStudents
     },
     {
       path: '/subjects',
