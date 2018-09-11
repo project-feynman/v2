@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h1 class="center">Feynman</h1>
+    <h1 class="center">Feynman (Beta)</h1>
     <h4 class="center">If you can't explain it simply, you don't understand it.</h4>
+    <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="loading" class="white-text center">Retrieving your information...</p>
     <div id="firebaseui-auth-container"></div>
     <template v-if="isLoggedIn">

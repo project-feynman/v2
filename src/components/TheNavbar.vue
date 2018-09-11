@@ -2,10 +2,10 @@
   <div>
     <nav>
       <ul id="dropdown1" class="dropdown-content">
-        <li>
-          <router-link to="/subjects">Dashboard</router-link>
-        </li>
         <template v-if="isLoggedIn">
+          <li>
+            <router-link to="/subjects">Dashboard</router-link>
+          </li>
           <!-- <li v-if="user.recentPsetID">
             <router-link :to="user.recentPsetID">
               Pset
@@ -41,6 +41,7 @@
         </template>
       </ul>
       <div class="nav-wrapper grey lighten-5">
+        <template v-show="isLoggedIn == true">
         <a id="dropdown-trigger-1" 
             class="brand-logo" 
             href="#!" 
@@ -48,15 +49,18 @@
             <i class="material-icons right">menu</i>
           Menu
         </a>
+        </template>
         <ul class="right hide-on-med-and-down">
-          <li>
-            <a id="dropdown-trigger-2" 
-              href="#!" 
-              data-target="dropdown2">
-              <i class="material-icons right">chat</i>
-              Group Chats
-            </a>
-          </li>
+          <template v-show="isLoggedIn == true">
+            <li>
+              <a id="dropdown-trigger-2" 
+                href="#!" 
+                data-target="dropdown2">
+                <i class="material-icons right">chat</i>
+                Group Chats
+              </a>
+            </li>
+          </template>
           <template v-if="isLoggedIn">
             <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">

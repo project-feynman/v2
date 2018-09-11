@@ -6,7 +6,7 @@
     </div>
     <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
-      <pulse-button @click="createGroup()" iconName="add"></pulse-button> 
+      <pulse-button @click="createGroup()" iconName="add" tooltipText="Start a new study group"></pulse-button> 
     </div>
     <template v-if="studyGroups">
       <div class="flexbox-container">
@@ -27,6 +27,7 @@
             <!-- potentially message individuals -->
             <!-- <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
             </collection-list> -->
+            <!-- Spontaneous study groups by location and time and progress -->
           </div>
         </template>
       </div>

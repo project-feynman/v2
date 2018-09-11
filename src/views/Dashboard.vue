@@ -2,9 +2,10 @@
   <div>
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
-    <div v-if="loading" class="spinner-wrapper">
+    <p v-if="loading" class="white-text center">Fetching your classes...</p>
+    <!-- <div v-if="loading" class="spinner-wrapper">
       <base-spinner/>
-    </div>
+    </div> -->
     <template v-if="subjects && !loading && isLoggedIn">
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
@@ -13,12 +14,15 @@
             <!-- <p class="black-text">Study group: Joe, Karina, Matt</p>
             <p class="pink-text">Joe and Karina are p-setting</p> -->
             <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p>
+            <!-- <pulse-button iconName="input" 
+                          :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
+                          @click="redirectToPset(subject)"/> -->
             <pulse-button iconName="input" 
                           :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
-                          @click="redirectToPset(subject)"/>
-            <pulse-button iconName="people_outline" 
+                          @click="$router.push('/study-groups/' + subject.subjectNumber)"/>
+            <!-- <pulse-button iconName="people_outline" 
                           :tooltipText="`Join or create a study group`"
-                          @click="$router.push(`/study-groups/${subject.subjectNumber}`)"/>
+                          @click="$router.push(`/study-groups/${subject.subjectNumber}`)"/> -->
             <!-- <base-button @click="$router.push(`${subject.subjectNumber}`)">
               View past material
             </base-button> -->

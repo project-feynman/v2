@@ -98,6 +98,8 @@ const actions = {
   logOut: async context => {
     await firebase.auth().signOut()
     context.commit('setUser', null)
+    console.log('about to resolve promise, this should occur before the redirect')
+    Promise.resolve()
   }
 }
 
