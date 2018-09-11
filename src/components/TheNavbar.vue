@@ -23,7 +23,7 @@
           </li>
         </template>
       </ul>
-      <ul id="dropdown2" class="dropdown-content">
+      <!-- <ul id="dropdown2" class="dropdown-content">
         <template v-if="isLoggedIn && user.enrolledSubjects">
           <li v-if="user.enrolledSubjects.length == 0">You haven't joined a study group yet</li>
           <template v-else v-for="(subject, idx) in user.enrolledSubjects"> 
@@ -32,14 +32,9 @@
                 {{ subject.subjectID }}'s Chat
               </router-link>
             </li>
-            <!-- <li v-else :key="idx">
-              <router-link :to="'/study-groups/' + subject.subjectID">
-                Join group for {{ subject.subjectID }}
-              </router-link>
-            </li> -->
           </template>
         </template>
-      </ul>
+      </ul> -->
       <div class="nav-wrapper grey lighten-5">
         <template v-show="isLoggedIn == true">
         <a id="dropdown-trigger-1" 
@@ -51,7 +46,7 @@
         </a>
         </template>
         <ul class="right hide-on-med-and-down">
-          <template v-show="isLoggedIn == true">
+          <!-- <template v-show="isLoggedIn == true">
             <li>
               <a id="dropdown-trigger-2" 
                 href="#!" 
@@ -60,7 +55,7 @@
                 Group Chats
               </a>
             </li>
-          </template>
+          </template> -->
           <template v-if="isLoggedIn">
             <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">

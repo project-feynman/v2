@@ -1,10 +1,19 @@
 <template>
   <div>
-    <h2 contenteditable 
+    <h2 v-if="title"
+        contenteditable 
         @keydown="updateTitle($event)" 
         @keydown.enter.prevent="doNothing()">
       {{ title }}
     </h2>
+     <p v-if="description"
+        contenteditable 
+        @keydown="updateDescription($event)" 
+        @keydown.enter.prevent="doNothing()"
+        class="center">
+      {{ description }}
+    </p>
+    <p class="center pink-text">Remember to press ENTER to save the description or the title</p>
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
@@ -17,7 +26,6 @@
       </template>
     </collection-list>
     </template>
-
     <p v-if="participants" class="center">Participants: {{ participants }}</p>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
@@ -70,6 +78,7 @@ export default {
       forQuestion: '',
       forSubject: '', 
       journeys: [],
+      description: '',
       feedback: ''
     }
   },
@@ -109,6 +118,7 @@ export default {
         this.forQuestion = data.forQuestion
         this.forSubject = data.forSubject
         this.journeys = data.journeys
+        this.description = data.description 
       }
     })
     // fetch drawing from Firestore and set up syncing 
@@ -199,6 +209,20 @@ export default {
         const docRef = db.collection('chatRooms').doc(roomID)
         await docRef.update({
           title: this.title 
+        })
+        this.feedback = ''
+      }
+    },
+    async updateDescription (event) {
+      if (event.key == 'Enter') {
+        this.feedback = 'Saving description...'
+        document.activeElement.blur()
+        this.description = event.target.innerText
+        // update title for the chatRoom
+        const roomID = this.$route.params.room_id
+        const docRef = db.collection('chatRooms').doc(roomID)
+        await docRef.update({
+          description: this.description
         })
         this.feedback = ''
       }

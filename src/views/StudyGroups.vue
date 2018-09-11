@@ -1,12 +1,12 @@
 <template>
   <div>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
-    <div class="center">
+    <!-- <div class="center">
       <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
-    </div>
+    </div> -->
     <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
-      <pulse-button @click="createGroup()" iconName="add" tooltipText="Start a new study group"></pulse-button> 
+      <base-button @click="createGroup()" iconName="add">Start a new group</base-button> 
     </div>
     <template v-if="studyGroups">
       <div class="flexbox-container">
@@ -18,6 +18,7 @@
                   <li :key="idx" class="black-text">{{ student.displayName }}</li>
                 </template>
               </ul>
+              <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
               <div class="flexbox-button-container center">
                 <base-button @click="joinGroup(group)">Join</base-button>
                 <base-button @click="leaveGroup(group)" buttonColor="yellow">Leave</base-button>
@@ -72,6 +73,9 @@ export default {
     await this.$bind('studyGroups', ref)
   },
   methods: {
+    enterChat ({ id }) {
+      this.$router.push('/chat/' + id)
+    },
     async createGroup () {
       if (!this.isLoggedIn) {
         return 
@@ -87,8 +91,9 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        title: `${subject_id} Study Group`,
-        forSubject: subject_id
+        title: `Edit the group name here...`,
+        forSubject: subject_id,
+        description: 'Edit the description here (e.g. working on question 2)'
       })
       this.feedback = 'Initializing the whiteboard...'
       const chatroomID = result.id 
