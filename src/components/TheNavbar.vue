@@ -100,9 +100,13 @@ export default {
       if (this.isLoggedIn) {
         // display notifications, if there are any 
         const notifs = this.user.notifications
-        const latestNotif = notifs[notifs.length - 1]
-        if (latestNotif.new) {
-          this.newNotif = true 
+        if (notifs) {
+          if (notifs.length != 0) {
+            const latestNotif = notifs[notifs.length - 1]
+            if (latestNotif.new) {
+              this.newNotif = true 
+            }
+          }
         }
         if (!this.hasFetchedToken) {
           // generate tokens if the user is new 
