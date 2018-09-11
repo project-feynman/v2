@@ -1,5 +1,17 @@
 <template>
   <div>
+    <template v-if="isLoggedIn">
+      <popup-modal v-if="showPopup" @close="showPopup = false">
+        <p slot="header" class="teal-text center">
+          Here, you can discuss p-set questions with the chat and realtime whiteboard.
+          After a discussion, you can share it so they can be viewed even if the chatroom is empty.
+          For hard issues, arrange to meet up in person or visit Office Hours collectively.
+        </p>
+      </popup-modal>
+    </template>
+    <div class="center">
+      <pulse-button @click="showPopup = true" iconName="warning" tooltipText="Help guide"></pulse-button>
+    </div>
      <h2 v-if="description"
         contenteditable 
         @keydown="updateDescription($event)" 
@@ -65,6 +77,7 @@ import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
 import Whiteboard from '@/components/chat/Whiteboard.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
+import PopupModal from '@/components/reusables/PopupModal.vue'
 import db from '@/firebase/init.js'
 
 export default {
@@ -72,7 +85,8 @@ export default {
     ChatNewMessage,
     Whiteboard,
     PulseButton,
-    CollectionList
+    CollectionList,
+    PopupModal 
   },
   data () {
     return {
@@ -85,7 +99,8 @@ export default {
       journeys: [],
       description: '',
       psetNumber: '',
-      feedback: ''
+      feedback: '',
+      showPopup: false 
     }
   },
   computed: {
