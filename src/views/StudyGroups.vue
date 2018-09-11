@@ -13,17 +13,20 @@
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
             <base-card>
+              <h4 class="teal-text">{{ group.title }}</h4>
+              <p class="teal-text">{{ group.description }}</p>
               <ul>
                 <template v-for="(student, idx) in group.participants">
                   <li :key="idx" class="black-text">{{ student.displayName }}</li>
                 </template>
               </ul>
               <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
-              <div class="flexbox-button-container center">
+              <base-button v-if="user.displayName == 'Elton Lin'" @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
+              <!-- <div class="flexbox-button-container center">
                 <base-button @click="joinGroup(group)">Join</base-button>
                 <base-button @click="leaveGroup(group)" buttonColor="yellow">Leave</base-button>
                 <base-button @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
-              </div>
+              </div> -->
             </base-card>
             <!-- potentially message individuals -->
             <!-- <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
