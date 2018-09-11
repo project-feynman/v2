@@ -1,9 +1,6 @@
 <template>
   <div>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
-    <!-- <div class="center">
-      <base-button @click="$router.push('/subjects')">Back to dashboard</base-button>
-    </div> -->
     <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
       <base-button @click="createGroup()" iconName="add">Start a new group</base-button> 
@@ -22,16 +19,7 @@
               </ul>
               <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
               <base-button v-if="user.displayName == 'Elton Lin'" @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
-              <!-- <div class="flexbox-button-container center">
-                <base-button @click="joinGroup(group)">Join</base-button>
-                <base-button @click="leaveGroup(group)" buttonColor="yellow">Leave</base-button>
-                <base-button @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
-              </div> -->
             </base-card>
-            <!-- potentially message individuals -->
-            <!-- <collection-list :title="group.groupName" :listItems="flattenArrayOfObjects(group.participants)">
-            </collection-list> -->
-            <!-- Spontaneous study groups by location and time and progress -->
           </div>
         </template>
       </div>
@@ -95,7 +83,7 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        title: `Group name`,
+        title: `Current discussion topic...`,
         forSubject: subject_id,
         psetNumber: pset_number,
         description: 'Working on question 1'
@@ -111,67 +99,15 @@ export default {
       const userRef = db.collection('users').doc(this.user.uid) 
       const newSubject = {
         subjectID: subject_id,
-        chatroomID
       }
       await userRef.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
-      })
-      // quickfix 
-      await userRef.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
       })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 500)
     },
-    async joinGroup ({ id, forSubject, participants }) {
-      const subject_id = this.$route.params.subject_id
-      const simplifiedUser = {
-        displayName: this.user.displayName,
-        uid: this.user.uid,
-      }
-      const oldGroup = participants
-      oldGroup.push(simplifiedUser)
-      const newSubject = {
-        subjectID: forSubject,
-        chatroomID: id
-      }
-      // 1) user should have a reference to group 
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
-      })
-      await ref.update({ // quickfix
-        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove({subjectID: subject_id})
-      })
-      // 2) update the participants of the chatroom 
-      const chatRef = db.collection('chatRooms').doc(id)  
-      await chatRef.update({
-        participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
-      })
-    },
-    async leaveGroup ({ id, participants, forSubject }) {
-      // update participants in the group document 
-      const ref = db.collection('chatRooms').doc(id)
-      const simplifiedUser = {
-        displayName: this.user.displayName,
-        uid: this.user.uid
-      }
-      await ref.update({
-        participants: firebase.firestore.FieldValue.arrayRemove(simplifiedUser)
-      })
-      // update the user himself 
-      const deleteObj = {
-        chatroomID: id,
-        subjectID: forSubject
-      }
-      const userRef = db.collection('users').doc(this.user.uid) 
-      await userRef.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
-      })
-    },
     async deleteGroup ({ id, participants, forSubject }) {
       const deleteObj = {
-        chatroomID: id, 
         subjectID: forSubject,
       }
       participants.forEach(async person => {

@@ -8,7 +8,7 @@ const Subject = () => import('@/views/Subject.vue')
 const Pset = () => import('@/views/Pset.vue')
 const Login = () => import('@/views/Login.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
-const Question = () => import('@/views/Question.vue')
+// const Question = () => import('@/views/Question.vue')
 const Profile = () => import('@/views/Profile.vue')
 const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
@@ -60,9 +60,9 @@ export default new Router({
       path: '/:subject_id/:pset_number',
       component: Pset
     },
-    {
-      path: '/:subject_id/:pset_number/:question_number',
-      component: Question
-    }
+    // {
+    //   path: '/:subject_id/:pset_number/:question_number',
+    //   component: Question
+    // }
   ]
 })

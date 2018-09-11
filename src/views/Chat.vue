@@ -1,32 +1,37 @@
 <template>
   <div>
+     <h2 v-if="description"
+        contenteditable 
+        @keydown="updateDescription($event)" 
+        @keydown.enter.prevent="doNothing()"
+        class="center">
+      {{ description }}
+    </h2>
+    <p class="center yellow-text">Remember to press ENTER after editting the description</p>
+    <div class="center">
+      <pulse-button iconName="share" @click="shareJourney()"/>
+    </div>
+    <template v-if="journeys">
+      <div class="collection-list-wrapper">
+        <collection-list title="Recorded discussions"
+                    :listItems="journeys"
+                    actionIcon="delete"
+                    @item-click="journey => processDeleteAttempt(journey)">
+                    @entire-click="journey => redirect(journey)">
+          <template slot-scope="{ item }">
+            {{ item.title }}
+          </template>
+        </collection-list>
+      </div>
+    </template>
+    <p v-if="participants" class="center">Participants: {{ participants }}</p>
     <h2 v-if="title"
         contenteditable 
         @keydown="updateTitle($event)" 
         @keydown.enter.prevent="doNothing()">
       {{ title }}
     </h2>
-     <p v-if="description"
-        contenteditable 
-        @keydown="updateDescription($event)" 
-        @keydown.enter.prevent="doNothing()"
-        class="center">
-      {{ description }}
-    </p>
-    <p class="center yellow-text">Remember to press ENTER after editting the description/title</p>
-    <div class="center">
-      <pulse-button iconName="share" @click="shareJourney()"/>
-    </div>
-    <template v-if="journeys">
-      <collection-list title="Recorded discussions"
-                    :listItems="journeys"
-                    @entire-click="journey => redirect(journey)">
-      <template slot-scope="{ item }">
-        {{ item.title }}
-      </template>
-    </collection-list>
-    </template>
-    <p v-if="participants" class="center">Participants: {{ participants }}</p>
+    <p class="center yellow-text">Remember to press ENTER after editting the topic</p>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
@@ -137,24 +142,9 @@ export default {
   methods: {
     async fetchJourneys () {
       // fetch journeys
-      console.log('this.forSubject =', this.forSubject)
-      console.log('this.psetNumber =', this.psetNumber)
       const questionID = this.forSubject + '/' + this.psetNumber 
-      console.log(`questionID for journey = ${questionID}`)
       const journeyRef = db.collection('conversations').where('questionID', '==', questionID)
       await this.$bind('journeys', journeyRef)
-      console.log('successfully binded')
-      // journeyRef
-      // .get()
-      // .then(function(querySnapshot) {
-      //     querySnapshot.forEach(function(doc) {
-      //         // doc.data() is never undefined for query doc snapshots
-      //         console.log(doc.id, " => ", doc.data());
-      //     });
-      // })
-      // .catch(function(error) {
-      //     console.log("Error getting documents: ", error);
-      // });
     },
     prettifyDate (timestamp) {
       return moment(timestamp).format("lll")
@@ -169,8 +159,8 @@ export default {
         isTalking: true 
       })
     },
-    redirect (journey) {
-      const url = '/conversation/' + journey.conversationID
+    redirect ({ id }) {
+      const url = '/conversation/' + id
       this.$router.push(url)
     },
     async shareJourney () {
@@ -246,12 +236,21 @@ export default {
     },
     doNothing () {
       return 
+    },
+    async processDeleteAttempt (journey) {
+      const ref = db.collection('conversations').doc(journey.id) 
+      await ref.delete()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.collection-list-wrapper {
+  margin: auto;
+  width: 60%;
+}
+
 h2 {
   @extend .center;
 }
