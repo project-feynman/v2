@@ -8,15 +8,12 @@
       {{ description }}
     </h2>
     <p class="center yellow-text">Remember to press ENTER after editting the description</p>
-    <div class="center">
-      <pulse-button iconName="share" @click="shareJourney()"/>
-    </div>
     <template v-if="journeys">
       <div class="collection-list-wrapper">
         <collection-list title="Recorded discussions"
                     :listItems="journeys"
                     actionIcon="delete"
-                    @item-click="journey => processDeleteAttempt(journey)">
+                    @item-click="journey => processDeleteAttempt(journey)"
                     @entire-click="journey => redirect(journey)">
           <template slot-scope="{ item }">
             {{ item.title }}
@@ -32,6 +29,9 @@
       {{ title }}
     </h2>
     <p class="center yellow-text">Remember to press ENTER after editting the topic</p>
+    <div class="center">
+      <pulse-button iconName="share" @click="shareJourney()" tooltipText="Save the discussion, reset the board and the chat messages"/>
+    </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
@@ -176,35 +176,23 @@ export default {
         questionID
       }
       const convoRef = db.collection('conversations')
-      var conversationID = await convoRef.add(conversation)
+      await convoRef.add(conversation)
+      // reset the messages and the boards afterwards 
+      this.feedback = 'Resetting messages'
+      const roomID = this.$route.params.room_id
+      const chatroomRef = db.collection('chatRooms').doc(roomID)
+      await chatroomRef.update({
+        messages: [],
+        title: 'New discussion topic'
+      })
+      this.feedback = 'Resetting whiteboard...'
+      const whiteboardRef = db.collection('whiteboards').doc(roomID)
+      await whiteboardRef.update({
+        allPaths: [] 
+      })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 1000)
-      // conversationID = conversationID.id
-      // // associate the journey with the question
-      // const convoObj = {
-      //   title: this.title,
-      //   participants: this.participants,
-      //   conversationID
-      // }
-      // if (this.forQuestion) {
-      //   const query = db.collection('questions').where('questionID', '==', this.forQuestion)
-      //   const results = await query.get() 
-      //   if (results) {
-      //     const doc = results.docs[0]
-      //     const ref = db.collection('questions').doc(doc.id) 
-      //     await ref.update({
-      //       journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
-      //     })
-      //   }
-      //   this.$router.push(this.forQuestion)
-      // } else {
-      //   let roomID = this.$route.params.room_id
-      //   const ref = db.collection('chatRooms').doc(roomID) 
-      //   await ref.update({
-      //     journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
-      //   })
-      //   // save the collection on the chatroom itself - and see where that leads 
-      // }
+
     },
     async updateTitle (event) {
       if (event.key == 'Enter') {
