@@ -33,7 +33,7 @@
     </template>
   </div>
 </template>
-
+wq
 <script>
 import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'

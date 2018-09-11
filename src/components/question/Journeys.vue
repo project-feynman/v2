@@ -73,7 +73,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 h4 {
   @extend .teal-text;
 }
