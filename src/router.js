@@ -12,7 +12,7 @@ const Question = () => import('@/views/Question.vue')
 const Profile = () => import('@/views/Profile.vue')
 const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
-const AllStudyGroups = () => import('@/views/AllStudyGroups.vue')
+const StudyGroups = () => import('@/views/StudyGroups.vue')
 const ManageClasses = () => import('@/views/ManageClasses.vue')
 const MapOfStudents = () => import('@/components/reusables/MapOfStudents.vue')
 
@@ -46,7 +46,7 @@ export default new Router({
     },
     {
       path: '/study-groups/:subject_id',
-      component: AllStudyGroups
+      component: StudyGroups
     },
     {
       path: '/conversation/:convo_id',
