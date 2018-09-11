@@ -45,7 +45,7 @@ export default new Router({
       component: Chat
     },
     {
-      path: '/study-groups/:subject_id',
+      path: '/study-groups/:subject_id/:pset_number',
       component: StudyGroups
     },
     {

@@ -38,7 +38,7 @@
     </template>
   </div>
 </template>
-wq
+
 <script>
 import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'
@@ -85,6 +85,7 @@ export default {
       }
       this.feedback = 'Creating a new study group...'
       const subject_id = this.$route.params.subject_id
+      const pset_number = this.$route.params.pset_number
       // designate a chatroom for it (and the associated whiteboard)
       const simplifiedUser = {
         displayName: this.user.displayName,
@@ -94,9 +95,10 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        title: `Edit the group name here...`,
+        title: `Group name`,
         forSubject: subject_id,
-        description: 'Edit the description here (e.g. working on question 2)'
+        psetNumber: pset_number,
+        description: 'Working on question 1'
       })
       this.feedback = 'Initializing the whiteboard...'
       const chatroomID = result.id 

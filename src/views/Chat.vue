@@ -13,7 +13,7 @@
         class="center">
       {{ description }}
     </p>
-    <p class="center pink-text">Remember to press ENTER to save the description or the title</p>
+    <p class="center yellow-text">Remember to press ENTER after editting the description/title</p>
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()"/>
     </div>
@@ -71,14 +71,15 @@ export default {
   },
   data () {
     return {
+      hasFetchedJourneys: false, 
       title: '',
       messages: [],
       whiteboard: {},
       participants: [],
-      forQuestion: '',
       forSubject: '', 
       journeys: [],
       description: '',
+      psetNumber: '',
       feedback: ''
     }
   },
@@ -96,6 +97,11 @@ export default {
       if (this.isLoggedIn) {
         this.addToRecentChat()
       }
+    },
+    psetNumber () {
+      if (this.psetNumber && this.forSubject && !this.hasFetchedJourneys) {
+        this.fetchJourneys() 
+      }
     }
   },
   async created () {
@@ -109,15 +115,14 @@ export default {
       this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
     }
     // fetch messages from Firestore and set up syncing 
-    doc.onSnapshot(snapshot => {
+    await doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
         const data = snapshot.data()
         this.title = data.title 
         this.messages = data.messages
         this.participants = data.participants
-        this.forQuestion = data.forQuestion
+        this.psetNumber = data.psetNumber 
         this.forSubject = data.forSubject
-        this.journeys = data.journeys
         this.description = data.description 
       }
     })
@@ -130,6 +135,27 @@ export default {
     })
   },
   methods: {
+    async fetchJourneys () {
+      // fetch journeys
+      console.log('this.forSubject =', this.forSubject)
+      console.log('this.psetNumber =', this.psetNumber)
+      const questionID = this.forSubject + '/' + this.psetNumber 
+      console.log(`questionID for journey = ${questionID}`)
+      const journeyRef = db.collection('conversations').where('questionID', '==', questionID)
+      await this.$bind('journeys', journeyRef)
+      console.log('successfully binded')
+      // journeyRef
+      // .get()
+      // .then(function(querySnapshot) {
+      //     querySnapshot.forEach(function(doc) {
+      //         // doc.data() is never undefined for query doc snapshots
+      //         console.log(doc.id, " => ", doc.data());
+      //     });
+      // })
+      // .catch(function(error) {
+      //     console.log("Error getting documents: ", error);
+      // });
+    },
     prettifyDate (timestamp) {
       return moment(timestamp).format("lll")
     },
@@ -149,55 +175,46 @@ export default {
     },
     async shareJourney () {
       this.feedback = 'Saving the doodle as an animation...'
+      const questionID = this.forSubject + '/' + this.psetNumber
+      console.log('questionID =', questionID)
       // upload the journey to Firestore 
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.messages,
         participants: this.participants,
-        title: this.title 
+        title: this.title,
+        questionID
       }
       const convoRef = db.collection('conversations')
       var conversationID = await convoRef.add(conversation)
-      conversationID = conversationID.id
-      // associate the journey with the question
-      const convoObj = {
-        title: this.title,
-        participants: this.participants,
-        conversationID
-      }
-      if (this.forQuestion) {
-        const query = db.collection('questions').where('questionID', '==', this.forQuestion)
-        const results = await query.get() 
-        if (results) {
-          const doc = results.docs[0]
-          const ref = db.collection('questions').doc(doc.id) 
-          await ref.update({
-            journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
-          })
-        }
-        this.$router.push(this.forQuestion)
-      } else {
-        let roomID = this.$route.params.room_id
-        const ref = db.collection('chatRooms').doc(roomID) 
-        await ref.update({
-          journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
-        })
-        // save the collection on the chatroom itself - and see where that leads 
-      }
-      // associate journey with the participants themselves
-      // await this.saveConversation(conversationID)
-    },
-    async saveConversation (conversationID) {
-      this.participants.forEach(async person => {
-        const docRef = db.collection('users').doc(person.uid)
-        const convoObj = {
-          conversationID,
-          title: 'default title' 
-        }
-        await docRef.update({
-          conversations: firebase.firestore.FieldValue.arrayUnion(convoObj)
-        })
-      })
+      this.feedback = 'Success'
+      setTimeout(() => this.feedback = '', 1000)
+      // conversationID = conversationID.id
+      // // associate the journey with the question
+      // const convoObj = {
+      //   title: this.title,
+      //   participants: this.participants,
+      //   conversationID
+      // }
+      // if (this.forQuestion) {
+      //   const query = db.collection('questions').where('questionID', '==', this.forQuestion)
+      //   const results = await query.get() 
+      //   if (results) {
+      //     const doc = results.docs[0]
+      //     const ref = db.collection('questions').doc(doc.id) 
+      //     await ref.update({
+      //       journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
+      //     })
+      //   }
+      //   this.$router.push(this.forQuestion)
+      // } else {
+      //   let roomID = this.$route.params.room_id
+      //   const ref = db.collection('chatRooms').doc(roomID) 
+      //   await ref.update({
+      //     journeys: firebase.firestore.FieldValue.arrayUnion(convoObj)
+      //   })
+      //   // save the collection on the chatroom itself - and see where that leads 
+      // }
     },
     async updateTitle (event) {
       if (event.key == 'Enter') {
