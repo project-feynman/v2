@@ -18,7 +18,7 @@
           <div class="modal-footer black-text center">
             <slot name="footer">
               <base-button class="modal-default-button" @click="$emit('close')">
-                Enter Chat
+                Okay
               </base-button>
             </slot>
           </div>

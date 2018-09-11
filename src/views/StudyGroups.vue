@@ -1,5 +1,14 @@
 <template>
   <div>
+    <base-button @click="showPopup = true">Help</base-button>
+    <template v-if="isLoggedIn">
+      <popup-modal v-if="showPopup" @close="showPopup = false">
+        <p slot="header" class="teal-text center">
+          Here, you can find people who are working on the same part of the p-set as you are. 
+          You can then view past discussions, chat with them directly, or arrange to meetup. 
+        </p>
+      </popup-modal>
+    </template>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <p class="yellow-text center">{{ feedback }}</p>
     <div class="center">
@@ -32,6 +41,7 @@ import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import NewStudyGroup from '@/components/groups/NewStudyGroup.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+import PopupModal from '@/components/reusables/PopupModal.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
@@ -39,7 +49,8 @@ export default {
   components: {
     NewStudyGroup,
     CollectionList,
-    PulseButton
+    PulseButton,
+    PopupModal 
   },
   computed: {
     user () {
@@ -54,7 +65,8 @@ export default {
       subject: {},
       studyGroups: [],
       showForm: false,
-      feedback: ''
+      feedback: '',
+      showPopup: false 
     }
   },
   async created () {

@@ -57,11 +57,11 @@
             </li>
           </template> -->
           <template v-if="isLoggedIn">
-            <li>
+            <!-- <li>
               <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
                 About
               </a>
-            </li>
+            </li> -->
             <!-- <li>
               <router-link class="black-text" to="/profile">
                 Hi, Feynman #{{ user.feynmanNumber }}
@@ -76,11 +76,11 @@
         </ul>
       </div>
     </nav>
-    <template v-if="isLoggedIn">
+    <!-- <template v-if="isLoggedIn">
       <popup-modal v-if="newNotif" @close="markNotifAsRead()">
         <h4 slot="header" class="teal-text center">Someone is asking you a question</h4>
       </popup-modal>
-    </template>
+    </template> -->
   </div>
 </template>
 
