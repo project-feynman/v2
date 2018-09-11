@@ -31,6 +31,7 @@ export default {
 
 .whiteboard {
   width: 40%;
+  height: 600px;
 }
 </style>
 

@@ -89,4 +89,8 @@ h2 {
 .doodle-wrapper, .messages-wrapper {
   width: 45%;
 }
+
+.doodle-wrapper {
+  height: 600px;
+}
 </style>
