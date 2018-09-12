@@ -71,7 +71,9 @@ const actions = {
           const newUser = {
             displayName: user.displayName,
             uid: user.uid,
-            conversations: []
+            conversations: [],
+            firstTimeViewingGroups: true,
+            firstTimeInChat: true
           }
           context.commit('setUser', newUser)
           const countRef = db.collection('statistics').doc('users')
@@ -98,7 +100,6 @@ const actions = {
   logOut: async context => {
     await firebase.auth().signOut()
     context.commit('setUser', null)
-    console.log('about to resolve promise, this should occur before the redirect')
     Promise.resolve()
   }
 }
