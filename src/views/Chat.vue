@@ -4,7 +4,7 @@
       <popup-modal v-if="showPopup" @close="showPopup = false">
         <p slot="header" class="teal-text center">
           Here, you can discuss p-set questions with the chat and realtime whiteboard.
-          After a discussion, you can share it so they can be viewed even if the chatroom is empty.
+          After a discussion, you can share it so others can view it even when you're all gone.
           For hard issues, arrange to meet up in person or visit Office Hours collectively.
         </p>
       </popup-modal>
@@ -58,7 +58,7 @@
             </ul>
           </div>
           <div class="card-action">
-            <chat-new-message/>
+            <chat-new-message :participants="participants"/>
           </div>
         </div>
       </div>
@@ -181,7 +181,6 @@ export default {
     async shareJourney () {
       this.feedback = 'Saving the doodle as an animation...'
       const questionID = this.forSubject + '/' + this.psetNumber
-      console.log('questionID =', questionID)
       // upload the journey to Firestore 
       const conversation = {
         doodle: this.whiteboard.allPaths,
@@ -198,7 +197,7 @@ export default {
       const chatroomRef = db.collection('chatRooms').doc(roomID)
       await chatroomRef.update({
         messages: [],
-        title: 'New discussion topic'
+        title: "ceci n'est pas une penis"
       })
       this.feedback = 'Resetting whiteboard...'
       const whiteboardRef = db.collection('whiteboards').doc(roomID)

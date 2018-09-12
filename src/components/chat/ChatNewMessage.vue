@@ -15,6 +15,9 @@ import db from '@/firebase/init.js'
 import moment from 'moment'
 
 export default {
+  props: {
+    participants: Array 
+  },
   computed: {
     user () {
       return this.$store.state.user 
@@ -31,7 +34,8 @@ export default {
       if (this.newMessage) {
         const content = this.newMessage
         this.newMessage = null 
-        let chatRoomRef = db.collection('chatRooms').doc(this.$route.params.room_id)
+        const roomID = this.$route.params.room_id
+        let chatRoomRef = db.collection('chatRooms').doc(roomID)
         let chatRoom = await chatRoomRef.get()
         this.messages = chatRoom.data().messages
         const author = {
@@ -43,9 +47,18 @@ export default {
           author,
           timestamp: Date.now()
         })
-        await chatRoomRef.update({
-          messages: this.messages
-        })
+        if (!this.participants.includes(author)) {
+          var copy = this.participants
+          copy.push(author)
+          await chatRoomRef.update({
+            messages: this.messages,
+            participants: copy 
+          })
+        } else {
+          await chatRoomRef.update({
+            messages: this.messages
+          })
+        }
       }
     }
   }

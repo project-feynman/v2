@@ -21,13 +21,9 @@
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
             <base-card>
-              <h4 class="teal-text">{{ group.title }}</h4>
-              <p class="teal-text">{{ group.description }}</p>
-              <ul>
-                <template v-for="(student, idx) in group.participants">
-                  <li :key="idx" class="black-text">{{ student.displayName }}</li>
-                </template>
-              </ul>
+              <h5 class="teal-text">{{ group.description }}</h5>
+              <p class="teal-text">Topic: {{ group.title }}</p>
+              <p class="teal-text">{{ group.participants.length }} participants</p>
               <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
               <base-button v-if="user.displayName == 'Elton Lin'" @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
             </base-card>
@@ -125,7 +121,6 @@ export default {
         subjectID: forSubject,
       }
       participants.forEach(async person => {
-        console.log('person =', person)
         const userRef = db.collection('users').doc(person.uid)
         await userRef.update({
           enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
@@ -136,11 +131,6 @@ export default {
       const ref = db.collection('chatRooms').doc(id) 
       await ref.delete()  
     },
-    // flattenArrayOfObjects (array) {
-    //   var output = [] 
-    //   array.forEach(elem => output.push(elem.displayName))
-    //   return output 
-    // }
   }
 }
 </script>

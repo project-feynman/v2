@@ -1,11 +1,11 @@
 <template>
   <div>
     <nav>
-      <ul id="dropdown1" class="dropdown-content">
+      <!-- <ul id="dropdown1" class="dropdown-content">
         <template v-if="isLoggedIn">
           <li>
             <router-link to="/subjects">Dashboard</router-link>
-          </li>
+          </li> -->
           <!-- <li v-if="user.recentPsetID">
             <router-link :to="user.recentPsetID">
               Pset
@@ -16,13 +16,13 @@
               Recent Question
             </router-link>
           </li> -->
-          <li v-if="user.recentChatID">
+          <!-- <li v-if="user.recentChatID">
             <router-link :to="`/chat/${user.recentChatID}`">
               Resume Chat
             </router-link>
           </li>
         </template>
-      </ul>
+      </ul> -->
       <!-- <ul id="dropdown2" class="dropdown-content">
         <template v-if="isLoggedIn && user.enrolledSubjects">
           <li v-if="user.enrolledSubjects.length == 0">You haven't joined a study group yet</li>
@@ -37,13 +37,19 @@
       </ul> -->
       <div class="nav-wrapper grey lighten-5">
         <template v-show="isLoggedIn == true">
-        <a id="dropdown-trigger-1" 
-            class="brand-logo" 
-            href="#!" 
-            data-target="dropdown1">
-            <i class="material-icons right">menu</i>
-          Menu
-        </a>
+          <!-- <a id="dropdown-trigger-1" 
+              class="brand-logo" 
+              href="#!" 
+              data-target="dropdown1">
+              <i class="material-icons right">menu</i>
+            Menu
+          </a> -->
+          <a class="brand-logo">
+            <router-link to="/subjects">
+              <i class="material-icons right">dashboard</i>
+              Dashboard
+            </router-link>
+          </a>
         </template>
         <ul class="right hide-on-med-and-down">
           <!-- <template v-show="isLoggedIn == true">
