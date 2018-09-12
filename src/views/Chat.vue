@@ -41,9 +41,6 @@
       {{ title }}
     </h2> -->
     <h4 v-if="title" class="center">Current topic: {{ title }}</h4>
-    <div class="center">
-      <pulse-button iconName="share" @click="shareJourney()" tooltipText="Save the discussion, reset the board and the chat messages"/>
-    </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
@@ -67,6 +64,9 @@
         <h4 class="center">Realtime Whiteboard</h4>
         <whiteboard/>
       </div>
+    </div>
+    <div class="center">
+      <pulse-button iconName="share" @click="shareJourney()" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
   </div>
 </template>
