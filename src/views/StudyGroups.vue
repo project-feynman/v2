@@ -85,7 +85,7 @@ export default {
   async created () {
     // obtain the study group from there
     const subject_id = this.$route.params.subject_id
-    const ref = db.collection('chatRooms').where('forSubject', '==', subject_id)
+    const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
     await this.$bind('studyGroups', ref)
   },
   methods: {
@@ -110,7 +110,7 @@ export default {
         displayName: this.user.displayName,
         uid: this.user.uid 
       }
-      const chatRef = db.collection('chatRooms')
+      const chatRef = db.collection('chatrooms')
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
@@ -145,14 +145,14 @@ export default {
     },
     async saveTitle(group) {
       this.isEditting = false 
-      const ref = db.collection('chatRooms').doc(this.editID)
+      const ref = db.collection('chatrooms').doc(this.editID)
       await ref.update({
         title: this.editTitle 
       })
       this.editTitle = '' 
     },
     async deleteGroup ({ id, forSubject }) {
-      const ref = db.collection('chatRooms').doc(id) 
+      const ref = db.collection('chatrooms').doc(id) 
       await ref.delete()  
     }
   }

@@ -131,7 +131,7 @@ export default {
       this.addToRecentChat() // this does more than just addToRecentChat()
     }
     let roomID = this.$route.params.room_id
-    let doc = db.collection('chatRooms').doc(roomID)
+    let doc = db.collection('chatrooms').doc(roomID)
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
       this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
@@ -202,7 +202,7 @@ export default {
       // reset the messages and the boards afterwards 
       this.feedback = 'Resetting messages'
       const roomID = this.$route.params.room_id
-      const chatroomRef = db.collection('chatRooms').doc(roomID)
+      const chatroomRef = db.collection('chatrooms').doc(roomID)
       await chatroomRef.update({
         messages: [],
         title: "Change the title..."
@@ -223,7 +223,7 @@ export default {
         this.title = event.target.innerText
         // update title for the chatRoom
         const roomID = this.$route.params.room_id
-        const docRef = db.collection('chatRooms').doc(roomID)
+        const docRef = db.collection('chatrooms').doc(roomID)
         await docRef.update({
           title: this.title 
         })
@@ -237,7 +237,7 @@ export default {
         this.description = event.target.innerText
         // update title for the chatRoom
         const roomID = this.$route.params.room_id
-        const docRef = db.collection('chatRooms').doc(roomID)
+        const docRef = db.collection('chatrooms').doc(roomID)
         await docRef.update({
           description: this.description
         })
