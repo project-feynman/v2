@@ -210,23 +210,6 @@ export default {
         this.feedback = ''
       }
     },
-    async updateDescription (event) {
-      if (event.key == 'Enter') {
-        this.feedback = 'Saving description...'
-        document.activeElement.blur()
-        this.description = event.target.innerText
-        // update title for the chatRoom
-        const roomID = this.$route.params.room_id
-        const docRef = db.collection('chatrooms').doc(roomID)
-        await docRef.update({
-          description: this.description
-        })
-        this.feedback = ''
-      }
-    },
-    doNothing () {
-      return 
-    },
     async processDeleteAttempt (journey) {
       const ref = db.collection('conversations').doc(journey.id) 
       await ref.delete()

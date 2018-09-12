@@ -28,7 +28,6 @@ export default {
     }
   },
   created () {
-    console.log('Doodle component has been created')
     this.paper = new paper.PaperScope()
     this.paper.install(window)
   },
@@ -39,7 +38,6 @@ export default {
   },
   watch: {
     allStrokes () {
-      console.log(`allStrokes = ${JSON.stringify(this.allStrokes)}`)
       this.drawAllPaths()
     }
   },

@@ -66,9 +66,10 @@ export default {
       const doc = await ref.get() 
       if (doc.exists) {
         // display Doodle 
-        this.doodle = doc.data().doodle
-        this.messages = doc.data().messages 
-        this.title = doc.data().title 
+        const data = doc.data()
+        this.doodle = data.doodle
+        this.messages = data.messages 
+        this.title = data.title 
         this.hasFetchedConversation = true
       }
     }
