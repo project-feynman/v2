@@ -22,7 +22,6 @@
           <div class="collection-list-wrapper" :key="idx">
             <base-card>
               <h5 class="teal-text">{{ group.description }}</h5>
-              <p class="teal-text">Topic: {{ group.title }}</p>
               <p class="teal-text">{{ group.participants.length }} participants</p>
               <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
               <base-button v-if="user.displayName == 'Elton Lin'" @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
@@ -126,7 +125,6 @@ export default {
           enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
         })
       })
-      console.log('removed reference to the group for all participants')
       // now safely delete the study group document 
       const ref = db.collection('chatRooms').doc(id) 
       await ref.delete()  

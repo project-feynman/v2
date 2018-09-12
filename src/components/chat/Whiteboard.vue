@@ -140,7 +140,7 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
-  height: 500px;
+  height: 484px;
   width: 100%;
   background: white;
 }

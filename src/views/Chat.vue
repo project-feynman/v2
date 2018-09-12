@@ -3,50 +3,54 @@
     <template v-if="isLoggedIn">
       <popup-modal v-if="showPopup" @close="showPopup = false">
         <p slot="header" class="teal-text center">
-          Here, you can discuss p-set questions with the chat and realtime whiteboard.
-          After a discussion, you can share it so others can view it even when you're all gone.
-          For hard issues, arrange to meet up in person or visit Office Hours collectively.
+          Discuss questions with the chat and a realtime whiteboard.
+          For harder questions, meet up in real life. 
+          Pressing the "share" icon will record the drawings and the chat history into a "discussion" that can be viewed by 
+          all other study groups.
         </p>
       </popup-modal>
     </template>
     <div class="center">
       <pulse-button @click="showPopup = true" iconName="warning" tooltipText="Help guide"></pulse-button>
     </div>
-     <h2 v-if="description"
+     <!-- <h2 v-if="description"
         contenteditable 
         @keydown="updateDescription($event)" 
         @keydown.enter.prevent="doNothing()"
         class="center">
       {{ description }}
-    </h2>
-    <p class="center yellow-text">Remember to press ENTER after editting the description</p>
-    <template v-if="journeys">
-      <div class="collection-list-wrapper">
-        <collection-list title="Recorded discussions"
-                    :listItems="journeys"
-                    actionIcon="delete"
-                    @item-click="journey => processDeleteAttempt(journey)"
-                    @entire-click="journey => redirect(journey)">
-          <template slot-scope="{ item }">
-            {{ item.title }}
-          </template>
-        </collection-list>
-      </div>
-    </template>
-    <p v-if="participants" class="center">Participants: {{ participants }}</p>
-    <h2 v-if="title"
+    </h2> -->
+    <h4 v-if="description" class="center">{{ description }}</h4>
+    <div class="flexbox-container">
+      <template v-if="journeys">
+        <div class="collection-list-wrapper">
+          <collection-list title="Recorded discussions"
+                      :listItems="journeys"
+                      actionIcon="delete"
+                      @item-click="journey => processDeleteAttempt(journey)"
+                      @entire-click="journey => redirect(journey)">
+            <template slot-scope="{ item }">
+              {{ item.title }}
+            </template>
+          </collection-list>
+        </div>
+      </template>
+      <p v-if="participants" class="center">Participants: {{ participants }}</p>
+    </div>
+    <!-- <h2 v-if="title"
         contenteditable 
         @keydown="updateTitle($event)" 
         @keydown.enter.prevent="doNothing()">
       {{ title }}
-    </h2>
-    <p class="center yellow-text">Remember to press ENTER after editting the topic</p>
+    </h2> -->
+    <h4 v-if="title" class="center">Current topic: {{ title }}</h4>
     <div class="center">
       <pulse-button iconName="share" @click="shareJourney()" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
+        <h4 class="center">Chatroom</h4>
         <div class="card">
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
@@ -63,6 +67,7 @@
         </div>
       </div>
       <div class="whiteboard-wrapper">
+        <h4 class="center">Realtime Whiteboard</h4>
         <whiteboard/>
       </div>
     </div>
@@ -197,7 +202,7 @@ export default {
       const chatroomRef = db.collection('chatRooms').doc(roomID)
       await chatroomRef.update({
         messages: [],
-        title: "ceci n'est pas une penis"
+        title: "Change the title..."
       })
       this.feedback = 'Resetting whiteboard...'
       const whiteboardRef = db.collection('whiteboards').doc(roomID)
@@ -250,7 +255,7 @@ export default {
 <style lang="scss" scoped>
 .collection-list-wrapper {
   margin: auto;
-  width: 60%;
+  width: 40%;
 }
 
 h2 {
@@ -272,7 +277,7 @@ span {
 
 .whiteboard-wrapper {
   width: 50%;
-  min-height: 1000px;
+  height: 484px;
 }
 
 .chat-wrapper {
