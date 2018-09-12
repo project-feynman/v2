@@ -47,18 +47,19 @@ export default {
           author,
           timestamp: Date.now()
         })
-        if (!this.participants.includes(author)) {
-          var copy = this.participants
-          copy.push(author)
-          await chatRoomRef.update({
-            messages: this.messages,
-            participants: copy 
-          })
-        } else {
-          await chatRoomRef.update({
-            messages: this.messages
-          })
-        }
+        // if (!this.participants.includes(author)) {
+        //   console.log('new author')
+        //   var copy = this.participants
+        //   copy.push(author)
+        //   await chatRoomRef.update({
+        //     messages: this.messages,
+        //     participants: copy 
+        //   })
+        // } else {
+        await chatRoomRef.update({
+          messages: this.messages
+        })
+        
       }
     }
   }
