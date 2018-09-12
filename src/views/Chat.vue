@@ -17,7 +17,7 @@
         class="center">
       {{ description }}
     </h2> -->
-    <h4 v-if="description" class="center">{{ description }}</h4>
+    <h3 v-if="title" class="center">{{ title }}</h3>
     <div class="flexbox-container">
       <template v-if="journeys">
         <div class="collection-list-wrapper">

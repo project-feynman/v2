@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="fixed-action-btn">
+      <pulse-button iconName="add" @click="createGroup()"></pulse-button>
+    </div>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -8,20 +11,34 @@
         </p>
       </popup-modal>
     </template>
+    <template v-if="isEditting">
+      <popup-modal @close="saveTitle()">
+        <input slot="header" class="teal-text center" v-model="editTitle">
+      </popup-modal>
+    </template>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <p class="yellow-text center">{{ feedback }}</p>
-    <div class="center">
-      <base-button @click="createGroup()" iconName="add">Start a new group</base-button> 
-    </div>
     <template v-if="studyGroups">
       <div class="flexbox-container">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
             <base-card>
-              <h5 class="teal-text">{{ group.description }}</h5>
-              <p class="teal-text">{{ group.participants.length }} participants</p>
-              <pulse-button @click="enterChat(group)" iconName="input" tooltipText="Enter group chat"></pulse-button> 
-              <base-button v-if="user.displayName == 'Elton Lin'" @click="deleteGroup(group)" buttonColor="red">Delete</base-button>
+              <h5 class="teal-text">{{ group.title }}</h5>
+              <p class="teal-text">{{ group.participants.length }} classmates online</p>
+              <floating-button iconName="input" 
+                               color="green" 
+                               tooltipText="Enter group chat"
+                               @click="$router.push('/chat/' + group.id)"/>
+              <template v-if="isOwner">
+                <floating-button iconName="mode_edit" 
+                                 color="yellow darken-2" 
+                                 tooltipText="Enter recruitment message"
+                                 @click="editGroup(group)"/>
+                <floating-button iconName="delete" 
+                                 color="red" 
+                                 tooltipText="Delete group" 
+                                 @click="deleteGroup(group)"/>
+              </template>
             </base-card>
           </div>
         </template>
@@ -33,17 +50,17 @@
 <script>
 import db from '@/firebase/init.js'
 import CollectionList from '@/components/reusables/CollectionList.vue'
-import NewStudyGroup from '@/components/groups/NewStudyGroup.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+import FloatingButton from '@/components/reusables/FloatingButton.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
 export default {
   components: {
-    NewStudyGroup,
     CollectionList,
     PulseButton,
+    FloatingButton,
     PopupModal 
   },
   computed: {
@@ -58,9 +75,11 @@ export default {
     return {
       subject: {},
       studyGroups: [],
-      showForm: false,
       feedback: '',
-      showPopup: false 
+      showPopup: false,
+      isEditting: false,
+      editTitle: '',
+      editID: ''
     }
   },
   async created () {
@@ -70,14 +89,14 @@ export default {
     await this.$bind('studyGroups', ref)
   },
   methods: {
+    isOwner () {
+      return true 
+    },
     async updateUser () {
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({
         firstTimeViewingGroups: false 
       })
-    },
-    enterChat ({ id }) {
-      this.$router.push('/chat/' + id)
     },
     async createGroup () {
       if (!this.isLoggedIn) {
@@ -95,10 +114,11 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        title: `Current discussion topic...`,
+        topic: `Current discussion topic...`,
         forSubject: subject_id,
         psetNumber: pset_number,
-        description: 'Working on question 1'
+        title: 'Working on question 1',
+        owner: simplifiedUser
       })
       this.feedback = 'Initializing the whiteboard...'
       const chatroomID = result.id 
@@ -118,20 +138,23 @@ export default {
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 500)
     },
-    async deleteGroup ({ id, participants, forSubject }) {
-      const deleteObj = {
-        subjectID: forSubject,
-      }
-      participants.forEach(async person => {
-        const userRef = db.collection('users').doc(person.uid)
-        await userRef.update({
-          enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(deleteObj)
-        })
+    async editGroup(group) {
+      this.isEditting = true 
+      this.editTitle = group.title
+      this.editID = group.id 
+    },
+    async saveTitle(group) {
+      this.isEditting = false 
+      const ref = db.collection('chatRooms').doc(this.editID)
+      await ref.update({
+        title: this.editTitle 
       })
-      // now safely delete the study group document 
+      this.editTitle = '' 
+    },
+    async deleteGroup ({ id, forSubject }) {
       const ref = db.collection('chatRooms').doc(id) 
       await ref.delete()  
-    },
+    }
   }
 }
 </script>
