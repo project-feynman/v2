@@ -194,7 +194,6 @@ export default {
       const chatroomRef = db.collection('chatrooms').doc(roomID)
       await chatroomRef.update({
         messages: [],
-        title: "Change the title..."
       })
       this.feedback = 'Resetting whiteboard...'
       const whiteboardRef = db.collection('whiteboards').doc(roomID)

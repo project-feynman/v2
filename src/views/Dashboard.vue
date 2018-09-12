@@ -13,7 +13,8 @@
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
             <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
-            <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p>
+            <!-- <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p> -->
+            <p class="green-text">10 classmates p-setting</p>
             <pulse-button iconName="input" 
                           :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                           @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
@@ -71,7 +72,8 @@ export default {
       loading: true,
       isChangingPset: false,
       subjectEditted: null,
-      newPset: null 
+      newPset: null,
+      hasLoadedSubjects: false 
     }
   },
   async created () {
@@ -82,7 +84,9 @@ export default {
   watch: {
     user () {
       if (this.isLoggedIn) {
-        this.loadSubjects()
+        if (!this.hasLoadedSubjects) {
+          this.loadSubjects()
+        }
       }
     }
   },
@@ -119,6 +123,7 @@ export default {
         })
         this.loading = false 
       }
+      this.hasLoadedSubjects = true
     },
     async addSubject () {
       const newObject = {

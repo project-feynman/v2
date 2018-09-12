@@ -18,7 +18,7 @@
       <base-button @click="resetClasses()" buttonColor="red darken-4">Reset classes</base-button>
     </div> -->
     <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
-    <div class="center">
+    <div class="center" style="padding-top: 25px;">
       <pulse-button @click="$router.push('/subjects')" iconName="dashboard" tooltipText="Head to dashboard"/>
     </div>
   </div>
