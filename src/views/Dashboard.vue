@@ -92,6 +92,9 @@ export default {
       this.isChangingPset = true 
     },
     async updateNewestPset () {
+      if (!this.newPset) {
+        return 
+      }
       this.isChangingPset = false 
       const ref = db.collection('subjects').doc(this.subjectEditted.subjectNumber)
       await ref.update({

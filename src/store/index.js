@@ -72,6 +72,7 @@ const actions = {
             displayName: user.displayName,
             uid: user.uid,
             conversations: [],
+            firstTimePickingClasses: true,
             firstTimeViewingGroups: true,
             firstTimeInChat: true
           }

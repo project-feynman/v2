@@ -14,14 +14,13 @@
       </popup-modal>
     </template>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
-    <!-- <p class="yellow-text center">{{ feedback }}</p> -->
     <template v-if="studyGroups">
       <div class="grid-container">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <base-card>
-              <p class="teal-text">{{ group.title }}</h5>
-              <p class="black-text" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
+              <p class="teal-text card-info">{{ group.title }}</h5>
+              <p class="black-text card-info" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
               <floating-button iconName="input" 
                                color="green" 
                                tooltipText="Enter group chat"
@@ -159,11 +158,7 @@ export default {
   margin: 40px;
 }
 
-h5 {
-  font-size: 0.7em;
-}
-
-p {
+.card-info {
   font-size: 0.7em;
 }
 
