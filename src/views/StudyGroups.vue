@@ -29,7 +29,7 @@
                                color="green" 
                                tooltipText="Enter group chat"
                                @click="$router.push('/chat/' + group.id)"/>
-              <template v-if="isOwner">
+              <template v-if="isOwner(group)">
                 <floating-button iconName="mode_edit" 
                                  color="yellow darken-2" 
                                  tooltipText="Enter recruitment message"
@@ -89,8 +89,8 @@ export default {
     await this.$bind('studyGroups', ref)
   },
   methods: {
-    isOwner () {
-      return true 
+    isOwner (group) {
+      return this.user.uid == group.owner.uid 
     },
     async updateUser () {
       const ref = db.collection('users').doc(this.user.uid)
