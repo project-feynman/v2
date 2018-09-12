@@ -1,15 +1,6 @@
 <template>
   <div>
-    <div class="center">
-      <pulse-button @click="showPopup = true" iconName="warning" tooltipText="Help guide"></pulse-button>
-    </div>
     <template v-if="isLoggedIn">
-      <!-- <popup-modal v-if="showPopup" @close="showPopup = false">
-        <p slot="header" class="teal-text center">
-          Here, you can find groups of people who are working on the same part of the p-set as you are. 
-          You can then view their past discussions, chat with them directly, or arrange to meet up. 
-        </p>
-      </popup-modal> -->
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
           Here, you can find groups of people who are working on the same part of the p-set as you are. 

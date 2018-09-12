@@ -1,14 +1,6 @@
 <template>
   <div>
     <template v-if="isLoggedIn">
-      <!-- <popup-modal v-if="showPopup" @close="showPopup = false">
-        <p slot="header" class="teal-text center">
-          Discuss questions with the chat and a realtime whiteboard.
-          For harder questions, meet up in real life. 
-          Pressing the "share" icon will record the drawings and the chat history into a "discussion" that can be viewed by 
-          all other study groups.
-        </p>
-      </popup-modal> -->
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
         <p slot="header" class="teal-text center">
           Discuss questions with the chat and a realtime whiteboard.
@@ -18,9 +10,6 @@
         </p>
       </popup-modal>
     </template>
-    <div class="help-button-wrapper">
-      <pulse-button @click="showPopup = true" iconName="warning" tooltipText="Help guide"></pulse-button>
-    </div>
      <!-- <h2 v-if="description"
         contenteditable 
         @keydown="updateDescription($event)" 
