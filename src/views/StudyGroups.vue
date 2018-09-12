@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="fixed-action-btn">
-      <pulse-button iconName="add" @click="createGroup()"></pulse-button>
-    </div>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -17,14 +14,14 @@
       </popup-modal>
     </template>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
-    <p class="yellow-text center">{{ feedback }}</p>
+    <!-- <p class="yellow-text center">{{ feedback }}</p> -->
     <template v-if="studyGroups">
       <div class="grid-container">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <base-card>
-              <h5 class="teal-text">{{ group.title }}</h5>
-              <p class="teal-text">{{ group.participants.length }} member(s)</p>
+              <p class="teal-text">{{ group.title }}</h5>
+              <p class="black-text" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
               <floating-button iconName="input" 
                                color="green" 
                                tooltipText="Enter group chat"
@@ -44,6 +41,9 @@
         </template>
       </div>
     </template>
+    <div class="fixed-action-btn">
+      <pulse-button iconName="add" @click="createGroup()"></pulse-button>
+    </div>
   </div>
 </template>
 
@@ -75,7 +75,6 @@ export default {
     return {
       subject: {},
       studyGroups: [],
-      feedback: '',
       showPopup: false,
       isEditting: false,
       editTitle: '',
@@ -105,7 +104,6 @@ export default {
       if (!this.isLoggedIn) {
         return 
       }
-      this.feedback = 'Creating a new study group...'
       const subject_id = this.$route.params.subject_id
       const pset_number = this.$route.params.pset_number
       // designate a chatroom for it (and the associated whiteboard)
@@ -124,20 +122,10 @@ export default {
         title: chosenTitle,
         owner: simplifiedUser
       })
-      this.feedback = 'Initializing the whiteboard...'
       const chatroomID = result.id 
       const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
       await whiteboardRef.set({
         allPaths: []  
-      })
-      // 3) store a reference to the group chat for the user 
-      this.feedback = 'Adding you to the group chat...'
-      const userRef = db.collection('users').doc(this.user.uid) 
-      const newSubject = {
-        subjectID: subject_id,
-      }
-      await userRef.update({
-        enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(newSubject)
       })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 500)
@@ -166,9 +154,17 @@ export default {
 <style lang="scss" scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: 32% 32% 32%;
   grid-gap: 10px;
   margin: 40px;
+}
+
+h5 {
+  font-size: 0.7em;
+}
+
+p {
+  font-size: 0.7em;
 }
 
 .grid-item {
