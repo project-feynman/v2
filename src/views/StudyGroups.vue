@@ -19,10 +19,9 @@
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <p class="yellow-text center">{{ feedback }}</p>
     <template v-if="studyGroups">
-      <!-- Use CSS Grid instead -->
-      <div class="flexbox-container">
+      <div class="grid-container">
         <template v-for="(group, idx) in studyGroups">
-          <div class="collection-list-wrapper" :key="idx">
+          <div class="collection-list-wrapper grid-item" :key="idx">
             <base-card>
               <h5 class="teal-text">{{ group.title }}</h5>
               <p class="teal-text">{{ group.participants.length }} member(s)</p>
@@ -165,20 +164,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.collection-list-wrapper {
-  max-width: 30%;
-  flex: 1 0 21%;
-  margin: 5px;
-  height: 100px;
+.grid-container {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-gap: 10px;
+  margin: 40px;
 }
 
-.flexbox-container {
-  display: flex;
-  flex-wrap: wrap;
+.grid-item {
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
 }
 
-.flexbox-button-container {
-  display: flex;
-  margin: auto;
-}
 </style>
