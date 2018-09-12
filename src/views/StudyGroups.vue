@@ -114,7 +114,6 @@ export default {
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
-        topic: `Current discussion topic...`,
         forSubject: subject_id,
         psetNumber: pset_number,
         title: 'Working on question 1',

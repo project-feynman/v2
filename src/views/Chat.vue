@@ -30,7 +30,6 @@
       </template>
       <p v-if="chatroom.participants" class="center">Participants: {{ chatroom.participants }}</p>
     </div>
-    <h4 v-if="chatroom.topic" class="center">Current topic: {{ chatroom.topic }}</h4>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
