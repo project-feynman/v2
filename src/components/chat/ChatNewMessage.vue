@@ -9,7 +9,7 @@
 
 <script>
 import firebase from 'firebase/app'
-import 'firebase/database'
+import 'firebase'
 import 'firebase/firestore'
 import db from '@/firebase/init.js'
 import moment from 'moment'
@@ -47,6 +47,7 @@ export default {
           author,
           timestamp: Date.now()
         })
+
         // if (!this.participants.includes(author)) {
         //   console.log('new author')
         //   var copy = this.participants
@@ -57,8 +58,10 @@ export default {
         //   })
         // } else {
         await chatRoomRef.update({
-          messages: this.messages
+          messages: this.messages,
+          participants: firebase.firestore.FieldValue.arrayUnion(author)
         })
+
         
       }
     }

@@ -125,7 +125,7 @@ export default {
             })
           }
         }
-				//sending the current location to Firestore
+				// sending the current location to Firestore
 				getPermissionForGeolocation((position) => { 
 					sendPositionToFirestore(this.user.uid, 
 					{ 
