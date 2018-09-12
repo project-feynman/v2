@@ -32,7 +32,7 @@
               <template v-if="isOwner(group)">
                 <floating-button iconName="mode_edit" 
                                  color="yellow darken-2" 
-                                 tooltipText="Enter recruitment message"
+                                 tooltipText="Edit title"
                                  @click="editGroup(group)"/>
                 <floating-button iconName="delete" 
                                  color="red" 

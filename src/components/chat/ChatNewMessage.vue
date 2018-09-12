@@ -35,7 +35,7 @@ export default {
         const content = this.newMessage
         this.newMessage = null 
         const roomID = this.$route.params.room_id
-        let chatRoomRef = db.collection('chatRooms').doc(roomID)
+        let chatRoomRef = db.collection('chatrooms').doc(roomID)
         let chatRoom = await chatRoomRef.get()
         this.messages = chatRoom.data().messages
         const author = {

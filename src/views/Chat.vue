@@ -10,14 +10,10 @@
         </p>
       </popup-modal>
     </template>
-     <!-- <h2 v-if="description"
-        contenteditable 
-        @keydown="updateDescription($event)" 
-        @keydown.enter.prevent="doNothing()"
-        class="center">
-      {{ description }}
-    </h2> -->
-    <h3 v-if="title" class="center">{{ title }}</h3>
+    <popup-modal v-if="isSharingJourney" @close="shareJourney()">
+      <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
+    </popup-modal>
+    <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <div class="flexbox-container">
       <template v-if="journeys">
         <div class="collection-list-wrapper">
@@ -32,15 +28,9 @@
           </collection-list>
         </div>
       </template>
-      <p v-if="participants" class="center">Participants: {{ participants }}</p>
+      <p v-if="chatroom.participants" class="center">Participants: {{ chatroom.participants }}</p>
     </div>
-    <!-- <h2 v-if="title"
-        contenteditable 
-        @keydown="updateTitle($event)" 
-        @keydown.enter.prevent="doNothing()">
-      {{ title }}
-    </h2> -->
-    <h4 v-if="title" class="center">Current topic: {{ title }}</h4>
+    <h4 v-if="chatroom.topic" class="center">Current topic: {{ chatroom.topic }}</h4>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="flexbox-container">
       <div class="chat-wrapper">
@@ -48,7 +38,7 @@
         <div class="card">
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
-              <li v-for="message in messages" :key="message.id">
+              <li v-for="message in chatroom.messages" :key="message.id">
                 <span class="teal-text">{{ message.author.displayName }}: </span>
                 <span class="grey-text text-darken-3">{{ message.content }}</span>
                 <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
@@ -56,7 +46,7 @@
             </ul>
           </div>
           <div class="card-action">
-            <chat-new-message :participants="participants"/>
+            <chat-new-message :participants="chatroom.participants"/>
           </div>
         </div>
       </div>
@@ -66,7 +56,7 @@
       </div>
     </div>
     <div class="center">
-      <pulse-button iconName="share" @click="shareJourney()" tooltipText="Save the discussion, reset the board and the chat messages"/>
+      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
   </div>
 </template>
@@ -93,16 +83,12 @@ export default {
   data () {
     return {
       hasFetchedJourneys: false, 
-      title: '',
-      messages: [],
+      chatroom: {},
       whiteboard: {},
-      participants: [],
-      forSubject: '', 
       journeys: [],
-      description: '',
-      psetNumber: '',
+      newJourneyTitle: '', 
       feedback: '',
-      showPopup: false 
+      isSharingJourney: false
     }
   },
   computed: {
@@ -120,8 +106,8 @@ export default {
         this.addToRecentChat()
       }
     },
-    psetNumber () {
-      if (this.psetNumber && this.forSubject && !this.hasFetchedJourneys) {
+    chatroom () {
+      if (this.chatRoom != {}) {
         this.fetchJourneys() 
       }
     }
@@ -139,13 +125,7 @@ export default {
     // fetch messages from Firestore and set up syncing 
     await doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
-        const data = snapshot.data()
-        this.title = data.title 
-        this.messages = data.messages
-        this.participants = data.participants
-        this.psetNumber = data.psetNumber 
-        this.forSubject = data.forSubject
-        this.description = data.description 
+        this.chatroom = snapshot.data()
       }
     })
     // fetch drawing from Firestore and set up syncing 
@@ -165,7 +145,8 @@ export default {
     },
     async fetchJourneys () {
       // fetch journeys
-      const questionID = this.forSubject + '/' + this.psetNumber 
+      const questionID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
+      console.log('questionID =,', questionID)
       const journeyRef = db.collection('conversations').where('questionID', '==', questionID)
       await this.$bind('journeys', journeyRef)
     },
@@ -187,14 +168,15 @@ export default {
       this.$router.push(url)
     },
     async shareJourney () {
+      this.isSharingJourney = false 
       this.feedback = 'Saving the doodle as an animation...'
-      const questionID = this.forSubject + '/' + this.psetNumber
+      const questionID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
       // upload the journey to Firestore 
       const conversation = {
         doodle: this.whiteboard.allPaths,
-        messages: this.messages,
-        participants: this.participants,
-        title: this.title,
+        messages: this.chatroom.messages,
+        participants: this.chatroom.participants,
+        title: this.newJourneyTitle,
         questionID
       }
       const convoRef = db.collection('conversations')
@@ -214,7 +196,6 @@ export default {
       })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 1000)
-
     },
     async updateTitle (event) {
       if (event.key == 'Enter') {
