@@ -19,12 +19,13 @@
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <p class="yellow-text center">{{ feedback }}</p>
     <template v-if="studyGroups">
+      <!-- Use CSS Grid instead -->
       <div class="flexbox-container">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper" :key="idx">
             <base-card>
               <h5 class="teal-text">{{ group.title }}</h5>
-              <p class="teal-text">{{ group.participants.length }} classmates online</p>
+              <p class="teal-text">{{ group.participants.length }} member(s)</p>
               <floating-button iconName="input" 
                                color="green" 
                                tooltipText="Enter group chat"
@@ -79,7 +80,10 @@ export default {
       showPopup: false,
       isEditting: false,
       editTitle: '',
-      editID: ''
+      editID: '',
+      defaultTitles: ['Looking for 2 more people: writing up proofs with Latex in the library', 
+                     'Starting p-set from scratch', 
+                     'Looking for 3 more people in Office Hours - working on question 2']
     }
   },
   async created () {
@@ -110,13 +114,15 @@ export default {
         displayName: this.user.displayName,
         uid: this.user.uid 
       }
+      const randomNumber = Math.floor(Math.random()*this.defaultTitles.length-1)+1
+      const chosenTitle = this.defaultTitles[randomNumber]
       const chatRef = db.collection('chatrooms')
       const result = await chatRef.add({
         messages: [],
         participants: [simplifiedUser],
         forSubject: subject_id,
         psetNumber: pset_number,
-        title: 'Working on question 1',
+        title: chosenTitle,
         owner: simplifiedUser
       })
       this.feedback = 'Initializing the whiteboard...'

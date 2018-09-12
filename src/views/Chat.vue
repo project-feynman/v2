@@ -28,13 +28,18 @@
           </collection-list>
         </div>
       </template>
-      <p v-if="chatroom.participants" class="center">Participants: {{ chatroom.participants }}</p>
     </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+    <div class="center" style="margin-top: 25px;">
+      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
+    </div>
     <div class="flexbox-container">
       <div class="chat-wrapper">
         <h4 class="center">Chatroom</h4>
         <div class="card">
+          <!-- <div class="card-title">
+            <p v-if="chatroom.participants" class="black-text center">Participants: {{ chatroom.participants }}</p>
+          </div> -->
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
               <li v-for="message in chatroom.messages" :key="message.id">
@@ -50,12 +55,9 @@
         </div>
       </div>
       <div class="whiteboard-wrapper">
-        <h4 class="center">Realtime Whiteboard</h4>
+        <h4 class="center">Whiteboard</h4>
         <whiteboard/>
       </div>
-    </div>
-    <div class="center">
-      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
   </div>
 </template>
@@ -107,8 +109,13 @@ export default {
     },
     chatroom () {
       if (this.chatRoom != {}) {
-        this.fetchJourneys() 
+        this.fetchJourneys()
       }
+    },
+    participants () {
+      console.log('participants changed')
+      // display online users among the participants
+      // don't get annoying notifications
     }
   },
   async created () {
@@ -124,7 +131,9 @@ export default {
     // fetch messages from Firestore and set up syncing 
     await doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
-        this.chatroom = snapshot.data()
+        const data = snapshot.data()
+        this.chatroom = data
+        this.participants = data.participants
       }
     })
     // fetch drawing from Firestore and set up syncing 
@@ -144,9 +153,8 @@ export default {
     },
     async fetchJourneys () {
       // fetch journeys
-      const questionID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
-      console.log('questionID =,', questionID)
-      const journeyRef = db.collection('conversations').where('questionID', '==', questionID)
+      const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
+      const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
       await this.$bind('journeys', journeyRef)
     },
     prettifyDate (timestamp) {
@@ -169,14 +177,14 @@ export default {
     async shareJourney () {
       this.isSharingJourney = false 
       this.feedback = 'Saving the doodle as an animation...'
-      const questionID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
+      const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
       // upload the journey to Firestore 
       const conversation = {
         doodle: this.whiteboard.allPaths,
         messages: this.chatroom.messages,
         participants: this.chatroom.participants,
         title: this.newJourneyTitle,
-        questionID
+        psetID
       }
       const convoRef = db.collection('conversations')
       await convoRef.add(conversation)

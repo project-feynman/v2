@@ -6,7 +6,6 @@
 
 <script>
 export default {
-  // props: ['color', 'size', 'iconName', 'tooltipText'],
   props: {
     color: String,
     size: {

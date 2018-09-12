@@ -1,31 +1,28 @@
 <template>
   <div>
+    <template v-if="isChangingPset">
+      <popup-modal @close="updateNewestPset()">
+        <input slot="header" placeholder="Enter the new p-set number" class="teal-text center" v-model="newPset">
+      </popup-modal>
+    </template>
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
-    <!-- <div v-if="loading" class="spinner-wrapper">
-      <base-spinner/>
-    </div> -->
     <template v-if="subjects && !loading && isLoggedIn">
       <div class="subject-card">
         <template v-for="(subject, i) in subjects">
           <base-card :key="i">
             <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
-            <!-- <p class="black-text">Study group: Joe, Karina, Matt</p>
-            <p class="pink-text">Joe and Karina are p-setting</p> -->
             <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p>
-            <!-- <pulse-button iconName="input" 
-                          :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
-                          @click="redirectToPset(subject)"/> -->
             <pulse-button iconName="input" 
                           :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                           @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
-            <!-- <pulse-button iconName="people_outline" 
-                          :tooltipText="`Join or create a study group`"
-                          @click="$router.push(`/study-groups/${subject.subjectNumber}`)"/> -->
-            <!-- <base-button @click="$router.push(`${subject.subjectNumber}`)">
-              View past material
-            </base-button> -->
+            <template v-if="user.displayName == 'Elton Lin'">
+              <floating-button iconName="settings" 
+                        color="yellow darken-1" 
+                        size="large"
+                        @click="startEdit(subject)"/>
+            </template>
           </base-card>
         </template>
       </div>
@@ -48,10 +45,16 @@
 // get the corresponding document for each subject the user is taking
 import db from '@/firebase/init.js'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+import FloatingButton from '@/components/reusables/FloatingButton.vue'
+import PopupModal from '@/components/reusables/PopupModal.vue'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 export default {
   components: {
-    PulseButton
+    PulseButton,
+    FloatingButton,
+    PopupModal
   },
   computed: {
     user () {
@@ -66,6 +69,9 @@ export default {
       subjects: [],
       newSubject: '',
       loading: true,
+      isChangingPset: false,
+      subjectEditted: null,
+      newPset: null 
     }
   },
   async created () {
@@ -81,6 +87,18 @@ export default {
     }
   },
   methods: {
+    startEdit (subject) {
+      this.subjectEditted = subject 
+      this.isChangingPset = true 
+    },
+    async updateNewestPset () {
+      this.isChangingPset = false 
+      const ref = db.collection('subjects').doc(this.subjectEditted.subjectNumber)
+      await ref.update({
+        psets: firebase.firestore.FieldValue.arrayUnion(this.newPset)
+      })
+      this.newPset = null 
+    },
     async loadSubjects () {
       if (this.loading == false) {
         return 
