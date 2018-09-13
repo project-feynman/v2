@@ -70,15 +70,11 @@ export default {
       hasFetchedClasses: false,
       feedback: '',
       newSubject: '',
-      // objectOfClasses: {} 
     }
   },
   async created () {
     const ref = db.collection('subjects')
     await this.$bind('classes', ref)
-    // this.classes.forEach(c => {
-    //   this.objectOfClasses[c.subjectNumber] = null 
-    // })
   },
   methods: {
     async updateUser () {

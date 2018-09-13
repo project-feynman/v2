@@ -118,15 +118,6 @@ export default {
       }
       this.hasLoadedSubjects = true
     },
-    async addSubject () {
-      const newObject = {
-        subjectNumber: this.newSubject,
-        psets: [1]
-      }
-      const ref = db.collection('subjects').doc(this.newSubject)
-      this.newSubject = ''
-      await ref.set(newObject)
-    },
     getCurrentPset ({ psets }) {
       if (!psets) {
         return 
