@@ -15,7 +15,7 @@
     </template>
     <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
     <template v-if="studyGroups">
-      <div class="grid-container">
+      <div class="responsive-grid">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <base-card>
@@ -151,6 +151,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 30px;
+  max-width: 90%;
+  margin: 0 auto 30px;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 32% 32% 32%;

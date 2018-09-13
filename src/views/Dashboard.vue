@@ -5,7 +5,6 @@
         <input slot="header" placeholder="Enter the new p-set number" class="teal-text center" v-model="newPset">
       </popup-modal>
     </template>
-    
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
@@ -155,9 +154,9 @@ export default {
 <style lang="scss" scoped>
 .responsive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 30px;
-  max-width: 960px;
+  max-width: 90%;
   margin: 0 auto 30px;
 }
 
