@@ -21,7 +21,7 @@
             <base-card>
               <p class="teal-text card-info">{{ group.title }}</h5>
               <p class="black-text card-info" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
-              <floating-button iconName="input" 
+              <floating-button iconName="slideshow" 
                                color="green" 
                                tooltipText="Enter group chat"
                                @click="$router.push('/chat/' + group.id)"/>

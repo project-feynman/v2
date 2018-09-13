@@ -9,7 +9,6 @@ const Pset = () => import('@/views/Pset.vue')
 const Login = () => import('@/views/Login.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
 // const Question = () => import('@/views/Question.vue')
-// const Profile = () => import('@/views/Profile.vue')
 const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const StudyGroups = () => import('@/views/StudyGroups.vue')
@@ -36,10 +35,6 @@ export default new Router({
       path: '/add-classes',
       component: ManageClasses
     },
-    // {
-    //   path: '/profile',
-    //   component: Profile
-    // },
     {
       path: '/chat/:room_id',
       component: Chat

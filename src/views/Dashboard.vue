@@ -9,23 +9,24 @@
     <h2>Dashboard</h2>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
     <template v-if="subjects && !loading && isLoggedIn">
-      <div class="subject-card">
-        <template v-for="(subject, i) in subjects">
-          <base-card :key="i">
-            <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
-            <!-- <p class="green-text">{{ parseInt(10 * Math.random()) }} classmates p-setting</p> -->
-            <p class="green-text">10 classmates p-setting</p>
-            <pulse-button iconName="input" 
-                          :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
-                          @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
-            <template v-if="user.displayName == 'Elton Lin'">
-              <floating-button iconName="settings" 
-                        color="yellow darken-1" 
-                        size="large"
-                        @click="startEdit(subject)"/>
-            </template>
-          </base-card>
-        </template>
+      <div class="responsive-grid">
+          <template v-for="(subject, i) in subjects">
+            <div class="subject-card" :key="i">
+              <base-card>
+                <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
+                <p class="green-text">X classmates p-setting</p>
+                <pulse-button iconName="slideshow" 
+                              :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
+                              @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
+                <template v-if="user.displayName == 'Elton Lin'">
+                  <floating-button iconName="settings" 
+                            color="yellow darken-1" 
+                            size="large"
+                            @click="startEdit(subject)"/>
+                </template>
+              </base-card>
+            </div>
+          </template>
       </div>
       <div class="center">
         <base-button @click="$router.push('/add-classes')">Manage classes</base-button>
@@ -154,6 +155,14 @@ export default {
 
 
 <style lang="scss" scoped>
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 30px;
+  max-width: 960px;
+  margin: 0 auto 30px;
+}
+
 h2 {
   @extend .center;
   padding-bottom: 50px;
@@ -163,16 +172,18 @@ h4 {
   @extend .black-text;
 
 }
-</style>
 
-<style scoped>
 .custom-offset {
   padding-top: 30px;
 }
 
+// .subject-card {
+//   margin: auto;
+//   width: 65%;
+// }
+
 .subject-card {
-  margin: auto;
-  width: 65%;
+  position: relative;
 }
 
 .new-subject {
@@ -184,7 +195,6 @@ h4 {
   margin-left: 49%;
 }
 </style>
-
 
 
 
