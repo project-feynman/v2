@@ -11,7 +11,7 @@
     <h2 class="white-text center">Class Directory</h2>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="searchbox-wrapper">
-      <search-box v-if="classes"
+      <search-box v-if="objectOfClasses"
         label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     </div>
     <!-- <div class="center">
@@ -53,6 +53,15 @@ export default {
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
+    },
+    objectOfClasses () {
+      if (this.classes) {
+        var output = {}
+        this.classes.forEach(c => {
+          output[c.subjectNumber] = null 
+        })
+        return output 
+      }
     }
   },
   data () {
@@ -61,15 +70,15 @@ export default {
       hasFetchedClasses: false,
       feedback: '',
       newSubject: '',
-      objectOfClasses: {} 
+      // objectOfClasses: {} 
     }
   },
   async created () {
     const ref = db.collection('subjects')
     await this.$bind('classes', ref)
-    this.classes.forEach(c => {
-      this.objectOfClasses[c.subjectNumber] = null 
-    })
+    // this.classes.forEach(c => {
+    //   this.objectOfClasses[c.subjectNumber] = null 
+    // })
   },
   methods: {
     async updateUser () {
@@ -101,7 +110,6 @@ export default {
       const ref = db.collection('subjects').doc(this.newSubject)
       this.newSubject = ''
       await ref.set(newObject)
-      console.log('successfully added new subject')
     }
   },
   watch: {

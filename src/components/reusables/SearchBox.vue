@@ -23,21 +23,29 @@ export default {
     },
     allResults: Object
   },
-  mounted () {
-    if (this.allResults) {
-      var elems = document.querySelectorAll('.autocomplete')
-      const options = {
-        data: this.allResults,
-        onAutocomplete: this.handleResultSelect,
-        minLength: 0
-      }
-      var instances = M.Autocomplete.init(elems, options)
+  watch: {
+    allResults () {
+      this.putDataInSearchbox()
     }
+  },
+  mounted () {
+    this.putDataInSearchbox()
   },
   methods: {
     handleResultSelect (payload) {
       this.$emit('select', payload)
     },
+    putDataInSearchbox () {
+      if (this.allResults) {
+        var elems = document.querySelectorAll('.autocomplete')
+        const options = {
+          data: this.allResults,
+          onAutocomplete: this.handleResultSelect,
+          minLength: 0
+        }
+        var instances = M.Autocomplete.init(elems, options)
+      }
+    }
   }
 }
 </script>
