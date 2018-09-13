@@ -8,19 +8,26 @@
         </p>
       </popup-modal>
     </template>
-    <h2 class="white-text center">Class Directory</h2>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <div class="searchbox-wrapper">
+    <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
-        label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
+        label="Search existing classes" 
+        :allResults="objectOfClasses"   
+        @select="payload => addClass(payload)"/>
     </div>
-    <div v-if="user">
-      <div v-if="user.admin == true || user.displayName == 'Elton Lin'" 
-           style="width: 70%; margin: auto;">
-        <form @submit.prevent="addSubject()">
-          <label>Add Subject</label>
-          <input type="text" v-model="newSubject">
-        </form>
+    <div style="width: 50%; margin: auto;">
+      <div class="row">
+        <div class="col s12">
+          <div class="row">
+            <form @submit.prevent="addSubject()">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">add</i>
+                <input type="text" id="new-subject" v-model="newSubject">
+                <label for="new-subject">Add a new class on Feynman</label>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,9 +123,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.searchbox-wrapper {
-  width: 50%;
-  margin: auto;
-}
 </style>
 

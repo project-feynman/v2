@@ -5,6 +5,7 @@
         <input slot="header" placeholder="Enter the new p-set number" class="teal-text center" v-model="newPset">
       </popup-modal>
     </template>
+    
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
@@ -171,10 +172,6 @@ h4 {
 
 .custom-offset {
   padding-top: 30px;
-}
-
-.subject-card {
-  position: relative;
 }
 
 .new-subject {
