@@ -32,14 +32,6 @@
         <base-button @click="$router.push('/add-classes')">Manage classes</base-button>
       </div>
     </template>
-    <div v-if="user">
-      <div v-if="user.admin == true || user.displayName == 'Elton Lin'" class="new-subject">
-        <form @submit.prevent="addSubject()">
-          <label>Add Subject</label>
-          <input type="text" v-model="newSubject">
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 

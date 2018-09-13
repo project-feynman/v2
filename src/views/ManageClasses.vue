@@ -21,6 +21,15 @@
     <div class="center" style="padding-top: 25px;">
       <pulse-button @click="$router.push('/subjects')" iconName="dashboard" tooltipText="Head to dashboard"/>
     </div>
+    <div v-if="user">
+      <div v-if="user.admin == true || user.displayName == 'Elton Lin'" 
+           style="width: 70%; margin: auto;">
+        <form @submit.prevent="addSubject()">
+          <label>Add Subject</label>
+          <input type="text" v-model="newSubject">
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -51,6 +60,7 @@ export default {
       classes: [],
       hasFetchedClasses: false,
       feedback: '',
+      newSubject: '',
       objectOfClasses: {} 
     }
   },
@@ -82,6 +92,16 @@ export default {
       await ref.update({
         enrolledSubjects: [] 
       })
+    },
+    async addSubject () {
+      const newObject = {
+        subjectNumber: this.newSubject,
+        psets: [1]
+      }
+      const ref = db.collection('subjects').doc(this.newSubject)
+      this.newSubject = ''
+      await ref.set(newObject)
+      console.log('successfully added new subject')
     }
   },
   watch: {
