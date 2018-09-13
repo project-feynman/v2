@@ -13,13 +13,14 @@
         <input slot="header" class="teal-text center" v-model="editTitle">
       </popup-modal>
     </template>
-    <h2 class="white-text center">{{ $route.params.subject_id }} Study Groups</h2>
+    <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }} Study Groups</h2>
     <template v-if="studyGroups">
-      <div class="responsive-grid">
+      <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
+            <div class="card-wrapper">
             <base-card>
-              <p class="teal-text card-info">{{ group.title }}</h5>
+              <p class="teal-text card-info">{{ group.title }}</p>
               <p class="black-text card-info" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
               <floating-button iconName="slideshow" 
                                color="green" 
@@ -36,6 +37,7 @@
                                  @click="deleteGroup(group)"/>
               </template>
             </base-card>
+            </div>
           </div>
         </template>
       </div>
@@ -154,17 +156,10 @@ export default {
 
 .responsive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 15px;
   max-width: 90%;
   margin: 0 auto 30px;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 32% 32% 32%;
-  grid-gap: 10px;
-  margin: 40px;
 }
 
 .card-info {
