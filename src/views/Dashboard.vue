@@ -15,7 +15,10 @@
               <base-card>
                 <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
                 <p class="green-text">X classmates p-setting</p>
-                <pulse-button iconName="slideshow" 
+                <floating-button 
+                              color="green"
+                              size="large"
+                              iconName="slideshow" 
                               :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
