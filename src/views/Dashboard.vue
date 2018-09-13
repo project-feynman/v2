@@ -23,6 +23,10 @@
                             color="yellow darken-1" 
                             size="large"
                             @click="startEdit(subject)"/>
+                  <floating-button iconName="delete" 
+                            color="red darken-1" 
+                            size="large"
+                            @click="removeSubject(subject)"/>
                 </template>
               </base-card>
             </div>
@@ -103,17 +107,27 @@ export default {
       })
       this.newPset = null 
     },
+    async removeSubject (subject) {
+      const ref = db.collection('users').doc(this.user.uid) 
+      await ref.update({
+        enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(subject.subjectNumber)
+      })
+      this.loadSubjects() 
+    },
     async loadSubjects () {
-      console.log('loadSubjects()')
       if (!this.user.enrolledSubjects) {
+        this.loading = false 
+        this.subjects = [] 
         this.feedback = 'Add a class below to get started'
       }
       if (this.user.enrolledSubjects.length == 0) {
+        this.loading = false 
+        this.subjects = [] 
         this.feedback = 'Add a class below to get started'
       } else {
         this.subjects = [] 
         this.user.enrolledSubjects.forEach(async subj => {
-          const ref = db.collection('subjects').doc(subj.subjectID)
+          const ref = db.collection('subjects').doc(subj)
           const subjDoc = await ref.get() 
           this.subjects.push(subjDoc.data())
         })

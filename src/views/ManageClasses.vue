@@ -87,7 +87,7 @@ export default {
       if (this.isLoggedIn) {
         const ref = db.collection('users').doc(this.user.uid)
         await ref.update({
-          enrolledSubjects: firebase.firestore.FieldValue.arrayUnion({subjectID: subjectNumber})
+          enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
         })
         this.$emit('add-class')
       }
