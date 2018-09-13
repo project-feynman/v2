@@ -32,9 +32,6 @@
             </div>
           </template>
       </div>
-      <div class="center">
-        <base-button @click="$router.push('/add-classes')">Manage classes</base-button>
-      </div>
     </template>
     <manage-classes @add-class="loadSubjects()"></manage-classes>
   </div>

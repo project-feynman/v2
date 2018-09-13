@@ -14,13 +14,6 @@
       <search-box v-if="objectOfClasses"
         label="Search classes" :allResults="objectOfClasses" @select="payload => addClass(payload)"/>
     </div>
-    <!-- <div class="center">
-      <base-button @click="resetClasses()" buttonColor="red darken-4">Reset classes</base-button>
-    </div> -->
-    <p v-if="isLoggedIn" class="center">Your classes: {{ user.enrolledSubjects }}</p>
-    <div class="center" style="padding-top: 25px;">
-      <pulse-button @click="$router.push('/subjects')" iconName="dashboard" tooltipText="Head to dashboard"/>
-    </div>
     <div v-if="user">
       <div v-if="user.admin == true || user.displayName == 'Elton Lin'" 
            style="width: 70%; margin: auto;">
@@ -119,14 +112,6 @@ export default {
       }
     }
   }
-  // watch: {
-  //   user () {
-  //     if (this.isLoggedIn && !this.hasFetchedClasses) {
-  //       this.classes = this.user.classes 
-  //       this.hasFetchedClasses = true 
-  //     }
-  //   }
-  // }
 }
 </script>
 
