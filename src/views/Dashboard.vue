@@ -32,7 +32,7 @@
         <base-button @click="$router.push('/add-classes')">Manage classes</base-button>
       </div>
     </template>
-    <manage-classes></manage-classes>
+    <manage-classes @add-class="loadSubjects()"></manage-classes>
   </div>
 </template>
 
@@ -64,12 +64,13 @@ export default {
   data () {
     return {
       subjects: [],
+      enrolledSubjects: [],
       newSubject: '',
       loading: true,
       isChangingPset: false,
       subjectEditted: null,
       newPset: null,
-      hasLoadedSubjects: false 
+      hasLoadedSubjects: false,
     }
   },
   async created () {
@@ -103,15 +104,14 @@ export default {
       this.newPset = null 
     },
     async loadSubjects () {
-      if (this.loading == false) {
-        return 
-      }
+      console.log('loadSubjects()')
       if (!this.user.enrolledSubjects) {
-        this.$router.push('add-classes')
+        this.feedback = 'Add a class below to get started'
       }
       if (this.user.enrolledSubjects.length == 0) {
-        this.$router.push('add-classes')
+        this.feedback = 'Add a class below to get started'
       } else {
+        this.subjects = [] 
         this.user.enrolledSubjects.forEach(async subj => {
           const ref = db.collection('subjects').doc(subj.subjectID)
           const subjDoc = await ref.get() 
@@ -156,17 +156,11 @@ h2 {
 
 h4 {
   @extend .black-text;
-
 }
 
 .custom-offset {
   padding-top: 30px;
 }
-
-// .subject-card {
-//   margin: auto;
-//   width: 65%;
-// }
 
 .subject-card {
   position: relative;

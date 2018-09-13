@@ -89,6 +89,7 @@ export default {
         await ref.update({
           enrolledSubjects: firebase.firestore.FieldValue.arrayUnion({subjectID: subjectNumber})
         })
+        this.$emit('add-class')
       }
     },
     async resetClasses () {

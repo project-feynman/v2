@@ -126,14 +126,18 @@ export default {
           }
         }
 				// sending the current location to Firestore
-				getPermissionForGeolocation((position) => { 
+				getPermissionForGeolocation(position => { 
+          if (this.hasSentPosition) {
+            return 
+          } 
 					sendPositionToFirestore(this.user.uid, 
 					{ 
 						accuracy: position.coords.accuracy,
 						longitude: position.coords.longitude,
 						latitude: position.coords.latitude,
 						timestamp: position.timestamp
-					})
+          })
+          this.hasSentPosition = true 
 				})
       }
     }
@@ -155,7 +159,8 @@ export default {
   data () {
     return {
       newNotif: false,
-      hasFetchedToken: false
+      hasFetchedToken: false,
+      hasSentPosition: false
     }
   },
   methods: {
