@@ -7,6 +7,7 @@
     </template>
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
+    <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
     <template v-if="subjects && !loading && isLoggedIn">
       <div class="responsive-grid">
@@ -75,6 +76,7 @@ export default {
       subjectEditted: null,
       newPset: null,
       hasLoadedSubjects: false,
+      feedback: ''
     }
   },
   async created () {
@@ -115,6 +117,8 @@ export default {
       this.loadSubjects() 
     },
     async loadSubjects () {
+      this.feedback = 'Fetching your classes...'
+      console.log('feedback has been set')
       if (!this.user.enrolledSubjects) {
         this.loading = false 
         this.subjects = [] 
@@ -133,6 +137,7 @@ export default {
         })
         this.loading = false 
       }
+      this.feedback = ''
       this.hasLoadedSubjects = true
     },
     getCurrentPset ({ psets }) {

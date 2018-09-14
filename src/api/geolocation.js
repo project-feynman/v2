@@ -15,7 +15,7 @@ const getPermissionForGeolocation = (success = ((_) => { }), error = ((_) => { }
 }
 
 var getPosition = () => {
-	if(permission){
+	if (permission) {
 		return position
 	} else {
 		return undefined
@@ -27,7 +27,7 @@ const updatePosition = () => {
 	}
 }
 const sendPositionToFirestore = async (uid, pos = position) => {
-	if(permission) {
+	if (permission) {
 		const ref = db.collection('users').doc(uid)
 		const snapshot = await ref.get()
 		const doc = snapshot.data()

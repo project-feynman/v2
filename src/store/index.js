@@ -61,14 +61,10 @@ const actions = {
         var mirror = await ref.get()
         var firstTime = true 
         if (mirror.exists) {
-          // why is this getting called so often? 
           ref.onSnapshot(mirror => {
-            // mirror.docChanges().forEach(change => console.log('change type =', change.type))
-            console.log('THIS IS THE PROBLEM')
             context.commit('setUser', mirror.data())
             if (!context.state.handledOnlineStatus) {
               checkOnlineStatusAndSetDisconnectHook(mirror.data())
-              console.log('THIS IS THE PROBLEM')
               context.commit('setHandledOnlineStatus', true) 
             }
           })

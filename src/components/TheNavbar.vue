@@ -47,7 +47,7 @@
           <a class="brand-logo">
             <router-link to="/subjects">
               <i class="material-icons right">dashboard</i>
-              Dashboard
+              Feynman
             </router-link>
           </a>
         </template>

@@ -14,21 +14,15 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
-    <div class="flexbox-container">
-      <template v-if="journeys">
-        <div class="collection-list-wrapper">
-          <collection-list title="Recorded discussions"
-                      :listItems="journeys"
-                      actionIcon="delete"
-                      @item-click="journey => processDeleteAttempt(journey)"
-                      @entire-click="journey => redirect(journey)">
-            <template slot-scope="{ item }">
-              {{ item.title }}
-            </template>
-          </collection-list>
-        </div>
-      </template>
-    </div>
+    <template v-if="journeys">
+      <div class="collection-list-wrapper">
+        <collection-list title="Users with the page open somewhere" :listItems="usersViewingPage">
+          <template slot-scope="{ item }">
+            {{ item.displayName }}
+          </template>
+        </collection-list>
+      </div>
+    </template>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="center" style="margin-top: 25px;">
       <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
@@ -37,9 +31,6 @@
       <div class="chat-wrapper">
         <h4 class="center">Chatroom</h4>
         <div class="card">
-          <!-- <div class="card-title">
-            <p v-if="chatroom.participants" class="black-text center">Participants: {{ chatroom.participants }}</p>
-          </div> -->
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
               <li v-for="message in chatroom.messages" :key="message.id">
@@ -59,6 +50,19 @@
         <whiteboard/>
       </div>
     </div>
+    <template v-if="journeys">
+      <div class="collection-list-wrapper">
+        <collection-list title="Recorded discussions"
+                    :listItems="journeys"
+                    actionIcon="delete"
+                    @item-click="journey => processDeleteAttempt(journey)"
+                    @entire-click="journey => redirect(journey)">
+          <template slot-scope="{ item }">
+            {{ item.title }}
+          </template>
+        </collection-list>
+      </div> 
+    </template>
   </div>
 </template>
 
@@ -72,6 +76,7 @@ import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import db from '@/firebase/init.js'
+import { constants } from 'zlib';
 
 export default {
   components: {
@@ -89,7 +94,8 @@ export default {
       journeys: [],
       newJourneyTitle: '', 
       feedback: '',
-      isSharingJourney: false
+      isSharingJourney: false,
+      usersViewingPage: []
     }
   },
   computed: {
@@ -122,7 +128,16 @@ export default {
     if (this.isLoggedIn) {
       this.addToRecentChat() // this does more than just addToRecentChat()
     }
-    let roomID = this.$route.params.room_id
+    const roomID = this.$route.params.room_id
+    const queryRef = db.collection('users')
+                         .where('recentChatID', '==', roomID)
+                         .where('isOnline', '==', true)
+                         .where('isTalking', '==', true)
+
+    await this.$bind('usersViewingPage', queryRef)
+    console.log('users viewing page =', this.usersViewingPage)
+    // great, that works 
+
     let doc = db.collection('chatrooms').doc(roomID)
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
