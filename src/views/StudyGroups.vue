@@ -14,14 +14,23 @@
       </popup-modal>
     </template>
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }} Study Groups</h2>
-    <template v-if="studyGroups">
+    <collection-list :title="`Classmates in ${$route.params.subject_id}`" 
+                     :listItems="enrolledStudents"
+                     style="width: 50%; margin: auto;">
+      <template slot-scope="{ item }">
+        {{ item.displayName }}
+      </template>
+    </collection-list>
+    <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <div class="card-wrapper">
             <base-card>
               <p class="teal-text card-info">{{ group.title }}</p>
-              <p class="black-text card-info" style="margin-bottom: 25px;">{{ group.participants.length }} member(s)</p>
+              <p class="black-text card-info" style="margin-bottom: 25px;">
+                Created by {{ group.owner.displayName }} 
+              </p>
               <floating-button iconName="slideshow" 
                                color="green" 
                                tooltipText="Enter group chat"
@@ -41,6 +50,9 @@
           </div>
         </template>
       </div>
+    </template>
+    <template v-else>
+      <h4 class="center">There are no ongoing study sessions right now - start a new session by clicking the plus icon</h4>
     </template>
     <div class="fixed-action-btn">
       <pulse-button iconName="add" @click="createGroup()"></pulse-button>
@@ -62,7 +74,7 @@ export default {
     CollectionList,
     PulseButton,
     FloatingButton,
-    PopupModal 
+    PopupModal
   },
   computed: {
     user () {
@@ -80,16 +92,19 @@ export default {
       isEditting: false,
       editTitle: '',
       editID: '',
-      defaultTitles: ['Looking for 2 more people: writing up proofs with Latex in the library', 
-                     'Starting p-set from scratch', 
-                     'Looking for 3 more people in Office Hours - working on question 2']
+      enrolledStudents: [],
+      defaultTitles: ['Doing Q1 in Student Center 5th', 
+                      'Doing LATEX write-up in Hayden 2nd', 
+                      '<Current Question><Location>']
     }
   },
   async created () {
     // obtain the study group from there
     const subject_id = this.$route.params.subject_id
     const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
+    const studentsRef = db.collection('users').where('enrolledSubjects', 'array-contains', subject_id)
     await this.$bind('studyGroups', ref)
+    await this.$bind('enrolledStudents', studentsRef)
   },
   methods: {
     isOwner (group) {
@@ -153,7 +168,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .responsive-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
