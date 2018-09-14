@@ -51,7 +51,7 @@
         </template>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="!loadingGroups">
       <h4 class="center">There are no ongoing study sessions right now - start a new session by clicking the plus icon</h4>
     </template>
     <div class="fixed-action-btn">
@@ -88,6 +88,7 @@ export default {
     return {
       subject: {},
       studyGroups: [],
+      loadingGroups: true, 
       showPopup: false,
       isEditting: false,
       editTitle: '',
@@ -104,6 +105,7 @@ export default {
     const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
     const studentsRef = db.collection('users').where('enrolledSubjects', 'array-contains', subject_id)
     await this.$bind('studyGroups', ref)
+    this.loadingGroups = false 
     await this.$bind('enrolledStudents', studentsRef)
   },
   methods: {
