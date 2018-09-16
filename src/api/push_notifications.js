@@ -1,91 +1,75 @@
 import firebase from 'firebase/app'
-import 'firebase/messaging'
-import axios from 'axios'
 import db from '@/firebase/init.js'
-export {askForPermissionToReceiveNotifications, sendTokenToFirestore, getToken}
+export { askNotificationPermission, sendSubscriptionToFirestore, getSubscription }
 
-var currentTokenInDb = false
-var token = undefined
+var currentSubInDb = false
+var sub = undefined
+var publicVapidKey = 'BBC2Ob2X8oKIOTZ8No75dd47WC9OgVgzvmjCAtVV3r6h9ohQZIlGfXl-bEVu1KQ3xQNmGRuynUy4NFch0rY4etE'
 //const messaging = firebase.messaging()
 //messaging.usePublicVapidKey("BJ0Ou0MdMi6KAqeA8BOcmsFkzYCX0Uw5WmXZorqcgZX1Uf55bpJjbvb-Hq5eFajOXwI-j-w-D-o7X7J5FWJ34y4")
 
-if ('Notification' in window && 'serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/firebase-messaging-sw.js')
-    .then(async registration => {
-      firebase.messaging().useServiceWorker(registration)
-			askForPermissionToReceiveNotifications()
-    })
-	  .catch(error => console.log('error =', error))
+//this functions is really really bad, probably should work somehow in sync with the subscription or sth
+const getSubscription = () => {
+	return sub
+}
+//this function is BAD. to fix
+const askNotificationPermission = async () => {
+	await Notification.requestPermission(result => { })
 }
 
-const getToken = async () => {
-	if(token) {
-		return token;
-	}
-	else {
-		try {
-			token = await firebase.messaging().getToken()
-			return token
-		}
-		catch(error) {
-			token = undefined
-			console.log(`error in getting the token = ${error}`)
-			return undefined
-		}
-	}
-}
-const askForPermissionToReceiveNotifications = async () => {
-  try {
-    await firebase.messaging().requestPermission()
-  } catch (error) {
-    console.log(`error in getting permission = ${error}`)
-  }
-}
-
-const sendTokenToFirestore = async uid => {
-  if(!currentTokenInDb) {
+const sendSubscriptionToFirestore = async uid => {
+  if(!currentSubInDb) {
 		const ref = db.collection('users').doc(uid)
 		const snapshot = await ref.get()
 		const doc = snapshot.data()
-		const token = await getToken()
-		if(!doc.tokens) {
-			doc.tokens = []
+		const sub = JSON.stringify(getSubscription())
+		if(!doc.subscriptions) {
+			doc.subscriptions = []
 		}
-		if(!token) {
+		if(!sub) {
 			return
 		}
-		if(doc.tokens.includes(token)) {
-			currentTokenInDb = true
+		if(doc.subscriptions.includes(sub)) {
+			currentSubInDb = true
 		}
 		else {
-			doc.tokens.push(token)
+			doc.subscriptions.push(sub)
 			ref.set(doc)
-			currentTokenInDb = true
+			currentSubInDb = true
 		}
   }
 }
 
-const sendNotification = async (title, body) => {
-  const requestBody = {
-    notification: {
-      title,
-      body,
-      click_action: "https://https://feynman-village.firebaseapp.com/"
-    },
-    to: await messaging.getToken()
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
   }
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
-  }
-  console.log(headers)
-  console.log(requestBody)
-  axios.create({
-    headers
-  })
-  .post('https://fcm.googleapis.com/fcm/send', requestBody)
-  .then(response => console.log(response))
-  .catch(error => console.log(error))
+  return outputArray;
 }
 
+if ('Notification' in window && 'serviceWorker' in navigator) {
+	askNotificationPermission()
+  navigator.serviceWorker
+	.register('/sw.js')
+	.then(registration => {
+		const subscribeOptions = {
+			applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+			userVisibleOnly: true
+		}
+		console.log(subscribeOptions)
+		registration.pushManager.subscribe(subscribeOptions).then(subscription => {
+			console.log(JSON.stringify(subscription))
+			sub = subscription
+		})
+	})
+	.catch(error => console.log('error =', error))
+}

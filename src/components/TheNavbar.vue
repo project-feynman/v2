@@ -93,7 +93,7 @@
 <script>
 import db from '@/firebase/init.js'
 import PopupModal from '@/components/reusables/PopupModal.vue'
-import { getToken, sendTokenToFirestore } from '@/api/push_notifications.js'
+import { getSubscription, sendSubscriptionToFirestore } from '@/api/push_notifications.js'
 import { getPermissionForGeolocation, sendPositionToFirestore } from '@/api/geolocation.js'
 
 export default {
@@ -113,16 +113,14 @@ export default {
             }
           }
         }
+				console.log(this.user.uid)
         if (!this.hasFetchedToken) {
           // generate tokens if the user is new 
           this.hasFetchedToken = true 
-          sendTokenToFirestore(this.user.uid)
-          var token = await getToken()
-          if (token) {
+          sendSubscriptionToFirestore(this.user.uid)
+          var subscription = getSubscription()
+          if (subscription) {
             const ref = db.collection('users').doc(this.user.uid)
-            await ref.update({
-              token
-            })
           }
         }
 				// sending the current location to Firestore
