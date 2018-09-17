@@ -11,7 +11,7 @@ import store from './store/index.js'
 //import './registerServiceWorker'
 import '@/components/reusables/_globals.js'
 import '@/api/push_notifications.js'
-// import '@/api/geolocation.js'
+import '@/api/geolocation.js'
 
 Vue.use(VueChatScroll)
 Vue.use(VueResource)
