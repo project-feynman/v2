@@ -1,3 +1,28 @@
+# Feynman Project is a conspiracy to bring simple, elegant explanations to every academic subject in the world. 
+
+Feynman is also: 
+- [a website that let's you find study groups spontaneously](./doc/website_intro.md)
+- an effort to improve academic material through students continually renewing/editting/creating explanations
+- a place where people practice to become competent, articulate thinkers  
+- a conspiracy to change MIT's student culture, then the world's. 
+
+# (Visual explanation to be added) 
+
+Problem: it's hard to find study partners
+
+Current Solutions:
+  1. Facebook Group Chat: 
+     - low response rate 
+     - unlikely to be on the same parts of the p-set 
+     
+  2. Piazza:
+     - not live 
+     - students rarely respond 
+     - instructor answers lack empathy 
+     
+Solution:
+  Have access to classmates who happen to be doing the same questions - and leave behind the discussions without much effort. 
+
 # 1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students.
 
 You are observing your friend Adam, who understands fuck all about Thermodynamics. Then, suddenly, he visits the TA's office. You wonder what's going on in there behind closed doors, but before long, Adam emerges again. "Eureka!", he says, "I get it now!".
@@ -27,12 +52,6 @@ Besides that, interactions don't have to be perfect. When one person teaches ano
 A side-product is the fact that a new culture will be established, one where students practice to explain concepts in an articulate way, and are kind to one another, not least due to the fact that they know others would do the same for them. 
 
 [1-minute video explanation](https://www.youtube.com/watch?v=zsbHQWGIQ9Q)
-
-Feynman is: 
-- [a website that let's you p-set efficiently](./doc/website_intro.md)
-- an effort to improve academic material through students continually renewing/editting/creating explanations
-- a place where people practice to become competent, articulate thinkers  
-- a conspiracy to change MIT's student culture, then the world's. 
 
 # Our Beliefs
 
