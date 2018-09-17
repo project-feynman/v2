@@ -63,16 +63,6 @@
             </li>
           </template> -->
           <template v-if="isLoggedIn">
-            <!-- <li>
-              <a href="https://github.com/Gustwalker/feynman-project/blob/master/README.md">
-                About
-              </a>
-            </li> -->
-            <!-- <li>
-              <router-link class="black-text" to="/profile">
-                Hi, Feynman #{{ user.feynmanNumber }}
-              </router-link>
-            </li> -->
             <li>
               <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
                 Logout

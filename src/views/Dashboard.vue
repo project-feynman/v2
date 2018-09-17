@@ -7,7 +7,6 @@
     </template>
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
-    <p v-if="feedback" class="yellow-text">{{ feedback }}</p>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
     <template v-if="subjects && !loading && isLoggedIn">
       <div class="responsive-grid">
@@ -42,7 +41,6 @@
 </template>
 
 <script>
-// get the corresponding document for each subject the user is taking
 import db from '@/firebase/init.js'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import FloatingButton from '@/components/reusables/FloatingButton.vue'
@@ -162,7 +160,7 @@ export default {
 <style lang="scss" scoped>
 .responsive-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 0.97fr));
   grid-gap: 30px;
   max-width: 90%;
   margin: 0 auto 30px;

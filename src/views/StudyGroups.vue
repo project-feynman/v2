@@ -103,7 +103,9 @@ export default {
     // obtain the study group from there
     const subject_id = this.$route.params.subject_id
     const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
-    const studentsRef = db.collection('users').where('enrolledSubjects', 'array-contains', subject_id)
+    const studentsRef = db.collection('users')
+                            .where('enrolledSubjects', 'array-contains', subject_id)
+                            .where('isOnline', '==', true) 
     await this.$bind('studyGroups', ref)
     this.loadingGroups = false 
     await this.$bind('enrolledStudents', studentsRef)
