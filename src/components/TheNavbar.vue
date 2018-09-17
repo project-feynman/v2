@@ -1,67 +1,16 @@
 <template>
   <div>
     <nav>
-      <!-- <ul id="dropdown1" class="dropdown-content">
-        <template v-if="isLoggedIn">
-          <li>
-            <router-link to="/subjects">Dashboard</router-link>
-          </li> -->
-          <!-- <li v-if="user.recentPsetID">
-            <router-link :to="user.recentPsetID">
-              Pset
-            </router-link>
-          </li> -->
-          <!-- <li v-if="user.recentQuestionID">
-            <router-link :to="user.recentQuestionID">
-              Recent Question
-            </router-link>
-          </li> -->
-          <!-- <li v-if="user.recentChatID">
-            <router-link :to="`/chat/${user.recentChatID}`">
-              Resume Chat
-            </router-link>
-          </li>
-        </template>
-      </ul> -->
-      <!-- <ul id="dropdown2" class="dropdown-content">
-        <template v-if="isLoggedIn && user.enrolledSubjects">
-          <li v-if="user.enrolledSubjects.length == 0">You haven't joined a study group yet</li>
-          <template v-else v-for="(subject, idx) in user.enrolledSubjects"> 
-            <li v-if="subject.chatroomID" :key="idx">
-              <router-link :to="'/chat/' + subject.chatroomID">
-                {{ subject.subjectID }}'s Chat
-              </router-link>
-            </li>
-          </template>
-        </template>
-      </ul> -->
       <div class="nav-wrapper grey lighten-5">
         <template v-show="isLoggedIn == true">
-          <!-- <a id="dropdown-trigger-1" 
-              class="brand-logo" 
-              href="#!" 
-              data-target="dropdown1">
-              <i class="material-icons right">menu</i>
-            Menu
-          </a> -->
           <a class="brand-logo">
             <router-link to="/subjects">
-              <i class="material-icons right">dashboard</i>
+              <i class="material-icons right">home</i>
               Feynman
             </router-link>
           </a>
         </template>
         <ul class="right hide-on-med-and-down">
-          <!-- <template v-show="isLoggedIn == true">
-            <li>
-              <a id="dropdown-trigger-2" 
-                href="#!" 
-                data-target="dropdown2">
-                <i class="material-icons right">chat</i>
-                Group Chats
-              </a>
-            </li>
-          </template> -->
           <template v-if="isLoggedIn">
             <li>
               <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
