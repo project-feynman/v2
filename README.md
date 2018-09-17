@@ -1,3 +1,15 @@
+Problem: 
+  It's hard to find the right group to study with: 
+    - logistics 
+    - different pace of studying / different needs 
+    - can't understand the way they explain things
+    - like each other 
+    
+  You need to be able to do that so much 
+  
+Solution:
+  Have access to classmates who happen to be doing the same questions - and leave behind the discussions without much effort. 
+  
 # 1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students.
 
 You are observing your friend Adam, who understands fuck all about Thermodynamics. Then, suddenly, he visits the TA's office. You wonder what's going on in there behind closed doors, but before long, Adam emerges again. "Eureka!", he says, "I get it now!".
