@@ -14,8 +14,15 @@
       </popup-modal>
     </template>
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }} Study Groups</h2>
-    <collection-list :title="`Classmates in ${$route.params.subject_id}`" 
+    <collection-list :title="`All classmates in ${$route.params.subject_id}`" 
                      :listItems="enrolledStudents"
+                     style="width: 50%; margin: auto;">
+      <template slot-scope="{ item }">
+        {{ item.displayName }}
+      </template>
+    </collection-list>
+    <collection-list :title="`Classmates currently online`" 
+                     :listItems="onlineClassmates"
                      style="width: 50%; margin: auto;">
       <template slot-scope="{ item }">
         {{ item.displayName }}
@@ -94,6 +101,7 @@ export default {
       editTitle: '',
       editID: '',
       enrolledStudents: [],
+      onlineClassmates: [],
       defaultTitles: ['Doing Q1 in Student Center 5th', 
                       'Doing LATEX write-up in Hayden 2nd', 
                       '<Current Question><Location>']
@@ -105,9 +113,13 @@ export default {
     const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
     const studentsRef = db.collection('users')
                             .where('enrolledSubjects', 'array-contains', subject_id)
-                            .where('isOnline', '==', true) 
+                            // .where('isOnline', '==', true) 
+    const onlineClassmates = db.collection('users')
+                              .where('enrolledSubjects', 'array-contains', subject_id)
+                              .where('isOnline', '==', true)
     await this.$bind('studyGroups', ref)
     this.loadingGroups = false 
+    await this.$bind('onlineClassmates', onlineClassmates)
     await this.$bind('enrolledStudents', studentsRef)
   },
   methods: {
