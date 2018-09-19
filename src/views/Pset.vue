@@ -229,9 +229,6 @@ li {
 h5 {
   @extend .teal-text;
 }
-</style>
-
-<style scoped>
 .flexbox-container {
   display: flex;
 }
