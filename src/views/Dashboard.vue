@@ -45,7 +45,7 @@ import db from '@/firebase/init.js'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import FloatingButton from '@/components/reusables/FloatingButton.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
-import ManageClasses from '@/views/ManageClasses.vue'
+import ManageClasses from '@/components/dashboard/ManageClasses.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
