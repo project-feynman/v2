@@ -1,4 +1,5 @@
-const axios = require('axios')
+const config = require('./config')
+const webpush = require('web-push')
 
 const functions = require('firebase-functions')
 
@@ -7,67 +8,13 @@ admin.initializeApp()
 
 const firestore = admin.firestore()
 firestore.settings({timestampsInSnapshots: true})
-// exports.addStudent = functions.https.onCall(async (req, res) => {
 
-// 	const studentUid = req.query.uid
-// 	const questionID = req.query.questionID
-// 	const questions = firestore.collection('questions')
-// 	const userDoc = await firestore.doc('/users/' + studentUid).get()
-// 	const displayName = userDoc.data().displayName
-
-// 	return questions.where('questionID', '==', questionID).onSnapshot(snapshot => {
-// 		var data = snapshot.docs[0].data()
-// 		if (!data.users) {
-// 			data.users = []
-// 		}
-// 		if (!data.users.find(u => u.uid == studentUid)) {
-// 			data.users.push({
-// 				displayName: displayName, 
-// 				finished: false, 
-// 				retired: false, 
-// 				uid: studentUid,
-// 				teacher: null
-// 			      })
-// 			snapshot.docs[0].ref.set(data)
-// 		}
-// 		console.log('finished')
-// 	})
-// })
-
-// exports.addTeacher = functions.https.onCall(async (req, res) => {
-// 	const teacherUid = req.query.uid
-// 	const questionID = req.query.questionID
-// 	const questions = firestore.collection('questions')
-// 	const userDoc = await firestore.doc('/users/' + teacherUid).get()
-// 	const displayName = userDoc.data().displayName;
-
-// 	return questions.where('questionID', '==', questionID).onSnapshot(snapshot => {
-// 		var data = snapshot.docs[0].data()
-// 		var matchingUser = data.users.find(u => u.uid == teacherUid)
-// 		if (matchingUser.finished == false) {
-// 			data.users.splice(data.users.indexOf(matchingUser[0]), 1)
-// 			data.users.push({
-// 				displayName: displayName, 
-// 				finished: true, 
-// 				retired: false, 
-// 				uid: teacherUid,
-// 				student: null
-// 			      })
-// 			snapshot.docs[0].ref.set(data)
-// 		}	
-// 		else if (!matchingUser) {
-// 			data.users.push({
-// 				displayName: displayName, 
-// 				finished: true, 
-// 				retired: false, 
-// 				uid: teacherUid,
-// 				student: null
-// 			      })
-// 			snapshot.docs[0].ref.set(data)
-// 		}
-// 		console.log('finished')
-// 	})
-// })
+const vapidKeys = config.vapidKeys
+webpush.setVapidDetails(
+	'mailto:hubewasi@gmail.com',
+	vapidKeys.publicKey,
+	vapidKeys.privateKey
+)
 
 exports.onStatusChange = functions.database.ref('/status/{uid}').onUpdate( async (change, context) => {
 	const eventStatus = change.after.val()
@@ -83,9 +30,18 @@ exports.onStatusChange = functions.database.ref('/status/{uid}').onUpdate( async
 		console.log('finished')
 	})
 })
-exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roomID}').onUpdate((change, context) => {
+exports.notificationOnNewMessage = functions.https.onRequest((req, res) => {
+	const data = req.body
+	const message = data.message
+	const uid = data.uid
+	const senderName = message.author.displayName
+
+})
+exports.notificationOnNewMessage = functions.firestore.document('/chatrooms/{roomID}').onUpdate((change, context) => {
 	if(change.after.data().messages == change.before.data().messages)
+	{
 		return;
+	}
 
 	const roomID = context.params.roomID;
 
@@ -94,41 +50,31 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatRooms/{roo
 	const message = messages[messages.length - 1]
 	const senderName = message.author.displayName
 	const senderUid = message.author.uid
-	var receiverUid = undefined
-	if(participants[0].uid == senderUid) {
-		receiverUid = participants[1].uid
-	} else {
-		receiverUid = participants[0].uid
-	}
-	firestore.doc('/users/' + receiverUid).get().then(async snapshot => {
-		var receiverTokens = snapshot.data().tokens
-		console.log(senderUid)
-		console.log(snapshot.data())
-		console.log(receiverTokens)
-		if(!receiverTokens) {
-			return;
-		}
-		receiverTokens.forEach(function(token) {
-			const payload = {
-				notification : {
-					title: senderName + ' sent you a message...',
+	console.log(message)
+	receivers = participants.filter((participant) => participant.uid !== senderUid)
+	console.log('receivers = ' + receivers)
+	receiverUids = receivers.map((receiver) => receiver.uid)
+	console.log('receiver uids = ' + receiverUids)
+	receiverUids.forEach(function(receiverUid) {
+		firestore.doc('/users/' + receiverUid).get().then(async snapshot => {
+			var receiverSubscriptions = snapshot.data().subscriptions
+			console.log(receiverSubscriptions)
+			if(!receiverSubscriptions) {
+				return;
+			}
+			receiverSubscriptions.forEach(function(sub) {
+				console.log(sub + 'should work')
+				const subscription = JSON.parse(sub)
+				const payload = {
+					senderName,
 					body: message.content,
-					click_action: 'https://feynman.online',
-					sound: 'default'
-				},
-				to: token
-			}
-			const headers = {
-				'Content-type': 'application/json',
-				'Authorization': 'key=AAAATwegD0Q:APA91bFqyN3LVqEtnEz829qCo-lynOl_5bvjc0knD4GBJm7p8I6K7ieo48DMJZgTYOJ5ceRVnZcxA5KAIoDYr3mkN9ad2752DfOG57hYt4h98PUU94TrZPclzMq239xdZ9gkZH9xBYHk'
-			}
-			axios.create({
-				headers
+					type: "message"
+				}
+				console.log(payload)
+				webpush.sendNotification(subscription, JSON.stringify(payload)).catch((err) => console.log(error))
 			})
-			.post('https://fcm.googleapis.com/fcm/send', payload)
-			.then(response => console.log(response.statusText))
-			.catch(error => console.log(error))
 		})
 	})
+
 	return null;
 })
