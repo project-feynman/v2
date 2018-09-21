@@ -13,22 +13,18 @@
           <template v-for="(subject, i) in subjects">
             <div class="subject-card" :key="i">
               <base-card>
-                <h4 class="teal-text text-darken-2">{{ subject.subjectNumber }}</h4>
-                <p class="green-text">X classmates p-setting</p>
+                <h4 class="black-text">{{ subject.subjectNumber }}</h4>
                 <floating-button 
-                              color="green"
-                              size="large"
+                              color="pink"
                               iconName="slideshow" 
                               :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
                   <floating-button iconName="settings" 
-                            color="yellow darken-1" 
-                            size="large"
+                            color="grey darken-1" 
                             @click="startEdit(subject)"/>
                   <floating-button iconName="delete" 
-                            color="red darken-1" 
-                            size="large"
+                            color="black" 
                             @click="removeSubject(subject)"/>
                 </template>
               </base-card>

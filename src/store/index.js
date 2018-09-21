@@ -10,12 +10,14 @@ Vue.use(Vuex)
 
 const state = {
   user: 'undetermined',
-  handledOnlineStatus: false 
+  handledOnlineStatus: false,
+  hasFetchedUser: false
 }
 
 const mutations = {
   setUser: (state, payload) => {
     state.user = payload
+    state.hasFetchedUser = true 
   },
   setHandledOnlineStatus: (state, payload) => {
     state.handledOnlineStatus = payload 
@@ -55,7 +57,6 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
 const actions = {  
   fetchUser: async context => { 
     firebase.auth().onAuthStateChanged(async user => {
-      console.log('auth state changed!')
       if (user) {
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()

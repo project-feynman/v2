@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1 class="center">Feynman Project (Beta)</h1>
-    <!-- <h4 class="center">Tinder for Psets</h4> -->
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="loading" class="white-text center">Retrieving your information...</p>
     <div id="firebaseui-auth-container"></div>
@@ -48,6 +47,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    hasFetchedUser () {
+      return this.$store.hasFetchedUser
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null

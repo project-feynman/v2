@@ -11,7 +11,7 @@
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
-        label="Search existing classes" 
+        label="Find and add existing subject to dashboard" 
         :allResults="objectOfClasses"   
         @select="payload => addClass(payload)"/>
     </div>
@@ -23,7 +23,7 @@
               <div class="input-field col s12">
                 <i class="material-icons prefix">add</i>
                 <input type="text" id="new-subject" v-model="newSubject">
-                <label for="new-subject">Add a new class on Feynman</label>
+                <label for="new-subject">Create new subject on Feynman</label>
               </div>
             </form>
           </div>
