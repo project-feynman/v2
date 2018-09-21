@@ -27,6 +27,11 @@
     <div class="center" style="margin-top: 25px;">
       <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
+    <div style="width: 90%; margin: auto;">
+      <!-- <h4 class="center">Whiteboard</h4> -->
+      <base-button @click="resetBoard()">Reset whiteboard</base-button>
+    <whiteboard ref="whiteboard"/>
+    </div>
     <div class="flexbox-container">
       <div class="chat-wrapper">
         <h4 class="center">Chatroom</h4>
@@ -45,10 +50,11 @@
           </div>
         </div>
       </div>
-      <div class="whiteboard-wrapper">
+      <!-- <div class="whiteboard-wrapper">
         <h4 class="center">Whiteboard</h4>
-        <whiteboard/>
-      </div>
+        <base-button @click="resetBoard()">Reset whiteboard</base-button>
+        <whiteboard ref="whiteboard"/>
+      </div> -->
     </div>
     <template v-if="journeys">
       <div class="collection-list-wrapper">
@@ -135,8 +141,6 @@ export default {
                          .where('isTalking', '==', true)
 
     await this.$bind('usersViewingPage', queryRef)
-    console.log('users viewing page =', this.usersViewingPage)
-    // great, that works 
 
     let doc = db.collection('chatrooms').doc(roomID)
     let chatRoom = await doc.get()
@@ -160,6 +164,9 @@ export default {
     })
   },
   methods: {
+    resetBoard () {
+      this.$refs.whiteboard.resetBoard()
+    },
     async updateUser () {
       const ref = db.collection('users').doc(this.user.uid)
       await ref.update({

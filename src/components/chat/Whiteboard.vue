@@ -47,7 +47,7 @@ export default {
     tool.onMouseDown = event => {
       PATH = new Path()
       PATH.strokeColor = 'black'
-      PATH.strokeWidth = 7
+      PATH.strokeWidth = 6
     }
     tool.onMouseDrag = event => {
       PATH.add(event.point)
@@ -99,7 +99,7 @@ export default {
       this.whiteboard.allPaths.forEach(stroke => {
         var path = new Path()
         path.strokeColor = 'pink'
-        path.strokeWidth = 7
+        path.strokeWidth = 6
         stroke.points.forEach(p => {
           path.add(new Point(p.x, p.y))
         })
