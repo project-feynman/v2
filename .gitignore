@@ -22,4 +22,4 @@ yarn-error.log*
 *.sw*
 
 .firebase/hosting.ZGlzdA.cache
-functions/index.js
+functions/config.js
