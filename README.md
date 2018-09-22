@@ -1,5 +1,4 @@
-## By giving every student a study group, and a magic whiteboard, the Feynman Project will change the way knowledge is stored and expressed. 
-
+## ...by giving every student a study group and a magic whiteboard
 Table of contents:
   - [Harnessing the potential of student interactions](./doc/harness_potential.md)
   - [Feynman vs Messenger vs Piazza](./doc/facebook_piazza.md) 
