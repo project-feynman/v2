@@ -1,15 +1,23 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
+    <div style="margin: auto; width: 90%;">
+      <template v-if="!doodle">
+         <p>Fetching doodle...</p>
+      </template>
+      <template v-else>
+        <doodle :allStrokes="doodle"/>
+      </template>
+    </div>
     <div class="flexbox-container">
-      <div class="doodle-wrapper">
+      <!-- <div class="doodle-wrapper">
         <template v-if="!doodle">
           <p>Fetching doodle...</p>
         </template>
         <template v-else>
           <doodle :allStrokes="doodle"/>
         </template>
-      </div>
+      </div> -->
       <div class="messages-wrapper">
         <message-history v-if="messages" :messages="messages"/>
       </div>

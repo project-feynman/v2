@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1 class="center">Feynman Project (Beta)</h1>
-    <!-- <h4 class="center">Tinder for Psets</h4> -->
+    <h5 class="center">A conspiracy to bring visual explanations to every subject in the world...</h5>
+    <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="loading" class="white-text center">Retrieving your information...</p>
     <div id="firebaseui-auth-container"></div>
@@ -13,6 +14,7 @@
           </a>
         </router-link>
       </div>
+      
     </template>
     <hr>
     <div class="showcase-container">
@@ -48,6 +50,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    hasFetchedUser () {
+      return this.$store.hasFetchedUser
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null
