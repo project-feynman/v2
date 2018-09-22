@@ -8,4 +8,4 @@ Current Solutions:
   2. Piazza:
      - not live 
      - students rarely respond 
-     - instructor answers lack empathy 
+     - instructor answers lack empathy / have to be intentionally vague since it's completely public 
