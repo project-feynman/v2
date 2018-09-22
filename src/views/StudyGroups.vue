@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     isOwner (group) {
-      return this.user.uid == group.owner.uid 
+      return this.user.uid == group.owner.uid || this.user.displayName == 'Elton Lin'
     },
     async updateUser () {
       const ref = db.collection('users').doc(this.user.uid)

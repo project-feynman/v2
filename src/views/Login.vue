@@ -1,6 +1,8 @@
 <template>
   <div>
     <h1 class="center">Feynman Project (Beta)</h1>
+    <h5 class="center">A conspiracy to bring visual explanations to every subject in the world...</h5>
+    <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="loading" class="white-text center">Retrieving your information...</p>
     <div id="firebaseui-auth-container"></div>
@@ -12,6 +14,7 @@
           </a>
         </router-link>
       </div>
+      
     </template>
     <hr>
     <div class="showcase-container">

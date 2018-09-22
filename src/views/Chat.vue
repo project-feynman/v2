@@ -30,11 +30,13 @@
     <div style="width: 90%; margin: auto;">
       <!-- <h4 class="center">Whiteboard</h4> -->
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
-    <whiteboard ref="whiteboard"/>
+      <whiteboard ref="whiteboard"/>
     </div>
+
     <div class="flexbox-container">
       <div class="chat-wrapper">
-        <h4 class="center">Chatroom</h4>
+        <h4 class="center">Chat</h4>
+        <base-button @click="resetMessages()">Reset chat</base-button>
         <div class="card">
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
@@ -164,6 +166,13 @@ export default {
     })
   },
   methods: {
+    async resetMessages () {
+      const roomID = this.$route.params.room_id
+      const ref = db.collection('chatrooms').doc(roomID)
+      await ref.update({
+        messages: [],
+      })
+    },
     resetBoard () {
       this.$refs.whiteboard.resetBoard()
     },
