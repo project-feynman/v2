@@ -1,4 +1,4 @@
-# A conspiracy to bring visual explanations to every subject in the world.  
+# A conspiracy to bring visual explanations to every subject in the world 
 
 The Feynman Project is:
   - a website that let's you find study groups spontaneously
