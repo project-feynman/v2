@@ -1,4 +1,4 @@
-# The Feynman Project is a conspiracy to bring visual explanations to every subject in the world - by giving every student a study group, a whiteboard, and a magic button. 
+## By giving every student a study group, and a magic whiteboard, the Feynman Project will change the way knowledge is stored and expressed. 
 
 Table of contents:
   - [Harnessing the potential of student interactions](./doc/harness_potential.md)
