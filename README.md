@@ -1,9 +1,4 @@
-# A conspiracy to bring visual explanations to every subject in the world 
-
-The Feynman Project is:
-  - a website that let's you find study groups spontaneously
-  - a conspiracy to change MIT's student culture, then the world's. 
-  - a place where individuals practice to become competent, articulate thinkers  
+# The Feynman Project is a conspiracy to bring visual explanations to every subject in the world - by giving every student a study group, a whiteboard, and a magic button. 
 
 Table of contents:
   - [Harnessing the potential of student interactions](./doc/harness_potential.md)
