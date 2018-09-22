@@ -21,3 +21,8 @@
 10) [When you see someone in hell, get ice cream with them.](./doc/never_abandoned.md)
 
 11) You go to MIT to learn how to think - you learn how to think by 
+
+
+  - a website that let's you find study groups spontaneously
+  - a conspiracy to change MIT's student culture, then the world's. 
+  - a place where individuals practice to become competent, articulate thinkers  
