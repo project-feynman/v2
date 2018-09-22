@@ -1,7 +1,9 @@
 # The Feynman Project will bring visual explanations to every subject in the world.  
 
 [Harnessing the potential of student interactions](./doc/harness_potential.md)
-[Comparison with Facebook Messenger and Piazza](./doc/facebook_and_piazza.md) 
+
+[Comparison with Facebook Messenger and Piazza](./doc/facebook_piazza.md) 
+
 [A letter to my nameless friend](./doc/my_promise.md)
 
 Feynman is also: 
