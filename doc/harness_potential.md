@@ -8,7 +8,7 @@ Keywords: "en route", "by-product", "effortless"
 
 Explanations through the site can be saved with one click. The resultingan animated doodle with an 
 
-# 1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students.
+1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students:
 
 You are observing your friend Adam, who understands f*ck all about Thermodynamics. Then, suddenly, he visits the TA's office. You wonder what's going on in there behind closed doors, but before long, Adam emerges again. "Eureka!", he says, "I get it now!".
 
