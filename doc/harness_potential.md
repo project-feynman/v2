@@ -1,4 +1,4 @@
-TL;DR
+# TL;DR
 
 The site has a realtime chat and whiteboard. With one click of a button, any explanation can be saved. The result is a "Journey" - an animated doodle accompanied by the relevant chat log. The best Journeys then go on to become invaluable learning resources for all other students.
 
