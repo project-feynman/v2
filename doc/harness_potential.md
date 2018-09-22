@@ -1,5 +1,10 @@
-Solution:
-  Have access to classmates who happen to be doing the same questions - and leave behind the discussions without much effort. 
+The site has a realtime chat and whiteboard. With one click of a button, any explanation can be saved. The result is a "Journey" - an animated doodle accompanied by the relevant chat log. The best Journeys then go on to become invaluable learning resources for all other students.
+
+Keywords: "en route", "by-product", "effortless"
+
+Explanations through the site can be saved with one click. The resultingan animated doodle with an 
+
+Exposition: 
 
 # 1-on-1 teaching interactions, if "captured",  become priceless learning resources for other students.
 
