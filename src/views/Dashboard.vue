@@ -112,7 +112,6 @@ export default {
     },
     async loadSubjects () {
       this.feedback = 'Fetching your classes...'
-      console.log('feedback has been set')
       if (!this.user.enrolledSubjects) {
         this.loading = false 
         this.subjects = [] 

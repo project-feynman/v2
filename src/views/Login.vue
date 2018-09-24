@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- https://firebase.google.com/docs/auth/web/google-signin -->
     <h1 class="center">Feynman Project (Beta)</h1>
     <h5 class="center">A conspiracy to bring visual explanations to every subject in the world...</h5>
     <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
