@@ -4,6 +4,7 @@ export { askNotificationPermission, sendSubscriptionToFirestore, getSubscription
 
 var currentSubInDb = false
 var sub = undefined
+var uid = undefined
 var publicVapidKey = 'BBC2Ob2X8oKIOTZ8No75dd47WC9OgVgzvmjCAtVV3r6h9ohQZIlGfXl-bEVu1KQ3xQNmGRuynUy4NFch0rY4etE'
 //const messaging = firebase.messaging()
 //messaging.usePublicVapidKey("BJ0Ou0MdMi6KAqeA8BOcmsFkzYCX0Uw5WmXZorqcgZX1Uf55bpJjbvb-Hq5eFajOXwI-j-w-D-o7X7J5FWJ34y4")
@@ -17,25 +18,33 @@ const askNotificationPermission = async () => {
 	await Notification.requestPermission(result => { })
 }
 
-const sendSubscriptionToFirestore = async uid => {
+const sendSubscriptionToFirestore = async (user_id = undefined, subscription = undefined) => {
   if(!currentSubInDb) {
-		const ref = db.collection('users').doc(uid)
-		const snapshot = await ref.get()
-		const doc = snapshot.data()
-		const sub = JSON.stringify(getSubscription())
-		if(!doc.subscriptions) {
-			doc.subscriptions = []
+		if(user_id && !uid) {
+			uid = user_id
 		}
-		if(!sub) {
-			return
+		if(subscription && !sub) {
+			sub = subscription
 		}
-		if(doc.subscriptions.includes(sub)) {
-			currentSubInDb = true
-		}
-		else {
-			doc.subscriptions.push(sub)
-			ref.set(doc)
-			currentSubInDb = true
+		if(uid && sub) {
+			const ref = db.collection('users').doc(uid)
+			const snapshot = await ref.get()
+			const doc = snapshot.data()
+			const sub = JSON.stringify(getSubscription())
+			if(!doc.subscriptions) {
+				doc.subscriptions = []
+			}
+			if(!sub) {
+				return
+			}
+			if(doc.subscriptions.includes(sub)) {
+				currentSubInDb = true
+			}
+			else {
+				doc.subscriptions.push(sub)
+				ref.set(doc)
+				currentSubInDb = true
+			}
 		}
   }
 }
@@ -68,7 +77,7 @@ if ('Notification' in window && 'serviceWorker' in navigator) {
 		console.log(subscribeOptions)
 		registration.pushManager.subscribe(subscribeOptions).then(subscription => {
 			console.log(JSON.stringify(subscription))
-			sub = subscription
+			sendSubscriptionToFirestore(undefined, subscription)
 		})
 	})
 	.catch(error => console.log('error =', error))
