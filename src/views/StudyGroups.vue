@@ -108,7 +108,6 @@ export default {
     }
   },
   async created () {
-    // obtain the study group from there
     const subject_id = this.$route.params.subject_id
     const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
     const studentsRef = db.collection('users')

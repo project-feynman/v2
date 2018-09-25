@@ -15,7 +15,6 @@
           </a>
         </router-link>
       </div>
-      
     </template>
     <hr>
     <div class="showcase-container">
