@@ -18,6 +18,7 @@ const mutations = {
   setUser: (state, payload) => {
     state.user = payload
     state.hasFetchedUser = true 
+    console.log('set has fetched user to true')
   },
   setHandledOnlineStatus: (state, payload) => {
     state.handledOnlineStatus = payload 

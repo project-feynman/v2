@@ -1,20 +1,26 @@
 <template>
   <div>
-    <!-- https://firebase.google.com/docs/auth/web/google-signin -->
     <h1 class="center">Feynman Project (Beta)</h1>
     <h5 class="center">A conspiracy to bring visual explanations to every subject in the world...</h5>
     <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
-    <p v-if="loading" class="white-text center">Retrieving your information...</p>
+    <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <div id="firebaseui-auth-container"></div>
-    <template v-if="isLoggedIn">
-      <div class="dashboard-button center">
-        <router-link to="/subjects">
-          <a class="btn-floating pulse pink btn-large">
-            <i class="material-icons">dashboard</i>
-          </a>
-        </router-link>
-      </div>
+    <template v-if="hasFetchedUser">
+      <template v-if="user != null">
+        <div class="dashboard-button center">
+          <router-link to="/subjects">
+            <a class="btn-floating pulse pink btn-large">
+              <i class="material-icons">dashboard</i>
+            </a>
+          </router-link>
+        </div>
+      </template>
+      <template v-else>
+        <div class="center">
+          <base-button style="margin: auto;" @click="signInWithPopup()">Login with Google</base-button>
+        </div>
+      </template>
     </template>
     <hr>
     <div class="showcase-container">
@@ -41,9 +47,27 @@ export default {
       this.showcase = doc.data() 
     }
   },
+  methods: {
+    signInWithPopup() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(result => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // ...
+      }).catch(error => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+      })
+    }
+  },
   data () {
     return {
-      loading: true,
       showcase: null
     }
   },
@@ -52,31 +76,14 @@ export default {
       return this.$store.state.user
     },
     hasFetchedUser () {
-      return this.$store.hasFetchedUser
-    },
-    isLoggedIn () {
-      return this.user != 'undetermined' && this.user != null
+      return this.$store.state.hasFetchedUser
     }
   },
   watch: {
     user () {
-      if (!this.isLoggedIn) {
-        this.loading = false 
-        // sign up user to Firebase - register in Firestore immediately after redirect
-        var ui = new firebaseui.auth.AuthUI(firebase.auth())
-        ui.start('#firebaseui-auth-container', {
-          signInSuccessUrl: '/subjects',
-          signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
-        })
-      } else if (this.user.displayName) {
-        this.loading = false 
+      if (this.hasFetchedUser && this.user != null) {
         this.$router.push('/subjects')
       }
-    }
-  },
-  mounted () {
-    if (this.isLoggedIn) {
-      this.loading = false
     }
   }
 }
