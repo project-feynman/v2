@@ -9,6 +9,7 @@ import paper from 'paper'
 import db from '@/firebase/init.js'
 
 var PATH = null 
+var STROKE_WIDTH = 4
 
 export default {
   props: {
@@ -71,7 +72,7 @@ export default {
     drawPath (data) {
       var path = new Path()
       path.strokeColor = 'pink'
-      path.strokeWidth = 6 
+      path.strokeWidth = STROKE_WIDTH
       data.points.forEach(point => {
         path.add(new Point(this.scaleFactor * point.x, this.scaleFactor * point.y))
       })

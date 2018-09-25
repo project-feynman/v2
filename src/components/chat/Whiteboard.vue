@@ -13,6 +13,7 @@ import { version } from 'moment'
 import db from '@/firebase/init.js'
 
 var PATH = null 
+var STROKE_WIDTH = 4
 
 export default {
   created () {
@@ -47,7 +48,7 @@ export default {
     tool.onMouseDown = event => {
       PATH = new Path()
       PATH.strokeColor = 'black'
-      PATH.strokeWidth = 6
+      PATH.strokeWidth = STROKE_WIDTH
     }
     tool.onMouseDrag = event => {
       PATH.add(event.point)
@@ -99,7 +100,7 @@ export default {
       this.whiteboard.allPaths.forEach(stroke => {
         var path = new Path()
         path.strokeColor = 'pink'
-        path.strokeWidth = 6
+        path.strokeWidth = STROKE_WIDTH
         stroke.points.forEach(p => {
           path.add(new Point(p.x, p.y))
         })
