@@ -90,12 +90,12 @@ export default {
   data () {
     return {
       hasFetchedJourneys: false, 
+      isSharingJourney: false,
       chatroom: {},
       whiteboard: {},
       journeys: [],
       newJourneyTitle: '', 
       feedback: '',
-      isSharingJourney: false,
       usersViewingPage: []
     }
   },
@@ -103,32 +103,26 @@ export default {
     user () {
       return this.$store.state.user
     },
+    hasFetchedUser () {
+      return this.$store.state.hasFetchedUser 
+    },
     isLoggedIn () {
       return this.user != null && this.user != 'undetermined'
     }
   },
   watch: {
-    // don't want to execute this more than twice
-    user () {
-      if (this.isLoggedIn) {
-        this.addToRecentChat()
-        this.updateParticipants() 
-      }
+    user: {
+      handler: 'handleMembershipLogic',
+      immediate: true 
     },
     chatroom () {
       if (this.chatRoom != {}) {
         this.fetchJourneys()
       }
-    },
-    participants () {
-      console.log('participants changed')
-      // display online users among the participants
     }
   },
   async created () {
-    if (this.isLoggedIn) {
-      this.addToRecentChat() // this does more than just addToRecentChat()
-    }
+    // display users viewing the page 
     const roomID = this.$route.params.room_id
     const queryRef = db.collection('users')
                          .where('recentChatID', '==', roomID)
@@ -142,6 +136,7 @@ export default {
     if (!chatRoom.data()) {
       this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
     }
+
     // fetch messages from Firestore and set up syncing 
     await doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
@@ -150,6 +145,7 @@ export default {
         this.participants = data.participants
       }
     })
+
     // fetch drawing from Firestore and set up syncing 
     const whiteboardDoc = db.collection('whiteboards').doc(roomID)
     whiteboardDoc.onSnapshot(snapshot => {
@@ -195,6 +191,12 @@ export default {
       await ref.update({
         isTalking: true 
       })
+    },
+    handleMembershipLogic () {
+      if (this.hasFetchedUser && this.user != null) {
+        this.updateParticipants()
+        this.addToRecentChat() 
+      }
     },
     async updateParticipants () {
       const roomID = this.$route.params.room_id 
