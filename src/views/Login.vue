@@ -5,7 +5,6 @@
     <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
-    <div id="firebaseui-auth-container"></div>
     <template v-if="hasFetchedUser">
       <template v-if="user != null">
         <div class="dashboard-button center">
@@ -32,7 +31,6 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import firebaseui from 'firebaseui'
 import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'
 
