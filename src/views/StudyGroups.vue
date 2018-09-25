@@ -40,16 +40,13 @@
               </p>
               <floating-button iconName="slideshow" 
                                color="green" 
-                               tooltipText="Enter group chat"
                                @click="$router.push('/chat/' + group.id)"/>
               <template v-if="isOwner(group)">
                 <floating-button iconName="mode_edit" 
                                  color="yellow darken-2" 
-                                 tooltipText="Edit title"
                                  @click="editGroup(group)"/>
                 <floating-button iconName="delete" 
                                  color="red" 
-                                 tooltipText="Delete group" 
                                  @click="deleteGroup(group)"/>
               </template>
             </base-card>

@@ -17,7 +17,6 @@
                 <floating-button 
                               color="pink"
                               iconName="slideshow" 
-                              :tooltipText="`Do p-set ${getCurrentPset(subject)}`"
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
                   <floating-button iconName="settings" 
