@@ -74,10 +74,9 @@ export default {
       feedback: ''
     }
   },
-  // use smart watchers
   watch: {
     user: {
-      handler: 'loadSubjects', // called 
+      handler: 'loadSubjects', 
       immediate: true
     }
   },

@@ -112,6 +112,7 @@ export default {
     user () {
       if (this.isLoggedIn) {
         this.addToRecentChat()
+        this.updateParticipants() 
       }
     },
     chatroom () {
@@ -193,6 +194,17 @@ export default {
       // we set isTalking to false when the user visits the Question page again 
       await ref.update({
         isTalking: true 
+      })
+    },
+    async updateParticipants () {
+      const roomID = this.$route.params.room_id 
+      const ref = db.collection('chatrooms').doc(roomID)
+      const simplifiedUser = {
+        displayName: this.user.displayName,
+        uid: this.user.uid 
+      }
+      await ref.update({
+        participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
       })
     },
     redirect ({ id }) {
