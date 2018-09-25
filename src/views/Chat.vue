@@ -4,7 +4,6 @@
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
         <p slot="header" class="teal-text center">
           Discuss questions with the chat and a realtime whiteboard.
-          For harder questions, meet up in real life. 
           Pressing the "share" icon will record the drawings and the chat history into a "discussion" that can be viewed by 
           all other study groups.
         </p>
@@ -154,6 +153,12 @@ export default {
       }
     })
   },
+  async destroyed () {
+    const ref = db.collection('users').doc(this.user.uid)
+    await ref.update({
+      isTalking: false 
+    })
+  },
   methods: {
     async resetMessages () {
       const roomID = this.$route.params.room_id
@@ -182,15 +187,13 @@ export default {
     },
     async addToRecentChat () {
       const roomID = this.$route.params.room_id
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        chatrooms: firebase.firestore.FieldValue.arrayUnion(roomID)
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        chatrooms: firebase.firestore.FieldValue.arrayUnion(roomID),
+        isTalking: true,
+        recentChatID: roomID
       })
       // chats with new messages should float towards the top 
-      // we set isTalking to false when the user visits the Question page again 
-      await ref.update({
-        isTalking: true 
-      })
     },
     handleMembershipLogic () {
       if (this.hasFetchedUser && this.user != null) {

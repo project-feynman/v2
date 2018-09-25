@@ -10,7 +10,7 @@
         </a>
         <ul class="right hide-on-med-and-down">
           <li v-show="isLoggedIn">
-            <a id="dropdown-trigger" href="#!" data-target="dropdown1">
+            <a id="dropdown-trigger" href="#!" data-target="dropdown">
               Chat
               <i class="material-icons right">chat</i>
             </a>
@@ -25,8 +25,7 @@
         </ul>
       </div>
     </nav>
-    <!-- dropdown  -->
-    <ul id="dropdown1" class="dropdown-content">
+    <ul id="dropdown" class="dropdown-content">
       <template v-if="user">
         <template v-if="user.chatrooms"
                   v-for="(room, idx) in user.chatrooms">
@@ -109,17 +108,6 @@ export default {
     async signOut () {
       await this.$store.dispatch('logOut')
       this.$router.push('/')
-    },
-    async markNotifAsRead () {
-      const notifs = this.user.notifications
-      const roomId = notifs[notifs.length - 1].roomId 
-      this.$router.push(`/chat/${roomId}`) 
-      this.newNotif = false 
-      notifs[notifs.length - 1].new = false 
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        notifications: notifs 
-      })
     },
     redirectToChat (roomID) {
       this.$router.push(`/chat/${roomID}`)

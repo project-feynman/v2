@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase/app'
-import 'firebase/database'
 import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/database'
 import db from '@/firebase/init.js'
 
 Vue.use(Vuex)
@@ -18,7 +18,6 @@ const mutations = {
   setUser: (state, payload) => {
     state.user = payload
     state.hasFetchedUser = true 
-    console.log('set has fetched user to true')
   },
   setHandledOnlineStatus: (state, payload) => {
     state.handledOnlineStatus = payload 
