@@ -29,7 +29,10 @@
       <template v-if="user">
         <template v-if="user.chatrooms"
                   v-for="(room, idx) in user.chatrooms">
-          <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
+          <div :key="idx">
+            <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
+            <li class="divider"></li>
+          </div>
         </template>
       </template>
     </ul>
@@ -49,6 +52,12 @@ export default {
   watch: {
     async user () {
       if (this.isLoggedIn) {
+        // fetch chatroom details through the references 
+        var chatroomValues = [] 
+        // has to be fully live
+        // this.user.chatrooms.forEach(room => {
+          
+        // })
         // display notifications, if there are any 
         const notifs = this.user.notifications
         if (notifs) {
