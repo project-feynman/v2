@@ -1,23 +1,21 @@
 <template>
   <div>
-    <h1 class="center">Feynman Project (Beta)</h1>
-    <h5 class="center">A conspiracy to bring visual explanations to every subject in the world...</h5>
-    <h5 class="center">by giving every student a study group and a magic whiteboard</h5>
+    <h1>Feynman Project (Beta)</h1>
+    <h5>A conspiracy to bring visual explanations to every subject in the world...</h5>
+    <h5>by giving every student a study group and a magic whiteboard</h5>
     <p class="center pink-text">(Beta is another way of saying - 'if something doesn't work, just refresh')</p>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <template v-if="hasFetchedUser">
       <template v-if="user != null">
-        <div class="dashboard-button center">
+        <div class="dashboard-button">
           <router-link to="/subjects">
-            <a class="btn-floating pulse pink btn-large">
-              <i class="material-icons">dashboard</i>
-            </a>
+            <pulse-button size="large" iconName="dashboard"/>
           </router-link>
         </div>
       </template>
       <template v-else>
         <div class="center">
-          <base-button style="margin: auto;" @click="signInWithPopup()">Login with Google</base-button>
+          <base-button @click="signInWithPopup()">Login with Google</base-button>
         </div>
       </template>
     </template>
@@ -33,10 +31,12 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'
+import PulseButton from '@/components/reusables/PulseButton.vue'
 
 export default {
   components: {
-    Journey
+    Journey,
+    PulseButton
   },
   async created () {
     const ref = db.collection('conversations').doc('mfRdL2JDbkhhemLGlvs5')
@@ -76,13 +76,6 @@ export default {
     hasFetchedUser () {
       return this.$store.state.hasFetchedUser
     }
-  },
-  watch: {
-    user () {
-      if (this.hasFetchedUser && this.user != null) {
-        this.$router.push('/subjects')
-      }
-    }
   }
 }
 </script>
@@ -95,9 +88,7 @@ p {
 .showcase-container {
   margin: auto;
 } 
-</style>
 
-<style scoped>
 .light-card {
   padding: 20px;
 }
@@ -110,6 +101,11 @@ p {
 .dashboard-button {
   padding-top: 30px;
   padding-bottom: 30px;
+  @extend .center;
+}
+
+h1, h5 {
+  @extend .center;
 }
 
 h1 {
