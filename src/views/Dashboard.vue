@@ -19,10 +19,12 @@
                               iconName="slideshow" 
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
-                  <floating-button iconName="settings" 
+                  <floating-button 
+                            iconName="settings" 
                             color="grey darken-1" 
                             @click="startEdit(subject)"/>
-                  <floating-button iconName="delete" 
+                  <floating-button 
+                            iconName="delete" 
                             color="black" 
                             @click="removeSubject(subject)"/>
                 </template>
@@ -72,18 +74,11 @@ export default {
       feedback: ''
     }
   },
-  async created () {
-    if (this.isLoggedIn) {
-      this.loadSubjects()
-    }
-  },
+  // use smart watchers
   watch: {
-    user () {
-      if (this.isLoggedIn) {
-        if (!this.hasLoadedSubjects) {
-          this.loadSubjects()
-        }
-      }
+    user: {
+      handler: 'loadSubjects', // called 
+      immediate: true
     }
   },
   methods: {
@@ -110,6 +105,12 @@ export default {
       this.loadSubjects() 
     },
     async loadSubjects () {
+       if (!this.isLoggedIn) {
+         return 
+       }
+      if (this.hasLoadedSubjects) {
+        return 
+      }
       this.feedback = 'Fetching your classes...'
       if (!this.user.enrolledSubjects) {
         this.loading = false 

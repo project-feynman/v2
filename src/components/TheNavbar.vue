@@ -27,9 +27,11 @@
     </nav>
     <!-- dropdown  -->
     <ul id="dropdown1" class="dropdown-content">
-      <template v-if="user.chatrooms"
-                v-for="(room, idx) in user.chatrooms">
-        <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
+      <template v-if="user">
+        <template v-if="user.chatrooms"
+                  v-for="(room, idx) in user.chatrooms">
+          <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
+        </template>
       </template>
     </ul>
   </div>
