@@ -28,11 +28,9 @@
       <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
     <div style="width: 90%; margin: auto;">
-      <!-- <h4 class="center">Whiteboard</h4> -->
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
       <whiteboard ref="whiteboard"/>
     </div>
-
     <div class="flexbox-container">
       <div class="chat-wrapper">
         <h4 class="center">Chat</h4>
@@ -52,11 +50,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="whiteboard-wrapper">
-        <h4 class="center">Whiteboard</h4>
-        <base-button @click="resetBoard()">Reset whiteboard</base-button>
-        <whiteboard ref="whiteboard"/>
-      </div> -->
     </div>
     <template v-if="journeys">
       <div class="collection-list-wrapper">
@@ -75,9 +68,9 @@
 </template>
 
 <script>
-import moment from 'moment'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import moment from 'moment'
 import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
 import Whiteboard from '@/components/chat/Whiteboard.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
@@ -129,7 +122,6 @@ export default {
     participants () {
       console.log('participants changed')
       // display online users among the participants
-      // don't get annoying notifications
     }
   },
   async created () {
@@ -192,12 +184,14 @@ export default {
       return moment(timestamp).format("lll")
     },
     async addToRecentChat () {
-      const userRef = db.collection('users').doc(this.user.uid)
-      await userRef.update({
-        recentChatID: this.$route.params.room_id
+      const roomID = this.$route.params.room_id
+      const ref = db.collection('users').doc(this.user.uid)
+      await ref.update({
+        chatrooms: firebase.firestore.FieldValue.arrayUnion(roomID)
       })
+      // chats with new messages should float towards the top 
       // we set isTalking to false when the user visits the Question page again 
-      await userRef.update({
+      await ref.update({
         isTalking: true 
       })
     },

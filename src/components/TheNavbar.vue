@@ -27,10 +27,10 @@
     </nav>
     <!-- dropdown  -->
     <ul id="dropdown1" class="dropdown-content">
-      <li><a href="#!">one</a></li>
-      <li><a href="#!">two</a></li>
-      <li class="divider"></li>
-      <li><a href="#!">three</a></li>
+      <template v-if="user.chatrooms"
+                v-for="(room, idx) in user.chatrooms">
+        <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
+      </template>
     </ul>
   </div>
 </template>
@@ -67,28 +67,26 @@ export default {
             const ref = db.collection('users').doc(this.user.uid)
           }
         }
-				// sending the current location to Firestore
-				getPermissionForGeolocation(position => { 
-          if (this.hasSentPosition) {
-            return 
-          } 
-					sendPositionToFirestore(this.user.uid, 
-					{ 
-						accuracy: position.coords.accuracy,
-						longitude: position.coords.longitude,
-						latitude: position.coords.latitude,
-						timestamp: position.timestamp
-          })
-          this.hasSentPosition = true 
-				})
+        // UPDATE: don't store locations for current MVP 
+				// getPermissionForGeolocation(position => { 
+        //   if (this.hasSentPosition) {
+        //     return 
+        //   } 
+				// 	sendPositionToFirestore(this.user.uid, 
+				// 	{ 
+				// 		accuracy: position.coords.accuracy,
+				// 		longitude: position.coords.longitude,
+				// 		latitude: position.coords.latitude,
+				// 		timestamp: position.timestamp
+        //   })
+        //   this.hasSentPosition = true 
+				// })
       }
     }
   },
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
-    console.log('elem =', elem)
     M.Dropdown.init(elem)
-    console.log('initialized dropdown')
   },
   computed: {
     user () {
@@ -120,6 +118,9 @@ export default {
       await ref.update({
         notifications: notifs 
       })
+    },
+    redirectToChat (roomID) {
+      this.$router.push(`/chat/${roomID}`)
     }
   }
 }
