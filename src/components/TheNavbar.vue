@@ -12,6 +12,7 @@
         </template>
         <ul class="right hide-on-med-and-down">
           <template v-if="isLoggedIn">
+            <li><a id="dropdown-trigger" href="#!" data-target="dropdown1">Chat<i class="material-icons right">chat</i></a></li>
             <li>
               <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
                 Logout
@@ -21,11 +22,13 @@
         </ul>
       </div>
     </nav>
-    <!-- <template v-if="isLoggedIn">
-      <popup-modal v-if="newNotif" @close="markNotifAsRead()">
-        <h4 slot="header" class="teal-text center">Someone is asking you a question</h4>
-      </popup-modal>
-    </template> -->
+    <!-- dropdown  -->
+    <ul id="dropdown1" class="dropdown-content">
+      <li><a href="#!">one</a></li>
+      <li><a href="#!">two</a></li>
+      <li class="divider"></li>
+      <li><a href="#!">three</a></li>
+    </ul>
   </div>
 </template>
 
@@ -80,10 +83,8 @@ export default {
     }
   },
   mounted () {
-    const elem1 = document.getElementById('dropdown-trigger-1')
-    const elem2 = document.getElementById('dropdown-trigger-2')
-    M.Dropdown.init(elem1)
-    M.Dropdown.init(elem2)
+    const elem = document.getElementById('dropdown-trigger')
+    M.Dropdown.init(elem)
   },
   computed: {
     user () {
