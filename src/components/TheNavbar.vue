@@ -2,17 +2,20 @@
   <div>
     <nav>
       <div class="nav-wrapper grey lighten-5">
-        <template v-show="isLoggedIn == true">
-          <a class="brand-logo">
-            <router-link to="/subjects">
-              <i class="material-icons right">home</i>
-              Feynman
-            </router-link>
-          </a>
-        </template>
+        <a v-show="isLoggedIn" class="brand-logo">
+          <router-link to="/subjects">
+            <i class="material-icons right">home</i>
+            Feynman
+          </router-link>
+        </a>
         <ul class="right hide-on-med-and-down">
+          <li v-show="isLoggedIn">
+            <a id="dropdown-trigger" href="#!" data-target="dropdown1">
+              Chat
+              <i class="material-icons right">chat</i>
+            </a>
+          </li>
           <template v-if="isLoggedIn">
-            <li><a id="dropdown-trigger" href="#!" data-target="dropdown1">Chat<i class="material-icons right">chat</i></a></li>
             <li>
               <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
                 Logout
@@ -55,7 +58,6 @@ export default {
             }
           }
         }
-				console.log(this.user.uid)
         if (!this.hasFetchedToken) {
           // generate tokens if the user is new 
           this.hasFetchedToken = true 
@@ -84,7 +86,9 @@ export default {
   },
   mounted () {
     const elem = document.getElementById('dropdown-trigger')
+    console.log('elem =', elem)
     M.Dropdown.init(elem)
+    console.log('initialized dropdown')
   },
   computed: {
     user () {

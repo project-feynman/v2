@@ -1,7 +1,7 @@
 <template>
   <div class="new-message">
     <form @submit.prevent="addMessage">
-      <label for="new-message">New message</label>
+      <label for="new-message">Write a new message below...</label>
       <input type="text" name="new-message" v-model="newMessage">
     </form>
   </div>
@@ -47,22 +47,10 @@ export default {
           author,
           timestamp: Date.now()
         })
-
-        // if (!this.participants.includes(author)) {
-        //   console.log('new author')
-        //   var copy = this.participants
-        //   copy.push(author)
-        //   await chatRoomRef.update({
-        //     messages: this.messages,
-        //     participants: copy 
-        //   })
-        // } else {
         await chatRoomRef.update({
           messages: this.messages,
           participants: firebase.firestore.FieldValue.arrayUnion(author)
         })
-
-        
       }
     }
   }
