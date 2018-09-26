@@ -26,14 +26,15 @@
       </div>
     </nav>
     <ul id="dropdown" class="dropdown-content">
-      <template v-if="user">
-        <template v-if="user.chatrooms"
-                  v-for="(room, idx) in user.chatrooms">
-          <div :key="idx">
-            <li :key="idx"><a :href="`/chat/${room}`">{{ room }}</a></li>
-            <li class="divider"></li>
-          </div>
-        </template>
+      <template v-if="chatrooms"
+                v-for="(room, idx) in chatrooms">
+        <div :key="idx">
+          <li :key="idx">
+            <a :href="`/chat/${room.id}`">{{ room.title }}          
+              <span v-if="true" class="new badge">4</span>
+            </a></li>
+          <li class="divider"></li>
+        </div>
       </template>
     </ul>
   </div>
@@ -53,11 +54,7 @@ export default {
     async user () {
       if (this.isLoggedIn) {
         // fetch chatroom details through the references 
-        var chatroomValues = [] 
-        // has to be fully live
-        // this.user.chatrooms.forEach(room => {
-          
-        // })
+        this.fetchChatDocs()
         // display notifications, if there are any 
         const notifs = this.user.notifications
         if (notifs) {
@@ -110,10 +107,25 @@ export default {
     return {
       newNotif: false,
       hasFetchedToken: false,
-      hasSentPosition: false
+      hasSentPosition: false,
+      chatrooms: []
     }
   },
   methods: {
+    async fetchChatDocs () {
+      const chats = this.user.chatrooms
+      const n = chats.length 
+      this.chatrooms = new Array(n).fill(0)
+      for (var i=0; i<n; i++) {
+        const ref = db.collection('chatrooms').doc(chats[i])
+        const idx = i // necessary - snapShots persist after the function call, and it'll reference the final value of i (which is n)
+        ref.onSnapshot(doc => {
+          var data = doc.data()
+          data.id = doc.id 
+          this.$set(this.chatrooms, idx, data)
+        })
+      }
+    },
     async signOut () {
       await this.$store.dispatch('logOut')
       this.$router.push('/')

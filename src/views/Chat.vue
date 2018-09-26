@@ -15,7 +15,16 @@
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <template v-if="journeys">
       <div class="collection-list-wrapper">
-        <collection-list title="Users with the page open somewhere" :listItems="usersViewingPage">
+        <collection-list title="Users with this chat open somewhere" :listItems="usersViewingPage">
+          <template slot-scope="{ item }">
+            {{ item.displayName }}
+          </template>
+        </collection-list>
+      </div>
+    </template>
+    <template v-if="chatroom">
+      <div style="margin: auto; width: 40%;">
+        <collection-list title="Group Chat Members" :listItems="chatroom.participants">
           <template slot-scope="{ item }">
             {{ item.displayName }}
           </template>
