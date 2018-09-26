@@ -287,6 +287,11 @@ export default {
         participants: firebase.firestore.FieldValue.arrayRemove(simplifiedUser)
       })
       console.log('deleted participants')
+      // remove reference from the user's perspective
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        chatrooms: firebase.firestore.FieldValue.arrayRemove(roomID)
+      })
     }
   }
 }
