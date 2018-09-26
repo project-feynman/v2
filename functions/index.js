@@ -63,7 +63,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatrooms/{roo
 				return;
 			}
 			receiverSubscriptions.forEach(function(sub) {
-				console.log(sub + 'should work')
+				console.log(sub + ' ')
 				const subscription = JSON.parse(sub)
 				const payload = {
 					senderName,
@@ -71,7 +71,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatrooms/{roo
 					type: "message"
 				}
 				console.log(payload)
-				webpush.sendNotification(subscription, JSON.stringify(payload)).catch((err) => console.log(error))
+				webpush.sendNotification(subscription, JSON.stringify(payload)).catch((err) => console.log(err))
 			})
 		})
 	})
