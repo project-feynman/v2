@@ -53,7 +53,6 @@ export default {
   watch: {
     async user () {
       if (this.isLoggedIn) {
-        // fetch chatroom details through the references 
         this.fetchChatDocs()
         // display notifications, if there are any 
         const notifs = this.user.notifications

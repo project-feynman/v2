@@ -13,6 +13,8 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
+    <base-button @click="updateParticipants()">Join group</base-button>
+    <base-button @click="leaveGroup()">Leave group</base-button>
     <template v-if="journeys">
       <div class="collection-list-wrapper">
         <collection-list title="Users with this chat open somewhere" :listItems="usersViewingPage">
@@ -198,15 +200,12 @@ export default {
       const roomID = this.$route.params.room_id
       const userRef = db.collection('users').doc(this.user.uid)
       await userRef.update({
-        chatrooms: firebase.firestore.FieldValue.arrayUnion(roomID),
         isTalking: true,
         recentChatID: roomID
       })
-      // chats with new messages should float towards the top 
     },
     handleMembershipLogic () {
       if (this.hasFetchedUser && this.user != null) {
-        this.updateParticipants()
         this.addToRecentChat() 
       }
     },
@@ -219,6 +218,11 @@ export default {
       }
       await ref.update({
         participants: firebase.firestore.FieldValue.arrayUnion(simplifiedUser)
+      })
+      // add reference to the group chat
+      const userRef = db.collection('users').doc(this.user.uid)
+      await userRef.update({
+        chatrooms: firebase.firestore.FieldValue.arrayUnion(roomID),
       })
     },
     redirect ({ id }) {
@@ -271,6 +275,18 @@ export default {
     async processDeleteAttempt (journey) {
       const ref = db.collection('conversations').doc(journey.id) 
       await ref.delete()
+    },
+    async leaveGroup () {
+      const simplifiedUser = {
+        displayName: this.user.displayName,
+        uid: this.user.uid
+      }
+      const roomID = this.$route.params.room_id
+      const ref = db.collection('chatrooms').doc(roomID)
+      await ref.update({
+        participants: firebase.firestore.FieldValue.arrayRemove(simplifiedUser)
+      })
+      console.log('deleted participants')
     }
   }
 }
