@@ -1,8 +1,13 @@
 # TL;DR
 
-The site has a realtime chat and whiteboard. With one click of a button, any explanation can be saved. The result is a "Journey" - an animated doodle accompanied by the relevant chat log. The best Journeys then go on to become invaluable learning resources for all other students.
+## Problem: 
+In study groups and Office Hours, elegant explanations are passed around all the time – but none is “captured”. 
+## Solution: 
+Feynman lets students generate elegant explanations as by-products of their discussions
 
 # Exposition
+
+The site has a realtime chat and whiteboard. With one click of a button, any explanation can be saved. The result is a "Journey" - an animated doodle accompanied by the relevant chat log. The best Journeys then go on to become invaluable learning resources for all other students.
 
 Keywords: "en route", "by-product", "effortless"
 
