@@ -21,12 +21,15 @@ const askNotificationPermission = async () => {
 const sendSubscriptionToFirestore = async (user_id = undefined, subscription = undefined) => {
   if(!currentSubInDb) {
 		if(user_id && !uid) {
+			console.log('uid given')
 			uid = user_id
 		}
 		if(subscription && !sub) {
+			console.log('sub given')
 			sub = subscription
 		}
 		if(uid && sub) {
+			console.log('both here wooo')
 			const ref = db.collection('users').doc(uid)
 			const snapshot = await ref.get()
 			const doc = snapshot.data()
@@ -70,15 +73,31 @@ if ('Notification' in window && 'serviceWorker' in navigator) {
   navigator.serviceWorker
 	.register('/sw.js')
 	.then(registration => {
+		const applicationServerKey = urlBase64ToUint8Array(publicVapidKey)
 		const subscribeOptions = {
-			applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+			applicationServerKey,
 			userVisibleOnly: true
 		}
-		console.log(subscribeOptions)
-		registration.pushManager.subscribe(subscribeOptions).then(subscription => {
-			console.log(JSON.stringify(subscription))
-			sendSubscriptionToFirestore(undefined, subscription)
-		})
+		registration.pushManager.getSubscription().then(function(subscription) {
+			const applicationServerKeyArray = new Uint8Array(subscription.options.applicationServerKey)
+			var areApplicationServerKeysSame = true
+
+			for(var i = 0; i < applicationServerKeyArray.length; i++) {
+				if(applicationServerKeyArray[i] == applicationServerKey[i]) {
+					areApplicationServerKeysSame = false
+					break
+				}
+			}
+
+			if(!subscription || areApplicationServerKeysSame) {
+				console.log('wrong subscription or no subscription')
+				registration.pushManager.subscribe(subscribeOptions).then(newSubscription => sendSubscriptionToFirestore(undefined, subscription))
+			}
+			else {
+				console.log('good subscription. sending')
+				sendSubscriptionToFirestore(undefined, subscription)
+			}
+		}) 
 	})
 	.catch(error => console.log('error =', error))
 }
