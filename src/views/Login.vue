@@ -45,16 +45,11 @@ export default {
   },
   methods: {
     signInWithPopup() {
-      var provider = new firebase.auth.GoogleAuthProvider();
+      var provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider).then(result => {
         // Google Access Token - can use for Google API.
         // var token = result.credential.accessToken
-      }).catch(error => {
-        var errorCode = error.code
-        var errorMessage = error.message
-        var email = error.email
-        var credential = error.credential
-      })
+      }).catch(error => console.log(error))
     }
   },
   data () {
