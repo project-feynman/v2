@@ -36,7 +36,6 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
     last_changed: firebase.firestore.FieldValue.serverTimestamp()
   }
   firebase.database().ref('.info/connected').on('value', snapshot => {
-    // why do we even need this line? 
     if (snapshot.val() == false) {
       // since Firestore copies Firebase (due to our Cloud Functions), updating Firebase is enough to change both 
       firebaseRef.update(isOfflineForDatabase) 
@@ -56,7 +55,9 @@ function checkOnlineStatusAndSetDisconnectHook (user) {
 
 const actions = {  
   fetchUser: async context => { 
+    console.log('fetchUser()')
     firebase.auth().onAuthStateChanged(async user => {
+      console.log('auth state changed...')
       if (user) {
         const ref = db.collection('users').doc(user.uid)
         var mirror = await ref.get()

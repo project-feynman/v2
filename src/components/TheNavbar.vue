@@ -112,6 +112,9 @@ export default {
   },
   methods: {
     async fetchChatDocs () {
+      if (!this.user.chatrooms) {
+        return 
+      }
       const chats = this.user.chatrooms
       const n = chats.length 
       this.chatrooms = new Array(n).fill(0)
