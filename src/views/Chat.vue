@@ -15,7 +15,7 @@
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <base-button @click="updateParticipants()">Join group</base-button>
     <base-button @click="leaveGroup()">Leave group</base-button>
-    <template v-if="journeys">
+    <!-- <template v-if="journeys">
       <div class="collection-list-wrapper">
         <collection-list title="Users with this chat open somewhere" :listItems="usersViewingPage">
           <template slot-scope="{ item }">
@@ -23,12 +23,13 @@
           </template>
         </collection-list>
       </div>
-    </template>
+    </template> -->
     <template v-if="chatroom">
       <div style="margin: auto; width: 40%;">
-        <collection-list title="Group Chat Members" :listItems="chatroom.participants">
+        <collection-list title="Group Chat Members" :listItems="usersAvalibility">
           <template slot-scope="{ item }">
             {{ item.displayName }}
+            <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
           </template>
         </collection-list>
       </div>
@@ -118,6 +119,18 @@ export default {
     },
     isLoggedIn () {
       return this.user != null && this.user != 'undetermined'
+    },
+    usersAvalibility() {
+      const activeUIDs = this.usersViewingPage.reduce((prev,obj) => {
+        prev[obj.uid] = true;
+        return prev
+      }, {})
+      return this.chatroom.participants.map(user => {
+        return {
+          displayName: user.displayName, 
+          isOnline: activeUIDs[user.uid] ? true : false
+        } 
+      })
     }
   },
   watch: {
@@ -348,5 +361,10 @@ span {
 
 .messages::-webkit-scrollbar-thumb {
   background: #aaa;
+}
+
+.user-online {
+  font-size: 10px; 
+  color: #4aba34;
 }
 </style>

@@ -15,19 +15,20 @@
     </template>
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }} Study Groups</h2>
     <collection-list :title="`All classmates in ${$route.params.subject_id}`" 
-                     :listItems="enrolledStudents"
+                     :listItems="usersAvalibility"
                      style="width: 50%; margin: auto;">
       <template slot-scope="{ item }">
         {{ item.displayName }}
+        <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
       </template>
     </collection-list>
-    <collection-list :title="`Classmates currently online`" 
+    <!-- <collection-list :title="`Classmates currently online`" 
                      :listItems="onlineClassmates"
                      style="width: 50%; margin: auto;">
       <template slot-scope="{ item }">
         {{ item.displayName }}
       </template>
-    </collection-list>
+    </collection-list> -->
     <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
@@ -86,6 +87,18 @@ export default {
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
+    },
+    usersAvalibility() {
+      const activeUIDs = this.onlineClassmates.reduce((prev, obj) => {
+        prev[obj.uid] = true;
+        return prev
+      }, {})
+      return this.enrolledStudents.map(user => {
+        return {
+          displayName: user.displayName, 
+          isOnline: activeUIDs[user.uid] ? true : false
+        } 
+      })
     }
   },
   data () {
@@ -198,4 +211,8 @@ export default {
   font-size: 150%;
 }
 
+.user-online {
+  font-size: 10px; 
+  color: #4aba34;
+}
 </style>
