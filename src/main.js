@@ -6,7 +6,7 @@ import 'firebase/messaging'
 import VueChatScroll from 'vue-chat-scroll'
 
 import App from './App.vue'
-import router from './router'
+import router from './router.js'
 import store from './store/index.js'
 //import './registerServiceWorker'
 import '@/components/reusables/_globals.js'
@@ -20,15 +20,14 @@ Vue.use(router)
 
 Vue.config.productionTip = false
 
-async function startApp () {
-  new Vue({
-    router,
-    store,
-    render: h => h(App)
-  }).$mount('#app')
-  store.dispatch('fetchUser')
-}
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
 
-startApp()
+store.dispatch('fetchUser')
+
+
 
 

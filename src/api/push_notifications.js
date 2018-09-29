@@ -79,22 +79,22 @@ if ('Notification' in window && 'serviceWorker' in navigator) {
 			userVisibleOnly: true
 		}
 		registration.pushManager.getSubscription().then(function(subscription) {
-			const applicationServerKeyArray = new Uint8Array(subscription.options.applicationServerKey)
-			var areApplicationServerKeysSame = true
-
-			for(var i = 0; i < applicationServerKeyArray.length; i++) {
-				if(applicationServerKeyArray[i] == applicationServerKey[i]) {
-					areApplicationServerKeysSame = false
-					break
+			if(subscription)
+			{
+				const applicationServerKeyArray = new Uint8Array(subscription.options.applicationServerKey)
+				var areApplicationServerKeysSame = true
+				
+				for(var i = 0; i < applicationServerKeyArray.length; i++) {
+					if(applicationServerKeyArray[i] == applicationServerKey[i]) {
+						areApplicationServerKeysSame = false
+						break
+					}
 				}
 			}
-
 			if(!subscription || areApplicationServerKeysSame) {
-				console.log('wrong subscription or no subscription')
 				registration.pushManager.subscribe(subscribeOptions).then(newSubscription => sendSubscriptionToFirestore(undefined, subscription))
 			}
 			else {
-				console.log('good subscription. sending')
 				sendSubscriptionToFirestore(undefined, subscription)
 			}
 		}) 

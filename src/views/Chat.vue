@@ -114,6 +114,23 @@ export default {
     user () {
       return this.$store.state.user
     },
+    membersWithOnlineStatus () {
+      if (!this.usersViewingPage) {
+        return 
+      }
+      if (!this.chatroom.participants) {
+        return 
+      }
+      const onlineUIDs = this.usersViewingPage.map(obj => obj.uid)
+      let output = this.chatroom.participants.map(person => {
+        const personCopy = {
+          displayName: person.displayName,
+          isOnline: onlineUIDs.includes(person.uid)
+        }
+        return personCopy
+      })
+      return output 
+    },
     hasFetchedUser () {
       return this.$store.state.hasFetchedUser 
     },
@@ -148,12 +165,10 @@ export default {
     // display users viewing the page 
     const roomID = this.$route.params.room_id
     const queryRef = db.collection('users')
-                         .where('recentChatID', '==', roomID)
                          .where('isOnline', '==', true)
-                         .where('isTalking', '==', true)
+
 
     await this.$bind('usersViewingPage', queryRef)
-
     let doc = db.collection('chatrooms').doc(roomID)
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
@@ -184,6 +199,9 @@ export default {
     })
   },
   methods: {
+    showGreenDot (isOnline) {
+      return isOnline ? 'fiber_manual_record' : null 
+    },
     async resetMessages () {
       const roomID = this.$route.params.room_id
       const ref = db.collection('chatrooms').doc(roomID)
@@ -299,7 +317,6 @@ export default {
       await ref.update({
         participants: firebase.firestore.FieldValue.arrayRemove(simplifiedUser)
       })
-      console.log('deleted participants')
       // remove reference from the user's perspective
       const userRef = db.collection('users').doc(this.user.uid)
       await userRef.update({
