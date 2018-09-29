@@ -23,3 +23,4 @@ yarn-error.log*
 *.cache 
 
 functions/config.js
+.firebase
