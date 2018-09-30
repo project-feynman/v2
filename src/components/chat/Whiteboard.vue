@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <div class="center">
-      <base-button @click="resetBoard()">Reset Board</base-button>
+    <base-button @click="resetBoard()">Reset Board</base-button>
     </div> -->
     <canvas id="whiteboard" resize></canvas>
   </div>
@@ -13,7 +13,10 @@ import { version } from 'moment'
 import db from '@/firebase/init.js'
 
 var PATH = null 
-var STROKE_WIDTH = 4
+var STROKE_WIDTH = 2
+var PREV_X = null
+var PREV_Y = null
+var PREV_RECORDED = false
 
 export default {
   created () {
@@ -48,10 +51,33 @@ export default {
     tool.onMouseDown = event => {
       PATH = new Path()
       PATH.strokeColor = 'black'
-      PATH.strokeWidth = STROKE_WIDTH
+        PATH.strokeWidth = STROKE_WIDTH
+        PATH.strokeCap='round'
+        PATH.strokeJoin='round'
+        PATH.add(event.point)
+        PREV_X = event.point.x
+        PREV_Y = event.point.y
+        PREV_RECORDED = true
     }
-    tool.onMouseDrag = event => {
-      PATH.add(event.point)
+      tool.onMouseDrag = event => {
+          var s = PATH.getSegments()
+          var ep = event.point
+          var dx = ep.x-PREV_X
+          var dy = ep.y-PREV_Y
+          if(dx*dx+dy*dy>10){
+              PREV_X = ep.x
+              PREV_Y = ep.y
+              PREV_RECORDED = true
+        	PATH.add(event.point)
+              PATH.smooth()
+          }
+          else{
+              if(!PREV_RECORDED){
+                  PATH.removeSegment(s.length-1)
+              }
+                  PATH.add(event.point)
+              PREV_RECORDED = false
+          }
     }
     if (this.user != null && this.user != 'undetermined') {
       if (!this.onMouseUpInitialized) {    
@@ -95,6 +121,7 @@ export default {
         allPaths: []
       })
     },
+
     drawAllPaths () {
       if (this.whiteboard == null) { return }
       this.whiteboard.allPaths.forEach(stroke => {
@@ -104,13 +131,15 @@ export default {
         stroke.points.forEach(p => {
           path.add(new Point(p.x, p.y))
         })
+          path.smooth()
       })
       this.loadedPreviousDrawings = true
     },
     initOnMouseUp () {
       this.onMouseUpInitialized = true 
       tool.onMouseUp = async event => {
-        PATH.add(event.point)
+          PATH.add(event.point)
+          PATH.smooth()
         // const segments = this.path.getSegments()
         const segments = PATH.getSegments()
         // save the "path" that the user has just drawn
