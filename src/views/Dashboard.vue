@@ -128,16 +128,16 @@ export default {
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(subject.subjectNumber)
       })
     },
-    // getCurrentPset ({ psets }) {
-    //   if (!psets) {
-    //     return 
-    //   }
-    //   if (psets.length == 0) {
-    //     return 
-    //   }
-    //   const lastPset = psets[psets.length - 1]
-    //   return lastPset 
-    // },
+    getCurrentPset ({ psets }) {
+      if (!psets) {
+        return 
+      }
+      if (psets.length == 0) {
+        return 
+      }
+      const lastPset = psets[psets.length - 1]
+      return lastPset 
+    },
     redirectToPset ({ subjectNumber, psets }) {
       const URL = subjectNumber + '/' + psets[psets.length -1]
       this.$router.push(URL)
