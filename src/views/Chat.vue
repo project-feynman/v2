@@ -138,6 +138,12 @@ export default {
       return this.user != null && this.user != 'undetermined'
     },
     usersAvalibility() {
+      if (!this.chatroom) {
+        return 
+      }
+      if (!this.chatroom.participants) {
+        return 
+      }
       const activeUIDs = this.usersViewingPage.reduce((prev,obj) => {
         prev[obj.uid] = true;
         return prev
