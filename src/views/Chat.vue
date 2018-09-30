@@ -164,33 +164,16 @@ export default {
   async created () {
     // display users viewing the page 
     const roomID = this.$route.params.room_id
-    const queryRef = db.collection('users')
-                         .where('isOnline', '==', true)
-    await this.$bind('usersViewingPage', queryRef)
-    let doc = db.collection('chatrooms').doc(roomID)
-    let chatRoom = await doc.get()
-    if (!chatRoom.data()) {
-      this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
-    }
-    // fetch messages from Firestore and set up syncing 
-    await doc.onSnapshot(snapshot => {
-      if (snapshot.exists) {
-        const data = snapshot.data()
-        this.chatroom = data
-        this.participants = data.participants
-        if (!this.hasFetchedJourneys) {
-          // initial fetch only 
-          this.fetchJourneys()
-        }
-      }
-    })
-    // fetch drawing from Firestore and set up syncing 
+    const membersRef = db.collection('users').where('isOnline', '==', true)
+    const chatRef = db.collection('chatrooms').doc(roomID)
+    await this.$bind('chatroom', chatRef)
+    const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
+    const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
+    await this.$bind('journeys', journeyRef)
+    // this.fetchJourneys() 
+    await this.$bind('usersViewingPage', membersRef)
     const whiteboardDoc = db.collection('whiteboards').doc(roomID)
-    whiteboardDoc.onSnapshot(snapshot => {
-      if (snapshot.exists) {
-        this.whiteboard = snapshot.data()
-      }
-    })
+    await this.$bind('whiteboard', whiteboardDoc)
   },
   async destroyed () {
     const ref = db.collection('users').doc(this.user.uid)
@@ -233,12 +216,6 @@ export default {
       await ref.update({
         firstTimeInChat: false 
       })
-    },
-    async fetchJourneys () {
-      const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
-      const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
-      await this.$bind('journeys', journeyRef)
-      this.hasFetchedJourneys = true 
     },
     prettifyDate (timestamp) {
       return moment(timestamp).format("lll")
@@ -310,7 +287,6 @@ export default {
       })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 1000)
-      this.fetchJourneys()
     },
     async updateTitle (event) {
       if (event.key == 'Enter') {
