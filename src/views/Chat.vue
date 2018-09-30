@@ -13,8 +13,6 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
-    <base-button @click="updateParticipants()">Join group</base-button>
-    <base-button @click="leaveGroup()">Leave group</base-button>
     <!-- <template v-if="journeys">
       <div class="collection-list-wrapper">
         <collection-list title="Users with this chat open somewhere" :listItems="usersViewingPage">
@@ -24,9 +22,12 @@
         </collection-list>
       </div>
     </template> -->
+    <div style="display: flex;">
     <template v-if="chatroom">
       <div style="margin: auto; width: 40%;">
-        <collection-list title="Group Chat Members" :listItems="usersAvalibility">
+        <base-button @click="updateParticipants()">Join group</base-button>
+        <base-button @click="leaveGroup()">Leave group</base-button>
+        <collection-list title="Members" :listItems="usersAvalibility">
           <template slot-scope="{ item }">
             {{ item.displayName }}
             <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
@@ -34,6 +35,20 @@
         </collection-list>
       </div>
     </template>
+    <template v-if="journeys">
+      <div class="collection-list-wrapper">
+        <collection-list title="Journeys"
+                    :listItems="journeys"
+                    actionIcon="delete"
+                    @item-click="journey => processDeleteAttempt(journey)"
+                    @entire-click="journey => redirect(journey)">
+          <template slot-scope="{ item }">
+            {{ item.title }}
+          </template>
+        </collection-list>
+      </div> 
+    </template>
+    </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="center" style="margin-top: 25px;">
       <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
@@ -67,19 +82,6 @@
         </div>
       </div>
     </div>
-    <template v-if="journeys">
-      <div class="collection-list-wrapper">
-        <collection-list title="Recorded discussions"
-                    :listItems="journeys"
-                    actionIcon="delete"
-                    @item-click="journey => processDeleteAttempt(journey)"
-                    @entire-click="journey => redirect(journey)">
-          <template slot-scope="{ item }">
-            {{ item.title }}
-          </template>
-        </collection-list>
-      </div> 
-    </template>
   </div>
 </template>
 
