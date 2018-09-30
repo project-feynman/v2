@@ -9,7 +9,7 @@
         </p>
       </popup-modal>
     </template>
-    <popup-modal v-if="isSharingJourney" @close="shareJourney()">
+    <popup-modal v-if="isSharingJourney" @close="shareJourney()" @dismiss="shareDismiss()">
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
@@ -260,7 +260,13 @@ export default {
       const url = '/conversation/' + id
       this.$router.push(url)
     },
-    async shareJourney () {
+      async shareDismiss(){
+          this.isSharingJourney = false
+      },
+      async shareJourney () {
+          if(!(this.newJourneyTitle.length>0)){
+              return
+          }
       this.isSharingJourney = false 
       this.feedback = 'Saving the doodle as an animation...'
       const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber

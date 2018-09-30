@@ -16,6 +16,12 @@
           </div>
 
           <div class="modal-footer black-text center">
+                      <slot name="footer">
+              <base-button class="modal-default-button" @click="$emit('dismiss')">
+                Cancel
+              </base-button>
+            </slot>
+
             <slot name="footer">
               <base-button class="modal-default-button" @click="$emit('close')">
                 Okay
