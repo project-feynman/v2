@@ -1,6 +1,6 @@
 <template>
   <div class="new-message">
-    <form @submit.prevent="addMessage">
+    <form autocomplete="off" @submit.prevent="addMessage">
       <label for="new-message">Write a new message below...</label>
       <input type="text" name="new-message" @input="emitChange" v-model="newMessage">
     </form>
@@ -40,7 +40,10 @@ export default {
         const roomID = this.$route.params.room_id
         let chatRoomRef = db.collection('chatrooms').doc(roomID)
         let chatRoom = await chatRoomRef.get()
-        this.messages = chatRoom.data().messages
+        const data = chatRoom.data()
+        this.messages = data.messages
+        const whoIsTyping = data.whoIsTyping
+        delete whoIsTyping[this.user.uid]
         const author = {
           displayName: this.user.displayName,
           uid: this.user.uid 
@@ -52,7 +55,8 @@ export default {
         })
         await chatRoomRef.update({
           messages: this.messages,
-          participants: firebase.firestore.FieldValue.arrayUnion(author)
+          participants: firebase.firestore.FieldValue.arrayUnion(author),
+          whoIsTyping
         })
       }
     }
