@@ -175,7 +175,6 @@ export default {
         this.participants = data.participants
         if (!this.hasFetchedJourneys) {
           // initial fetch only 
-          console.log("should only be triggered once")
           this.fetchJourneys()
         }
       }
