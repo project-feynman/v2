@@ -9,9 +9,9 @@
           </router-link>
         </a>
         <ul class="right hide-on-med-and-down">
-          <li v-show="isLoggedIn">
+          <li v-show="isLoggedIn && user.chatrooms">
             <a id="dropdown-trigger" href="#!" data-target="dropdown">
-              Chat
+              Chats
               <i class="material-icons right">chat</i>
             </a>
           </li>
@@ -26,13 +26,18 @@
       </div>
     </nav>
     <ul id="dropdown" class="dropdown-content">
-      <template v-if="chatrooms"
+      <template v-if="chatrooms.length != 0"
                 v-for="(room, idx) in chatrooms">
         <div :key="idx">
-          <li :key="idx">
+          <li>
             <a :href="`/chat/${room.id}`">{{ room.title }}          
-              <span v-if="true" class="new badge">4</span>
-            </a></li>
+              <span v-if="true" class="new badge">1</span>
+              <template v-if="room.messages">
+                <p v-if="room.messages.length != 0"
+                   class="teal-text">{{getLastMessage(room.messages)}}</p>
+              </template>
+            </a> 
+          </li>
           <li class="divider"></li>
         </div>
       </template>
@@ -51,6 +56,7 @@ export default {
     PopupModal
   },
   watch: {
+    // use the "immediate" handler to handle the logic to clean the code 
     async user () {
       if (this.isLoggedIn) {
         this.fetchChatDocs()
@@ -122,9 +128,14 @@ export default {
         const ref = db.collection('chatrooms').doc(chats[i])
         const idx = i // necessary - snapShots persist after the function call, and it'll reference the final value of i (which is n)
         ref.onSnapshot(doc => {
-          var data = doc.data()
-          data.id = doc.id 
-          this.$set(this.chatrooms, idx, data)
+          if (!doc.exists) {
+            return 
+          }
+          else {
+            let data = doc.data()
+            data.id = doc.id 
+            this.$set(this.chatrooms, idx, data)
+          }
         })
       }
     },
@@ -134,6 +145,9 @@ export default {
     },
     redirectToChat (roomID) {
       this.$router.push(`/chat/${roomID}`)
+    },
+    getLastMessage (messages) {
+      return messages[messages.length - 1].content
     }
   }
 }
