@@ -47,6 +47,8 @@
 
 <script>
 import db from '@/firebase/init.js'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import { getSubscription, sendSubscriptionToFirestore } from '@/api/push_notifications.js'
 import { getPermissionForGeolocation, sendPositionToFirestore } from '@/api/geolocation.js'
@@ -80,19 +82,7 @@ export default {
           }
         }
         // UPDATE: don't store locations for current MVP 
-				// getPermissionForGeolocation(position => { 
-        //   if (this.hasSentPosition) {
-        //     return 
-        //   } 
-				// 	sendPositionToFirestore(this.user.uid, 
-				// 	{ 
-				// 		accuracy: position.coords.accuracy,
-				// 		longitude: position.coords.longitude,
-				// 		latitude: position.coords.latitude,
-				// 		timestamp: position.timestamp
-        //   })
-        //   this.hasSentPosition = true 
-				// })
+        // this.getPermissionForGeolocation()
       }
     }
   },
@@ -129,6 +119,7 @@ export default {
         const idx = i // necessary - snapShots persist after the function call, and it'll reference the final value of i (which is n)
         ref.onSnapshot(doc => {
           if (!doc.exists) {
+            this.removeEmptyPointer(chats[idx])
             return 
           }
           else {
@@ -139,6 +130,12 @@ export default {
         })
       }
     },
+    async removeEmptyPointer (pointer) {
+      const ref = db.collection('users').doc(this.user.uid) 
+      await ref.update({
+        chatrooms: firebase.firestore.FieldValue.arrayRemove(pointer)
+      })
+    },
     async signOut () {
       await this.$store.dispatch('logOut')
       this.$router.push('/')
@@ -148,6 +145,21 @@ export default {
     },
     getLastMessage (messages) {
       return messages[messages.length - 1].content
+    },
+    getPermissionForGeolocation () {
+      getPermissionForGeolocation(position => { 
+        if (this.hasSentPosition) {
+          return 
+        } 
+        sendPositionToFirestore(this.user.uid, 
+        { 
+          accuracy: position.coords.accuracy,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+          timestamp: position.timestamp
+        })
+        this.hasSentPosition = true 
+      })
     }
   }
 }
