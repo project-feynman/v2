@@ -159,11 +159,6 @@ export default {
     user: {
       handler: 'handleMembershipLogic',
       immediate: true 
-    },
-    chatroom () {
-      if (this.chatRoom != {}) {
-        this.fetchJourneys()
-      }
     }
   },
   async created () {
@@ -171,24 +166,24 @@ export default {
     const roomID = this.$route.params.room_id
     const queryRef = db.collection('users')
                          .where('isOnline', '==', true)
-
-
     await this.$bind('usersViewingPage', queryRef)
     let doc = db.collection('chatrooms').doc(roomID)
     let chatRoom = await doc.get()
     if (!chatRoom.data()) {
       this.feedback = 'This is not a chatroom - to create a chatroom, message a classmate on a particular question'
     }
-
     // fetch messages from Firestore and set up syncing 
     await doc.onSnapshot(snapshot => {
       if (snapshot.exists) {
         const data = snapshot.data()
         this.chatroom = data
         this.participants = data.participants
+        if (!this.hasFetchedJourneys) {
+          // initial fetch only 
+          this.fetchJourneys()
+        }
       }
     })
-
     // fetch drawing from Firestore and set up syncing 
     const whiteboardDoc = db.collection('whiteboards').doc(roomID)
     whiteboardDoc.onSnapshot(snapshot => {
@@ -240,10 +235,10 @@ export default {
       })
     },
     async fetchJourneys () {
-      // fetch journeys
       const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
       const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
       await this.$bind('journeys', journeyRef)
+      this.hasFetchedJourneys = true 
     },
     prettifyDate (timestamp) {
       return moment(timestamp).format("lll")
@@ -281,13 +276,13 @@ export default {
       const url = '/conversation/' + id
       this.$router.push(url)
     },
-      async shareDismiss(){
+      async shareDismiss () {
           this.isSharingJourney = false
       },
       async shareJourney () {
-          if(!(this.newJourneyTitle.length>0)){
-              return
-          }
+      if (!(this.newJourneyTitle.length > 0)) {
+          return
+      }
       this.isSharingJourney = false 
       this.feedback = 'Saving the doodle as an animation...'
       const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
@@ -315,6 +310,7 @@ export default {
       })
       this.feedback = 'Success'
       setTimeout(() => this.feedback = '', 1000)
+      this.fetchJourneys()
     },
     async updateTitle (event) {
       if (event.key == 'Enter') {
