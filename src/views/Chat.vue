@@ -13,18 +13,9 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
-    <!-- <template v-if="journeys">
-      <div class="collection-list-wrapper">
-        <collection-list title="Users with this chat open somewhere" :listItems="usersViewingPage">
-          <template slot-scope="{ item }">
-            {{ item.displayName }}
-          </template>
-        </collection-list>
-      </div>
-    </template> -->
     <div style="display: flex;">
     <template v-if="chatroom">
-      <div style="margin: auto; width: 40%;">
+      <div style="margin: auto; width: 22%;">
         <base-button @click="updateParticipants()">Join group</base-button>
         <base-button @click="leaveGroup()">Leave group</base-button>
         <collection-list title="Members" :listItems="usersAvalibility">
@@ -35,31 +26,9 @@
         </collection-list>
       </div>
     </template>
-    <template v-if="journeys">
-      <div class="collection-list-wrapper">
-        <collection-list title="Journeys"
-                    :listItems="journeys"
-                    actionIcon="delete"
-                    @item-click="journey => processDeleteAttempt(journey)"
-                    @entire-click="journey => redirect(journey)">
-          <template slot-scope="{ item }">
-            {{ item.title }}
-          </template>
-        </collection-list>
-      </div> 
-    </template>
-    </div>
-    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <div class="center" style="margin-top: 25px;">
-      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
-    </div>
-    <div style="width: 90%; margin: auto;">
-      <base-button @click="resetBoard()">Reset whiteboard</base-button>
-      <whiteboard ref="whiteboard"/>
-    </div>
-    <div class="flexbox-container">
+    <div style="width: 40%; margin: auto;">
       <div class="chat-wrapper">
-        <h4 class="center">Chat</h4>
+        <!-- <h4 class="center">Chat</h4> -->
         <base-button @click="resetMessages()">Reset chat</base-button>
         <div class="card">
           <div class="card-content">
@@ -81,6 +50,28 @@
           </div>
         </div>
       </div>
+    </div>
+    <template v-if="journeys">
+      <div style="margin: auto; width: 20%;">
+        <collection-list title="Journeys"
+                    :listItems="journeys"
+                    actionIcon="delete"
+                    @item-click="journey => processDeleteAttempt(journey)"
+                    @entire-click="journey => redirect(journey)">
+          <template slot-scope="{ item }">
+            {{ item.title }}
+          </template>
+        </collection-list>
+      </div> 
+    </template>
+    </div>
+    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+    <div class="center" style="margin-top: 25px;">
+      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
+    </div>
+    <div style="width: 90%; margin: auto;">
+      <base-button @click="resetBoard()">Reset whiteboard</base-button>
+      <whiteboard ref="whiteboard"/>
     </div>
   </div>
 </template>
@@ -329,11 +320,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.collection-list-wrapper {
-  margin: auto;
-  width: 40%;
-}
-
 h2 {
   @extend .center;
 }
@@ -356,17 +342,9 @@ span {
   height: 484px;
 }
 
-.chat-wrapper {
-  width: 50%;
-}
-
 .messages {
   max-height: 300px;
   overflow: auto;
-}
-
-.flexbox-container {
-  display: flex;
 }
 
 .messages::-webkit-scrollbar {
