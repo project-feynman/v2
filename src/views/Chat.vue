@@ -40,7 +40,9 @@
               </li>
               <li>
                 <span class="grey-text time"> 
-                  <template v-if="Object.keys(chatroom.whoIsTyping).length > 0">{{Object.keys(chatroom.whoIsTyping).map(key => chatroom.whoIsTyping[key]).join(", ")}} is typing...</template> 
+                  <template v-if="chatroom.whoIsTyping">
+                    <template v-if="Object.keys(chatroom.whoIsTyping).length > 0">{{Object.keys(chatroom.whoIsTyping).map(key => chatroom.whoIsTyping[key]).join(", ")}} is typing...</template> 
+                  </template>
                 </span>              
               </li>
             </ul>
