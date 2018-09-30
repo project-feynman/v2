@@ -54,10 +54,15 @@
                 <span class="grey-text text-darken-3">{{ message.content }}</span>
                 <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
               </li>
+              <li>
+                <span class="grey-text time"> 
+                  <template v-if="Object.keys(chatroom.whoIsTyping).length > 0">{{Object.keys(chatroom.whoIsTyping).map(key => chatroom.whoIsTyping[key]).join(", ")}} is typing...</template> 
+                </span>              
+              </li>
             </ul>
           </div>
           <div class="card-action">
-            <chat-new-message :participants="chatroom.participants"/>
+            <chat-new-message @onInputChange="newChatMessageChange" :participants="chatroom.participants"/>
           </div>
         </div>
       </div>
@@ -201,6 +206,22 @@ export default {
   methods: {
     showGreenDot (isOnline) {
       return isOnline ? 'fiber_manual_record' : null 
+    },
+    async newChatMessageChange (event) {
+      if ((event.target.value.length > 0 && this.chatroom.whoIsTyping[this.user.uid]) || 
+          (event.target.value.length === 0 && !this.chatroom.whoIsTyping[this.user.uid])){
+        //early exit condition so we don't have to query database everytime
+        return
+      }
+      const roomID = this.$route.params.room_id
+      const chatRoomRef = db.collection('chatrooms').doc(roomID)
+      let chatRoom = await chatRoomRef.get()
+      const whoIsTyping = chatRoom.data().whoIsTyping || {}
+      console.log(whoIsTyping)
+      event.target.value.length > 0 ? whoIsTyping[this.user.uid] = this.user.displayName : delete whoIsTyping[this.user.uid]
+      chatRoomRef.update({
+        whoIsTyping
+      })
     },
     async resetMessages () {
       const roomID = this.$route.params.room_id

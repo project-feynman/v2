@@ -2,7 +2,7 @@
   <div class="new-message">
     <form @submit.prevent="addMessage">
       <label for="new-message">Write a new message below...</label>
-      <input type="text" name="new-message" v-model="newMessage">
+      <input type="text" name="new-message" @input="emitChange" v-model="newMessage">
     </form>
   </div>
 </template>
@@ -30,6 +30,9 @@ export default {
     }
   },
   methods: {
+    emitChange (event) {
+      this.$emit('onInputChange', event)
+    },
     async addMessage () {
       if (this.newMessage) {
         const content = this.newMessage
