@@ -13,9 +13,9 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
-    <div style="display: flex;">
+    <div class="row" style="margin-top: 50px;">
     <template v-if="chatroom">
-      <div style="margin: auto; width: 22%;">
+      <div class="col s10 m3">
         <base-button @click="updateParticipants()">Join group</base-button>
         <base-button @click="leaveGroup()">Leave group</base-button>
         <collection-list title="Members" :listItems="usersAvalibility">
@@ -26,9 +26,8 @@
         </collection-list>
       </div>
     </template>
-    <div style="width: 40%; margin: auto;">
+    <div class="col s10 m4 offset-m1">
       <div class="chat-wrapper">
-        <!-- <h4 class="center">Chat</h4> -->
         <base-button @click="resetMessages()">Reset chat</base-button>
         <div class="card">
           <div class="card-content">
@@ -54,7 +53,7 @@
       </div>
     </div>
     <template v-if="journeys">
-      <div style="margin: auto; width: 20%;">
+        <div class="col s10 m3 offset-m1">
         <collection-list title="Journeys"
                     :listItems="journeys"
                     actionIcon="delete"
@@ -68,7 +67,7 @@
     </template>
     </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <div class="center" style="margin-top: 25px;">
+    <div class="center">
       <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
     <div style="width: 90%; margin: auto;">
