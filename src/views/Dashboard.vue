@@ -8,9 +8,9 @@
     <div class="custom-offset"></div>
     <h2>Dashboard</h2>
     <p v-if="loading" class="white-text center">Fetching your classes...</p>
-    <template v-if="subjects && !loading && isLoggedIn">
+    <template v-if="betaSubjects && !loading && isLoggedIn">
       <div class="responsive-grid">
-          <template v-for="(subject, i) in subjects">
+          <template v-for="(subject, i) in betaSubjects">
             <div class="subject-card" :key="i">
               <base-card>
                 <h4 class="black-text">{{ subject.subjectNumber }}</h4>
@@ -19,10 +19,10 @@
                               iconName="slideshow" 
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
-                  <floating-button 
+                  <!-- <floating-button 
                             iconName="settings" 
                             color="grey darken-1" 
-                            @click="startEdit(subject)"/>
+                            @click="startEdit(subject)"/> -->
                   <floating-button 
                             iconName="delete" 
                             color="black" 
@@ -33,7 +33,7 @@
           </template>
       </div>
     </template>
-    <manage-classes @add-class="loadSubjects()"></manage-classes>
+    <manage-classes></manage-classes>
   </div>
 </template>
 
@@ -71,77 +71,73 @@ export default {
       subjectEditted: null,
       newPset: null,
       hasLoadedSubjects: false,
-      feedback: ''
+      feedback: '',
+      betaSubjects: []
     }
   },
   watch: {
     user: {
-      handler: 'loadSubjects', 
+      handler: 'fetchSubjectDocs', // 'loadSubjects'
       immediate: true
     }
   },
+
   methods: {
     startEdit (subject) {
       this.subjectEditted = subject 
       this.isChangingPset = true 
     },
-    async updateNewestPset () {
-      if (!this.newPset) {
+    async fetchSubjectDocs () {
+      if (!this.user.enrolledSubjects) {
         return 
       }
-      this.isChangingPset = false 
-      const ref = db.collection('subjects').doc(this.subjectEditted.subjectNumber)
-      await ref.update({
-        psets: firebase.firestore.FieldValue.arrayUnion(this.newPset)
-      })
-      this.newPset = null 
+      const subjects = this.user.enrolledSubjects
+      const n = subjects.length 
+      this.betaSubjects = new Array(n).fill(0)
+      for (var i=0; i<n; i++) {
+        const ref = db.collection('subjects').doc(subjects[i])
+        const idx = i // necessary - snapShots persist after the function call, and it'll reference the final value of i (which is n)
+        ref.onSnapshot(doc => {
+          if (!doc.exists) {
+            return 
+          }
+          else {
+            let data = doc.data()
+            data.id = doc.id 
+            this.$set(this.betaSubjects, idx, data)
+          }
+        })
+      }
+      this.loading = false 
+      this.hasLoadedSubjects = true
     },
+    // async updateNewestPset () {
+    //   if (!this.newPset) {
+    //     return 
+    //   }
+    //   this.isChangingPset = false 
+    //   const ref = db.collection('subjects').doc(this.subjectEditted.subjectNumber)
+    //   await ref.update({
+    //     psets: firebase.firestore.FieldValue.arrayUnion(this.newPset)
+    //   })
+    //   this.newPset = null 
+    // },
     async removeSubject (subject) {
       const ref = db.collection('users').doc(this.user.uid) 
       await ref.update({
         enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(subject.subjectNumber)
       })
-      this.loadSubjects() 
     },
-    async loadSubjects () {
-       if (!this.isLoggedIn) {
-         return 
-       }
-      if (this.hasLoadedSubjects) {
-        return 
-      }
-      this.feedback = 'Fetching your classes...'
-      if (!this.user.enrolledSubjects) {
-        this.loading = false 
-        this.subjects = [] 
-        this.feedback = 'Add a class below to get started'
-      }
-      if (this.user.enrolledSubjects.length == 0) {
-        this.loading = false 
-        this.subjects = [] 
-        this.feedback = 'Add a class below to get started'
-      } else {
-        this.subjects = [] 
-        this.user.enrolledSubjects.forEach(async subj => {
-          const ref = db.collection('subjects').doc(subj)
-          const subjDoc = await ref.get() 
-          this.subjects.push(subjDoc.data())
-        })
-        this.loading = false 
-      }
-      this.feedback = ''
-      this.hasLoadedSubjects = true
-    },
-    getCurrentPset ({ psets }) {
-      if (!psets) {
-        return 
-      }
-      if (psets.length == 0) {
-        return 
-      }
-      const lastPset = psets[psets.length - 1]
-      return lastPset 
-    },
+    // getCurrentPset ({ psets }) {
+    //   if (!psets) {
+    //     return 
+    //   }
+    //   if (psets.length == 0) {
+    //     return 
+    //   }
+    //   const lastPset = psets[psets.length - 1]
+    //   return lastPset 
+    // },
     redirectToPset ({ subjectNumber, psets }) {
       const URL = subjectNumber + '/' + psets[psets.length -1]
       this.$router.push(URL)
