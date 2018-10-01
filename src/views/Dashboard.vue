@@ -111,17 +111,6 @@ export default {
       this.loading = false 
       this.hasLoadedSubjects = true
     },
-    // async updateNewestPset () {
-    //   if (!this.newPset) {
-    //     return 
-    //   }
-    //   this.isChangingPset = false 
-    //   const ref = db.collection('subjects').doc(this.subjectEditted.subjectNumber)
-    //   await ref.update({
-    //     psets: firebase.firestore.FieldValue.arrayUnion(this.newPset)
-    //   })
-    //   this.newPset = null 
-    // },
     async removeSubject (subject) {
       const ref = db.collection('users').doc(this.user.uid) 
       await ref.update({

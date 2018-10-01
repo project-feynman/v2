@@ -22,13 +22,6 @@
         <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
       </template>
     </collection-list>
-    <!-- <collection-list :title="`Classmates currently online`" 
-                     :listItems="onlineClassmates"
-                     style="width: 50%; margin: auto;">
-      <template slot-scope="{ item }">
-        {{ item.displayName }}
-      </template>
-    </collection-list> -->
     <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
@@ -126,10 +119,8 @@ export default {
     const onlineClassmates = db.collection('users')
                               .where('enrolledSubjects', 'array-contains', subject_id)
                               .where('isOnline', '==', true)
-    await this.$bind('studyGroups', ref)
+    Promise.all([this.$bind('enrolledStudents', studentsRef), this.$bind('onlineClassmates', onlineClassmates), this.$bind('studyGroups', ref)])
     this.loadingGroups = false 
-    await this.$bind('onlineClassmates', onlineClassmates)
-    await this.$bind('enrolledStudents', studentsRef)
   },
   methods: {
     isOwner (group) {

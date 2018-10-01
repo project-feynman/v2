@@ -176,17 +176,15 @@ export default {
         })
     }
     // display users viewing the page 
-    const roomID = this.$route.params.room_id
     const membersRef = db.collection('users').where('isOnline', '==', true)
+    const roomID = this.$route.params.room_id
     const chatRef = db.collection('chatrooms').doc(roomID)
+    const whiteboardDoc = db.collection('whiteboards').doc(roomID)
+    Promise.all([this.$bind('usersViewingPage', membersRef), this.$bind('whiteboard', whiteboardDoc)])
     await this.$bind('chatroom', chatRef)
     const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber 
     const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
-    await this.$bind('journeys', journeyRef)
-    // this.fetchJourneys() 
-    await this.$bind('usersViewingPage', membersRef)
-    const whiteboardDoc = db.collection('whiteboards').doc(roomID)
-    await this.$bind('whiteboard', whiteboardDoc)
+    this.$bind('journeys', journeyRef)
   },
   beforeRouteLeave(to, from, next) {
     // remove user from whoIsTyping
@@ -218,7 +216,7 @@ export default {
       }
       if ((event.target.value.length > 0 && this.chatroom.whoIsTyping[this.user.uid]) || 
           (event.target.value.length === 0 && !this.chatroom.whoIsTyping[this.user.uid])){
-        //early exit condition so we don't have to query database everytime
+        // early exit condition so we don't have to query database everytime
         return
       }
       const roomID = this.$route.params.room_id
@@ -333,8 +331,10 @@ export default {
       }
     },
     async processDeleteAttempt (journey) {
-      const ref = db.collection('conversations').doc(journey.id) 
-      await ref.delete()
+      if (this.user.displayName == 'Elton Lin') {
+        const ref = db.collection('conversations').doc(journey.id) 
+        await ref.delete()
+      }
     },
     async leaveGroup () {
       const simplifiedUser = {
