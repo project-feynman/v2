@@ -8,7 +8,10 @@
         </p>
       </popup-modal>
     </template>
-    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+    <template v-if="hasFetchedUser">
+      <p v-if="!user.enrolledSubjects" class="yellow-text center">Add a class from below to get started.</p>
+      <p v-else-if="user.enrolledSubjects.length == 0" class="yellow-text center">Add a class from below to get started</p>
+    </template>
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
         label="Add a class to dashboard" 
@@ -50,6 +53,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.user 
+    },
+    hasFetchedUser () {
+      return this.$store.state.hasFetchedUser 
     },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
