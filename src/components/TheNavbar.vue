@@ -62,16 +62,6 @@ export default {
     async user () {
       if (this.isLoggedIn) {
         this.fetchChatDocs()
-        // display notifications, if there are any 
-        const notifs = this.user.notifications
-        if (notifs) {
-          if (notifs.length != 0) {
-            const latestNotif = notifs[notifs.length - 1]
-            if (latestNotif.new) {
-              this.newNotif = true 
-            }
-          }
-        }
         if (!this.hasFetchedToken) {
           // generate tokens if the user is new 
           this.hasFetchedToken = true 
