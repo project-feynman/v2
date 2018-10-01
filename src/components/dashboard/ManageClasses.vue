@@ -11,7 +11,7 @@
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
-        label="Find and add existing subject to dashboard" 
+        label="Add a class to dashboard" 
         :allResults="objectOfClasses"   
         @select="payload => addClass(payload)"/>
     </div>
@@ -89,14 +89,7 @@ export default {
         await ref.update({
           enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
         })
-        this.$emit('add-class')
       }
-    },
-    async resetClasses () {
-      const ref = db.collection('users').doc(this.user.uid) 
-      await ref.update({
-        enrolledSubjects: [] 
-      })
     },
     async addSubject () {
       const newObject = {
@@ -107,21 +100,6 @@ export default {
       this.newSubject = ''
       await ref.set(newObject)
     }
-  },
-  watch: {
-    isLoggedIn () {
-      if (this.isLoggedIn) {
-        if (!this.user.enrolledSubjects) {
-          this.feedback = "Welcome - to get started, select classes you're taking this term" 
-        } else if (this.user.enrolledSubjects.length == 0) {
-          this.feedback = "Welcome - to get started, select classes you're taking this term" 
-        }
-      }
-    }
   }
 }
 </script>
-
-<style scoped lang="scss">
-</style>
-
