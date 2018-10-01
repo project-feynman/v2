@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <div class="center">
-    <base-button @click="resetBoard()">Reset Board</base-button>
-    </div> -->
     <canvas id="whiteboard" resize></canvas>
   </div>
 </template>
@@ -19,21 +16,12 @@ var PREV_Y = null
 var PREV_RECORDED = false
 
 export default {
-  created () {
-    paper.install(window)
-  },
   computed: {
     user () {
       return this.$store.state.user 
-    }
-  },
-  watch: {
-    user () {
-      if (this.user != null && this.user != 'undetermined') {
-        if (!this.onMouseUpInitialized) {
-          this.initOnMouseUp() 
-        } 
-      }
+    },
+    hasFetchedUser () {
+      return this.$store.state.hasFetchedUser 
     }
   },
   data () {
@@ -41,14 +29,21 @@ export default {
       whiteboard: null,
       numOfPaths: 0,
       loadedPreviousDrawings: false,
-      onMouseUpInitialized: false
+      tool: null 
+    }
+  },
+  created () {
+    paper.install(window)
+  },
+  watch: {
+    hasFetchedUser: {
+      handler: 'initOnMouseUp',
+      immediate: true 
     }
   },
   mounted () {
-    // setup paper.js 
     paper.setup('whiteboard')
-    var tool = new Tool()
-    tool.onMouseDown = event => {
+    this.tool.onMouseDown = event => {
       PATH = new Path()
       PATH.strokeColor = 'black'
         PATH.strokeWidth = STROKE_WIDTH
@@ -59,29 +54,24 @@ export default {
         PREV_Y = event.point.y
         PREV_RECORDED = true
     }
-      tool.onMouseDrag = event => {
-          var s = PATH.getSegments()
-          var ep = event.point
-          var dx = ep.x-PREV_X
-          var dy = ep.y-PREV_Y
-          if(dx*dx+dy*dy>10){
-              PREV_X = ep.x
-              PREV_Y = ep.y
-              PREV_RECORDED = true
-        	PATH.add(event.point)
-              PATH.smooth()
-          }
-          else{
-              if(!PREV_RECORDED){
-                  PATH.removeSegment(s.length-1)
-              }
-                  PATH.add(event.point)
-              PREV_RECORDED = false
-          }
-    }
-    if (this.user != null && this.user != 'undetermined') {
-      if (!this.onMouseUpInitialized) {    
-        this.initOnMouseUp()
+    this.tool.onMouseDrag = event => {
+      var s = PATH.getSegments()
+      var ep = event.point
+      var dx = ep.x-PREV_X
+      var dy = ep.y-PREV_Y
+      if (dx*dx+dy*dy>10) {
+          PREV_X = ep.x
+          PREV_Y = ep.y
+          PREV_RECORDED = true
+          PATH.add(event.point)
+          PATH.smooth()
+      }
+      else {
+        if (!PREV_RECORDED) {
+          PATH.removeSegment(s.length-1)
+        }
+        PATH.add(event.point)
+        PREV_RECORDED = false
       }
     }
     // sync whiteboard to Firestore 
@@ -121,7 +111,6 @@ export default {
         allPaths: []
       })
     },
-
     drawAllPaths () {
       if (this.whiteboard == null) { return }
       this.whiteboard.allPaths.forEach(stroke => {
@@ -136,8 +125,13 @@ export default {
       this.loadedPreviousDrawings = true
     },
     initOnMouseUp () {
-      this.onMouseUpInitialized = true 
-      tool.onMouseUp = async event => {
+      if (!this.hasFetchedUser) {
+        return 
+      }
+      if (!this.tool) {
+        this.tool = new Tool()
+      }
+      this.tool.onMouseUp = async event => {
           PATH.add(event.point)
           PATH.smooth()
         // const segments = this.path.getSegments()
