@@ -15,9 +15,6 @@ export default {
   store, // injects Vuex to all children
   components: {
     TheNavbar
-  },
-  created () {
-    console.log('App instance is created') 
   }
 }
 </script>

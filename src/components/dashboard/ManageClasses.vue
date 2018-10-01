@@ -52,7 +52,8 @@ export default {
     PulseButton
   },
   computed: {
-    ...mapState(['user', 'hasFetchedUser']), // returns an array of objects, which we then "spread" out with "..."" 
+    // "mapState" returns an array of objects/methods, which we then "spread" out with "..."" to integrate into "computed""
+    ...mapState(['user', 'hasFetchedUser']),  
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
     },
