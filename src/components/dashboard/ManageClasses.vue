@@ -40,9 +40,12 @@
 import db from '@/firebase/init.js'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { mapState } from 'vuex'
 import SearchBox from '@/components/reusables/SearchBox.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+
+
 
 export default {
   components: {
@@ -51,12 +54,7 @@ export default {
     PulseButton
   },
   computed: {
-    user () {
-      return this.$store.state.user 
-    },
-    hasFetchedUser () {
-      return this.$store.state.hasFetchedUser 
-    },
+    ...mapState(['user', 'hasFetchedUser']),
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
     },
