@@ -31,8 +31,8 @@ export default {
     user () {
       return this.$store.state.user 
     },
-    isLoggedIn () {
-      return this.user != 'undetermined' && this.user != null
+    hasFetchedUser () {
+      return this.$store.hasFetchedUser
     }
   },
   data () {
@@ -43,23 +43,20 @@ export default {
       hasFetchedConversation: false 
     }
   },
-  created () {
-    if (this.isLoggedIn) { 
-      this.fetchConversation()
-    } 
-    // if the user directly visited this page, see 'watch' hook below  
-  },
   watch: {
-    user () {
-      if (this.isLoggedIn) {
-        if (this.hasFetchedConversation == false) {
-          this.fetchConversation() 
-        }
-      }
+    hasFetchedUser: {
+      handler: 'fetchConversation',
+      immediate: true 
     }
   },
   methods: {
     async fetchConversation () {
+      if (this.hasFetchedConversation) {
+        return 
+      }
+      if (!this.hasFetchedUser) {
+        return 
+      }
       // get document from firestore 
       const id = this.$route.params.convo_id
       const ref = db.collection('conversations').doc(id)
