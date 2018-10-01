@@ -30,21 +30,17 @@
       <div class="chat-wrapper">
         <base-button @click="resetMessages()">Reset chat</base-button>
         <div class="card">
-          <div class="card-content">
+          <div class="card-content messages-container">
             <ul class="messages" v-chat-scroll>
               <li v-for="message in chatroom.messages" :key="message.id">
                 <span class="teal-text">{{ message.author.displayName }}: </span>
                 <span class="grey-text text-darken-3">{{ message.content }}</span>
                 <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
               </li>
-              <li>
-                <span class="grey-text time"> 
-                  <template v-if="chatroom.whoIsTyping">
-                    <template v-if="Object.keys(chatroom.whoIsTyping).length > 0">{{Object.keys(chatroom.whoIsTyping).map(key => chatroom.whoIsTyping[key]).join(", ")}} is typing...</template> 
-                  </template>
-                </span>              
-              </li>
             </ul>
+            <span class="grey-text time"> 
+              {{typingIndicator}}
+            </span>
           </div>
           <div class="card-action">
             <chat-new-message @onInputChange="newChatMessageChange" :participants="chatroom.participants"/>
@@ -113,6 +109,12 @@ export default {
     user () {
       return this.$store.state.user
     },
+    typingIndicator() {
+      if (this.chatroom.whoIsTyping && Object.keys(this.chatroom.whoIsTyping).length > 0) {
+        return Object.keys(this.chatroom.whoIsTyping).map(key => this.chatroom.whoIsTyping[key]).join(", ") + " is typing..."
+      }
+      return "\xa0"
+    },
     membersWithOnlineStatus () {
       if (!this.usersViewingPage) {
         return 
@@ -162,6 +164,17 @@ export default {
     }
   },
   async created () {
+    // add event listener to page to remove user from whoIsTyping
+    window.onbeforeunload = async () => {
+        const roomID = this.$route.params.room_id
+        let chatRoomRef = db.collection('chatrooms').doc(roomID)
+        let chatRoom = await chatRoomRef.get()
+        const whoIsTyping = chatRoom.data().whoIsTyping
+        delete whoIsTyping[this.user.uid]
+        chatRoomRef.update({
+          whoIsTyping
+        })
+    }
     // display users viewing the page 
     const membersRef = db.collection('users').where('isOnline', '==', true)
     const roomID = this.$route.params.room_id
@@ -173,9 +186,22 @@ export default {
     const journeyRef = db.collection('conversations').where('psetID', '==', psetID)
     this.$bind('journeys', journeyRef)
   },
-  async destroyed () {
+  beforeRouteLeave(to, from, next) {
+    // remove user from whoIsTyping
+    const roomID = this.$route.params.room_id
+    let chatRoomRef = db.collection('chatrooms').doc(roomID)
+    chatRoomRef.get().then(chatRoom => {
+        const whoIsTyping = chatRoom.data().whoIsTyping
+        delete whoIsTyping[this.user.uid]
+        chatRoomRef.update({
+        whoIsTyping
+      })
+    })
+    next();
+  },
+  destroyed () {
     const ref = db.collection('users').doc(this.user.uid)
-    await ref.update({
+    ref.update({
       isTalking: false 
     })
   },
@@ -184,6 +210,10 @@ export default {
       return isOnline ? 'fiber_manual_record' : null 
     },
     async newChatMessageChange (event) {
+      if (!this.user.uid) {
+        // early exit if user isn't loaded from db yet
+        return
+      }
       if ((event.target.value.length > 0 && this.chatroom.whoIsTyping[this.user.uid]) || 
           (event.target.value.length === 0 && !this.chatroom.whoIsTyping[this.user.uid])){
         // early exit condition so we don't have to query database everytime
@@ -193,8 +223,8 @@ export default {
       const chatRoomRef = db.collection('chatrooms').doc(roomID)
       let chatRoom = await chatRoomRef.get()
       const whoIsTyping = chatRoom.data().whoIsTyping || {}
-      console.log(whoIsTyping)
       event.target.value.length > 0 ? whoIsTyping[this.user.uid] = this.user.displayName : delete whoIsTyping[this.user.uid]
+      console.log(whoIsTyping)
       chatRoomRef.update({
         whoIsTyping
       })
@@ -349,9 +379,14 @@ span {
   height: 484px;
 }
 
+.card-content.messages-container{
+  padding-bottom: 5px;
+}
+
 .messages {
   max-height: 300px;
   overflow: auto;
+  margin: 5px;
 }
 
 .messages::-webkit-scrollbar {
