@@ -19,10 +19,6 @@
                               iconName="slideshow" 
                               @click="$router.push('/study-groups/' + subject.subjectNumber + '/' + getCurrentPset(subject))"/>
                 <template v-if="user.displayName == 'Elton Lin'">
-                  <!-- <floating-button 
-                            iconName="settings" 
-                            color="grey darken-1" 
-                            @click="startEdit(subject)"/> -->
                   <floating-button 
                             iconName="delete" 
                             color="black" 

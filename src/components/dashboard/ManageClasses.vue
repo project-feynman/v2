@@ -45,8 +45,6 @@ import SearchBox from '@/components/reusables/SearchBox.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 
-
-
 export default {
   components: {
     SearchBox,
@@ -54,7 +52,7 @@ export default {
     PulseButton
   },
   computed: {
-    ...mapState(['user', 'hasFetchedUser']),
+    ...mapState(['user', 'hasFetchedUser']), // returns an array of objects, which we then "spread" out with "..."" 
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
     },
