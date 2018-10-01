@@ -301,8 +301,10 @@ export default {
       }
     },
     async processDeleteAttempt (journey) {
-      const ref = db.collection('conversations').doc(journey.id) 
-      await ref.delete()
+      if (this.user.displayName == 'Elton Lin') {
+        const ref = db.collection('conversations').doc(journey.id) 
+        await ref.delete()
+      }
     },
     async leaveGroup () {
       const simplifiedUser = {
