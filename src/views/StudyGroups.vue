@@ -126,10 +126,8 @@ export default {
     const onlineClassmates = db.collection('users')
                               .where('enrolledSubjects', 'array-contains', subject_id)
                               .where('isOnline', '==', true)
-    await this.$bind('studyGroups', ref)
+    Promise.all([this.$bind('enrolledStudents', studentsRef), this.$bind('onlineClassmates', onlineClassmates), this.$bind('studyGroups', ref)])
     this.loadingGroups = false 
-    await this.$bind('onlineClassmates', onlineClassmates)
-    await this.$bind('enrolledStudents', studentsRef)
   },
   methods: {
     isOwner (group) {
