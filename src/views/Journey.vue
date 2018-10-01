@@ -51,10 +51,7 @@ export default {
   },
   methods: {
     async fetchConversation () {
-      if (this.hasFetchedConversation) {
-        return 
-      }
-      if (!this.hasFetchedUser) {
+      if (this.hasFetchedConversation || !this.hasFetchedUser) {
         return 
       }
       // get document from firestore 
