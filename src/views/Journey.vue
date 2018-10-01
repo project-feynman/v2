@@ -32,7 +32,7 @@ export default {
       return this.$store.state.user 
     },
     hasFetchedUser () {
-      return this.$store.hasFetchedUser
+      return this.$store.state.hasFetchedUser
     }
   },
   data () {
