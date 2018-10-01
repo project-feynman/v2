@@ -37,43 +37,12 @@ export default {
   },
   watch: {
     hasFetchedUser: {
-      handler: 'initOnMouseUp',
+      handler: 'initMouseTools',
       immediate: true 
     }
   },
   mounted () {
     paper.setup('whiteboard')
-    this.tool.onMouseDown = event => {
-      PATH = new Path()
-      PATH.strokeColor = 'black'
-        PATH.strokeWidth = STROKE_WIDTH
-        PATH.strokeCap='round'
-        PATH.strokeJoin='round'
-        PATH.add(event.point)
-        PREV_X = event.point.x
-        PREV_Y = event.point.y
-        PREV_RECORDED = true
-    }
-    this.tool.onMouseDrag = event => {
-      var s = PATH.getSegments()
-      var ep = event.point
-      var dx = ep.x-PREV_X
-      var dy = ep.y-PREV_Y
-      if (dx*dx+dy*dy>10) {
-          PREV_X = ep.x
-          PREV_Y = ep.y
-          PREV_RECORDED = true
-          PATH.add(event.point)
-          PATH.smooth()
-      }
-      else {
-        if (!PREV_RECORDED) {
-          PATH.removeSegment(s.length-1)
-        }
-        PATH.add(event.point)
-        PREV_RECORDED = false
-      }
-    }
     // sync whiteboard to Firestore 
     const roomID = this.$route.params.room_id
     const ref = db.collection('whiteboards').doc(roomID)
@@ -124,7 +93,7 @@ export default {
       })
       this.loadedPreviousDrawings = true
     },
-    initOnMouseUp () {
+    initMouseTools () {
       if (!this.hasFetchedUser) {
         return 
       }
@@ -156,6 +125,37 @@ export default {
           allPaths: updatedPaths
         })
         PATH = null 
+      }
+      this.tool.onMouseDown = event => {
+        PATH = new Path()
+        PATH.strokeColor = 'black'
+        PATH.strokeWidth = STROKE_WIDTH
+        PATH.strokeCap='round'
+        PATH.strokeJoin='round'
+        PATH.add(event.point)
+        PREV_X = event.point.x
+        PREV_Y = event.point.y
+        PREV_RECORDED = true
+      }
+      this.tool.onMouseDrag = event => {
+        var s = PATH.getSegments()
+        var ep = event.point
+        var dx = ep.x-PREV_X
+        var dy = ep.y-PREV_Y
+        if (dx*dx+dy*dy>10) {
+            PREV_X = ep.x
+            PREV_Y = ep.y
+            PREV_RECORDED = true
+            PATH.add(event.point)
+            PATH.smooth()
+        }
+        else {
+          if (!PREV_RECORDED) {
+            PATH.removeSegment(s.length-1)
+          }
+          PATH.add(event.point)
+          PREV_RECORDED = false
+        }
       }
     }
   }
