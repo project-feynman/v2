@@ -8,13 +8,10 @@
         </p>
       </popup-modal>
     </template>
-    <template v-if="hasFetchedUser">
-      <p v-if="!user.enrolledSubjects" class="yellow-text center">Add a class from below to get started.</p>
-      <p v-else-if="user.enrolledSubjects.length == 0" class="yellow-text center">Add a class from below to get started</p>
-    </template>
+    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
-        label="Add a class to dashboard" 
+        label="Find and add existing subject to dashboard" 
         :allResults="objectOfClasses"   
         @select="payload => addClass(payload)"/>
     </div>
@@ -40,7 +37,6 @@
 import db from '@/firebase/init.js'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { mapState } from 'vuex'
 import SearchBox from '@/components/reusables/SearchBox.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
@@ -52,8 +48,9 @@ export default {
     PulseButton
   },
   computed: {
-    // "mapState" returns an array of objects/methods, which we then "spread" out with "..."" to integrate into "computed""
-    ...mapState(['user', 'hasFetchedUser']),  
+    user () {
+      return this.$store.state.user 
+    },
     isLoggedIn () {
       return this.user != 'undetermined' && this.user != null 
     },
@@ -92,7 +89,14 @@ export default {
         await ref.update({
           enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
         })
+        this.$emit('add-class')
       }
+    },
+    async resetClasses () {
+      const ref = db.collection('users').doc(this.user.uid) 
+      await ref.update({
+        enrolledSubjects: [] 
+      })
     },
     async addSubject () {
       const newObject = {
@@ -103,6 +107,21 @@ export default {
       this.newSubject = ''
       await ref.set(newObject)
     }
+  },
+  watch: {
+    isLoggedIn () {
+      if (this.isLoggedIn) {
+        if (!this.user.enrolledSubjects) {
+          this.feedback = "Welcome - to get started, select classes you're taking this term" 
+        } else if (this.user.enrolledSubjects.length == 0) {
+          this.feedback = "Welcome - to get started, select classes you're taking this term" 
+        }
+      }
+    }
   }
 }
 </script>
+
+<style scoped lang="scss">
+</style>
+

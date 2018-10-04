@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- <div class="center">
+    <base-button @click="resetBoard()">Reset Board</base-button>
+    </div> -->
     <canvas id="whiteboard" resize></canvas>
   </div>
 </template>
@@ -16,12 +19,21 @@ var PREV_Y = null
 var PREV_RECORDED = false
 
 export default {
+  created () {
+    paper.install(window)
+  },
   computed: {
     user () {
       return this.$store.state.user 
-    },
-    hasFetchedUser () {
-      return this.$store.state.hasFetchedUser 
+    }
+  },
+  watch: {
+    user () {
+      if (this.user != null && this.user != 'undetermined') {
+        if (!this.onMouseUpInitialized) {
+          this.initOnMouseUp() 
+        } 
+      }
     }
   },
   data () {
@@ -29,20 +41,49 @@ export default {
       whiteboard: null,
       numOfPaths: 0,
       loadedPreviousDrawings: false,
-      tool: null 
-    }
-  },
-  created () {
-    paper.install(window)
-  },
-  watch: {
-    hasFetchedUser: {
-      handler: 'initMouseTools',
-      immediate: true 
+      onMouseUpInitialized: false
     }
   },
   mounted () {
+    // setup paper.js 
     paper.setup('whiteboard')
+    var tool = new Tool()
+    tool.onMouseDown = event => {
+      PATH = new Path()
+      PATH.strokeColor = 'black'
+        PATH.strokeWidth = STROKE_WIDTH
+        PATH.strokeCap='round'
+        PATH.strokeJoin='round'
+        PATH.add(event.point)
+        PREV_X = event.point.x
+        PREV_Y = event.point.y
+        PREV_RECORDED = true
+    }
+      tool.onMouseDrag = event => {
+          var s = PATH.getSegments()
+          var ep = event.point
+          var dx = ep.x-PREV_X
+          var dy = ep.y-PREV_Y
+          if(dx*dx+dy*dy>10){
+              PREV_X = ep.x
+              PREV_Y = ep.y
+              PREV_RECORDED = true
+        	PATH.add(event.point)
+              PATH.smooth()
+          }
+          else{
+              if(!PREV_RECORDED){
+                  PATH.removeSegment(s.length-1)
+              }
+                  PATH.add(event.point)
+              PREV_RECORDED = false
+          }
+    }
+    if (this.user != null && this.user != 'undetermined') {
+      if (!this.onMouseUpInitialized) {    
+        this.initOnMouseUp()
+      }
+    }
     // sync whiteboard to Firestore 
     const roomID = this.$route.params.room_id
     const ref = db.collection('whiteboards').doc(roomID)
@@ -80,6 +121,7 @@ export default {
         allPaths: []
       })
     },
+
     drawAllPaths () {
       if (this.whiteboard == null) { return }
       this.whiteboard.allPaths.forEach(stroke => {
@@ -93,14 +135,9 @@ export default {
       })
       this.loadedPreviousDrawings = true
     },
-    initMouseTools () {
-      if (!this.hasFetchedUser) {
-        return 
-      }
-      if (!this.tool) {
-        this.tool = new Tool()
-      }
-      this.tool.onMouseUp = async event => {
+    initOnMouseUp () {
+      this.onMouseUpInitialized = true 
+      tool.onMouseUp = async event => {
           PATH.add(event.point)
           PATH.smooth()
         // const segments = this.path.getSegments()
@@ -125,37 +162,6 @@ export default {
           allPaths: updatedPaths
         })
         PATH = null 
-      }
-      this.tool.onMouseDown = event => {
-        PATH = new Path()
-        PATH.strokeColor = 'black'
-        PATH.strokeWidth = STROKE_WIDTH
-        PATH.strokeCap='round'
-        PATH.strokeJoin='round'
-        PATH.add(event.point)
-        PREV_X = event.point.x
-        PREV_Y = event.point.y
-        PREV_RECORDED = true
-      }
-      this.tool.onMouseDrag = event => {
-        var s = PATH.getSegments()
-        var ep = event.point
-        var dx = ep.x-PREV_X
-        var dy = ep.y-PREV_Y
-        if (dx*dx+dy*dy>10) {
-            PREV_X = ep.x
-            PREV_Y = ep.y
-            PREV_RECORDED = true
-            PATH.add(event.point)
-            PATH.smooth()
-        }
-        else {
-          if (!PREV_RECORDED) {
-            PATH.removeSegment(s.length-1)
-          }
-          PATH.add(event.point)
-          PREV_RECORDED = false
-        }
       }
     }
   }
