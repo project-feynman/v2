@@ -50,11 +50,11 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatrooms/{roo
 	const message = messages[messages.length - 1]
 	const senderName = message.author.displayName
 	const senderUid = message.author.uid
-	console.log(message)
+	/* console.log(message) */
 	receivers = participants.filter((participant) => participant.uid !== senderUid)
-	console.log('receivers = ' + receivers)
+	/* console.log('receivers = ' + receivers) */
 	receiverUids = receivers.map((receiver) => receiver.uid)
-	console.log('receiver uids = ' + receiverUids)
+	/* console.log('receiver uids = ' + receiverUids) */
 	receiverUids.forEach(function(receiverUid) {
 		firestore.doc('/users/' + receiverUid).get().then(async snapshot => {
 			var receiverSubscriptions = snapshot.data().subscriptions
@@ -70,8 +70,7 @@ exports.notificationOnNewMessage = functions.firestore.document('/chatrooms/{roo
 					body: message.content,
 					type: "message"
 				}
-				console.log(payload)
-				webpush.sendNotification(subscription, JSON.stringify(payload)).catch((err) => console.log(err))
+				webpush.sendNotification(subscription, JSON.stringify(payload)).catch((err) => console.log(receiverUid + '\n' + sub + '\n' + err))
 			})
 		})
 	})
