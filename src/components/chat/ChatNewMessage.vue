@@ -5,7 +5,9 @@
       <input type="text" name="new-message" @input="emitChange" v-model="newMessage">
     </form>
   </div>
+  <!-- Add comments and remove print statements -->
 </template>
+
 
 <script>
 import firebase from 'firebase/app'
