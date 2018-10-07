@@ -184,6 +184,9 @@ export default {
       return isOnline ? 'fiber_manual_record' : null 
     },
     async newChatMessageChange (event) {
+      if (!this.chatroom.whoIsTyping) {
+        return 
+      }
       if ((event.target.value.length > 0 && this.chatroom.whoIsTyping[this.user.uid]) || 
           (event.target.value.length === 0 && !this.chatroom.whoIsTyping[this.user.uid])){
         // early exit condition so we don't have to query database everytime
@@ -195,6 +198,7 @@ export default {
       const whoIsTyping = chatRoom.data().whoIsTyping || {}
       console.log(whoIsTyping)
       event.target.value.length > 0 ? whoIsTyping[this.user.uid] = this.user.displayName : delete whoIsTyping[this.user.uid]
+      console.log('whoIsTyping =', whoIsTyping)
       chatRoomRef.update({
         whoIsTyping
       })
