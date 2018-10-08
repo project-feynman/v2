@@ -3,7 +3,7 @@
     <!-- <div class="center">
     <base-button @click="resetBoard()">Reset Board</base-button>
     </div> -->
-    <canvas id="whiteboard" resize></canvas>
+    <canvas :id="id" resize></canvas>
   </div>
 </template>
 
@@ -20,7 +20,8 @@ var PREV_RECORDED = false
 
 export default {
   created () {
-    paper.install(window)
+      paper.install(window)
+      this.id="awb"+this.uid
   },
   computed: {
     user () {
@@ -41,12 +42,13 @@ export default {
       whiteboard: null,
       numOfPaths: 0,
       loadedPreviousDrawings: false,
-      onMouseUpInitialized: false
+        onMouseUpInitialized: false,
+        id:null
     }
   },
   mounted () {
     // setup paper.js 
-    paper.setup('whiteboard')
+    paper.setup(this.id)
     var tool = new Tool()
     tool.onMouseDown = event => {
       PATH = new Path()
