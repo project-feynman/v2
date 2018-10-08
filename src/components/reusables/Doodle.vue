@@ -79,6 +79,7 @@ export default {
         },
         drawPath (data) {
             var path = new Path()
+            this.paper.activate()
             path.strokeColor = 'pink'
             path.strokeWidth = STROKE_WIDTH
             path.strokeCap = 'round'
