@@ -27,23 +27,23 @@
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <div class="card-wrapper">
-            <base-card>
-              <p class="teal-text card-info">{{ group.title }}</p>
-              <p class="black-text card-info" style="margin-bottom: 25px;">
-                Created by {{ group.owner.displayName }} 
-              </p>
-              <floating-button iconName="slideshow" 
-                               color="green" 
-                               @click="$router.push('/chat/' + group.id)"/>
-              <template v-if="isOwner(group)">
-                <floating-button iconName="mode_edit" 
-                                 color="yellow darken-2" 
-                                 @click="editGroup(group)"/>
-                <floating-button iconName="delete" 
-                                 color="red" 
-                                 @click="deleteGroup(group)"/>
-              </template>
-            </base-card>
+              <base-card>
+                <p class="teal-text card-info">{{ group.title }}</p>
+                <p class="black-text card-info" style="margin-bottom: 25px;">
+                  Created by {{ group.owner.displayName }} 
+                </p>
+                <floating-button iconName="slideshow" 
+                                color="green" 
+                                @click="$router.push('/chat/' + group.id)"/>
+                <template v-if="isOwner(group)">
+                  <floating-button iconName="mode_edit" 
+                                  color="yellow darken-2" 
+                                  @click="editGroup(group)"/>
+                  <floating-button iconName="delete" 
+                                  color="red" 
+                                  @click="deleteGroup(group)"/>
+                </template>
+              </base-card>
             </div>
           </div>
         </template>
@@ -148,6 +148,7 @@ export default {
       const chatRef = db.collection('chatrooms')
       const result = await chatRef.add({
         messages: [],
+        whoIsTyping: {},
         participants: [simplifiedUser],
         forSubject: subject_id,
         psetNumber: pset_number,

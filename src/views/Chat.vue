@@ -217,6 +217,7 @@ export default {
       if (this.chatroom.whoIsTyping && 
           ((event.target.value.length > 0 && this.chatroom.whoIsTyping[this.user.uid]) || 
           (event.target.value.length === 0 && !this.chatroom.whoIsTyping[this.user.uid]))){
+
         // early exit condition so we don't have to query database everytime
         return
       }
@@ -224,6 +225,7 @@ export default {
       const chatRoomRef = db.collection('chatrooms').doc(roomID)
       let chatRoom = await chatRoomRef.get()
       const whoIsTyping = chatRoom.data().whoIsTyping || {}
+      console.log(whoIsTyping, 'is typing...')
       event.target.value.length > 0 ? whoIsTyping[this.user.uid] = this.user.displayName : delete whoIsTyping[this.user.uid]
       chatRoomRef.update({
         whoIsTyping
