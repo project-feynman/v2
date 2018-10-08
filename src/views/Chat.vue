@@ -33,6 +33,7 @@
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
               <li v-for="message in chatroom.messages" :key="message.id">
+                <!-- <p>{{ chatroom.messages }}</p> -->
                 <span class="teal-text">{{ message.author.displayName }}: </span>
                 <span class="grey-text text-darken-3">{{ message.content }}</span>
                 <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
@@ -87,7 +88,6 @@ import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import db from '@/firebase/init.js'
-import { constants } from 'zlib';
 
 export default {
   components: {
@@ -193,9 +193,7 @@ export default {
       const chatRoomRef = db.collection('chatrooms').doc(roomID)
       let chatRoom = await chatRoomRef.get()
       const whoIsTyping = chatRoom.data().whoIsTyping || {}
-      console.log(whoIsTyping, 'is typing...')
       event.target.value.length > 0 ? whoIsTyping[this.user.uid] = this.user.displayName : delete whoIsTyping[this.user.uid]
-      console.log('whoIsTyping =', whoIsTyping)
       chatRoomRef.update({
         whoIsTyping
       })
