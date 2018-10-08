@@ -160,7 +160,8 @@ export default {
         forSubject: subject_id,
         psetNumber: pset_number,
         title: chosenTitle,
-        owner: simplifiedUser
+        owner: simplifiedUser,
+        whoIsTyping: {}
       })
       const chatroomID = result.id 
       const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
