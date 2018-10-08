@@ -33,7 +33,7 @@
           </template>
       </div>
     </template>
-    <manage-classes></manage-classes>
+    <manage-classes/>
   </div>
 </template>
 

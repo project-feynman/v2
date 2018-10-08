@@ -45,9 +45,7 @@ export default {
         const data = chatRoom.data()
         this.messages = data.messages
         const whoIsTyping = data.whoIsTyping
-        if (whoIsTyping) {
-          delete whoIsTyping[this.user.uid]
-        }
+        delete whoIsTyping[this.user.uid]
         const author = {
           displayName: this.user.displayName,
           uid: this.user.uid 
@@ -57,18 +55,11 @@ export default {
           author,
           timestamp: Date.now()
         })
-        if (whoIsTyping) {
-          await chatRoomRef.update({
-            messages: this.messages,
-            participants: firebase.firestore.FieldValue.arrayUnion(author),
-            whoIsTyping
-          })
-        } else {
-          await chatRoomRef.update({
-            messages: this.messages,
-            participants: firebase.firestore.FieldValue.arrayUnion(author),
-          })
-        }
+        await chatRoomRef.update({
+          messages: this.messages,
+          participants: firebase.firestore.FieldValue.arrayUnion(author),
+          whoIsTyping
+        })
       }
     }
   }

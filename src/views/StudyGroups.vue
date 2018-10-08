@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <chat-window :messages="subject.messages"></chat-window> -->
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -27,23 +28,23 @@
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
             <div class="card-wrapper">
-            <base-card>
-              <p class="teal-text card-info">{{ group.title }}</p>
-              <p class="black-text card-info" style="margin-bottom: 25px;">
-                Created by {{ group.owner.displayName }} 
-              </p>
-              <floating-button iconName="slideshow" 
-                               color="green" 
-                               @click="$router.push('/chat/' + group.id)"/>
-              <template v-if="isOwner(group)">
-                <floating-button iconName="mode_edit" 
-                                 color="yellow darken-2" 
-                                 @click="editGroup(group)"/>
-                <floating-button iconName="delete" 
-                                 color="red" 
-                                 @click="deleteGroup(group)"/>
-              </template>
-            </base-card>
+              <base-card>
+                <p class="teal-text card-info">{{ group.title }}</p>
+                <p class="black-text card-info" style="margin-bottom: 25px;">
+                  Created by {{ group.owner.displayName }} 
+                </p>
+                <floating-button iconName="slideshow" 
+                                color="green" 
+                                @click="$router.push('/chat/' + group.id)"/>
+                <template v-if="isOwner(group)">
+                  <floating-button iconName="mode_edit" 
+                                  color="yellow darken-2" 
+                                  @click="editGroup(group)"/>
+                  <floating-button iconName="delete" 
+                                  color="red" 
+                                  @click="deleteGroup(group)"/>
+                </template>
+              </base-card>
             </div>
           </div>
         </template>
@@ -64,6 +65,7 @@ import CollectionList from '@/components/reusables/CollectionList.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import FloatingButton from '@/components/reusables/FloatingButton.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
+import ChatWindow from '@/components/reusables/ChatWindow.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
@@ -72,7 +74,8 @@ export default {
     CollectionList,
     PulseButton,
     FloatingButton,
-    PopupModal
+    PopupModal,
+    ChatWindow
   },
   computed: {
     user () {
@@ -105,9 +108,9 @@ export default {
       editID: '',
       enrolledStudents: [],
       onlineClassmates: [],
-      defaultTitles: ['Doing Q1 in Student Center 5th', 
-                      'Doing LATEX write-up in Hayden 2nd', 
-                      '<Current Question><Location>']
+      defaultTitles: ['Edit title here...', 
+                      'Edit title here...', 
+                      'Edit title here...']
     }
   },
   async created () {
@@ -120,6 +123,10 @@ export default {
                               .where('enrolledSubjects', 'array-contains', subject_id)
                               .where('isOnline', '==', true)
     Promise.all([this.$bind('enrolledStudents', studentsRef), this.$bind('onlineClassmates', onlineClassmates), this.$bind('studyGroups', ref)])
+    // load the chat from the subject 
+    // const subjectRef = db.collection('subjects').doc(subject_id)
+    // await this.$bind('subject', subjectRef)
+    // console.log('subject messages =', this.subject.messages)
     this.loadingGroups = false 
   },
   methods: {
@@ -148,11 +155,13 @@ export default {
       const chatRef = db.collection('chatrooms')
       const result = await chatRef.add({
         messages: [],
+        whoIsTyping: {},
         participants: [simplifiedUser],
         forSubject: subject_id,
         psetNumber: pset_number,
         title: chosenTitle,
-        owner: simplifiedUser
+        owner: simplifiedUser,
+        whoIsTyping: {}
       })
       const chatroomID = result.id 
       const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
