@@ -33,7 +33,6 @@ export default {
     this.paper.install(window)
   },
   mounted () {
-    // setup paper.js 
     this.paper.setup('whiteboard')
     this.drawAllPaths() 
   },
