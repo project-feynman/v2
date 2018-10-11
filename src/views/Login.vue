@@ -3,11 +3,8 @@
     <h1>Feynman Project (Beta)</h1>
     <div style="display: flex; justify-content: space-around;">
       <doodle :allStrokes="featureThree"></doodle>
-
       <doodle :allStrokes="showcase"></doodle>
-            <doodle :allStrokes="featureTwo"></doodle>
-    
- 
+      <doodle :allStrokes="featureTwo"></doodle>
     </div>
     <hr>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
