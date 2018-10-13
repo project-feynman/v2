@@ -75,8 +75,6 @@ export default {
 	},
 	async created() {
 		const ref = db.collection('subjects')
-		// dead pointers
-
 		await this.$bind('classes', ref)
 	},
 	methods: {

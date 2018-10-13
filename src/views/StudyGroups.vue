@@ -70,149 +70,158 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 
 export default {
-  components: {
-    CollectionList,
-    PulseButton,
-    FloatingButton,
-    PopupModal,
-    ChatWindow
-  },
-  computed: {
-    user () {
-      return this.$store.state.user
-    },
-    isLoggedIn () {
-      return this.user != 'undetermined' && this.user != null 
-    },
-    usersAvalibility() {
-      const activeUIDs = this.onlineClassmates.reduce((prev, obj) => {
-        prev[obj.uid] = true;
-        return prev
-      }, {})
-      return this.enrolledStudents.map(user => {
-        return {
-          displayName: user.displayName, 
-          isOnline: activeUIDs[user.uid] ? true : false
-        } 
-      })
-    }
-  },
-  data () {
-    return {
-      subject: {},
-      studyGroups: [],
-      loadingGroups: true, 
-      showPopup: false,
-      isEditting: false,
-      editTitle: '',
-      editID: '',
-      enrolledStudents: [],
-      onlineClassmates: [],
-      defaultTitles: ['Edit title here...', 
-                      'Edit title here...', 
-                      'Edit title here...']
-    }
-  },
-  async created () {
-    const subject_id = this.$route.params.subject_id
-    const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
-    const studentsRef = db.collection('users')
-                            .where('enrolledSubjects', 'array-contains', subject_id)
-                            // .where('isOnline', '==', true) 
-    const onlineClassmates = db.collection('users')
-                              .where('enrolledSubjects', 'array-contains', subject_id)
-                              .where('isOnline', '==', true)
-    Promise.all([this.$bind('enrolledStudents', studentsRef), this.$bind('onlineClassmates', onlineClassmates), this.$bind('studyGroups', ref)])
-    // load the chat from the subject 
-    // const subjectRef = db.collection('subjects').doc(subject_id)
-    // await this.$bind('subject', subjectRef)
-    // console.log('subject messages =', this.subject.messages)
-    this.loadingGroups = false 
-  },
-  methods: {
-    isOwner (group) {
-      return this.user.uid == group.owner.uid || this.user.displayName == 'Elton Lin'
-    },
-    async updateUser () {
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        firstTimeViewingGroups: false 
-      })
-    },
-    async createGroup () {
-      if (!this.isLoggedIn) {
-        return 
-      }
-      const subject_id = this.$route.params.subject_id
-      const pset_number = this.$route.params.pset_number
-      // designate a chatroom for it (and the associated whiteboard)
-      const simplifiedUser = {
-        displayName: this.user.displayName,
-        uid: this.user.uid 
-      }
-      const randomNumber = Math.floor(Math.random()*this.defaultTitles.length-1)+1
-      const chosenTitle = this.defaultTitles[randomNumber]
-      const chatRef = db.collection('chatrooms')
-      const result = await chatRef.add({
-        messages: [],
-        whoIsTyping: {},
-        participants: [simplifiedUser],
-        forSubject: subject_id,
-        psetNumber: pset_number,
-        title: chosenTitle,
-        owner: simplifiedUser,
-        whoIsTyping: {}
-      })
-      const chatroomID = result.id 
-      const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
-      await whiteboardRef.set({
-        allPaths: []  
-      })
-      this.feedback = 'Success'
-      setTimeout(() => this.feedback = '', 500)
-    },
-    async editGroup(group) {
-      this.isEditting = true 
-      this.editTitle = group.title
-      this.editID = group.id 
-    },
-    async saveTitle(group) {
-      this.isEditting = false 
-      const ref = db.collection('chatrooms').doc(this.editID)
-      await ref.update({
-        title: this.editTitle 
-      })
-      this.editTitle = '' 
-    },
-    async deleteGroup ({ id, forSubject }) {
-      const ref = db.collection('chatrooms').doc(id) 
-      await ref.delete()  
-    }
-  }
+	components: {
+		CollectionList,
+		PulseButton,
+		FloatingButton,
+		PopupModal,
+		ChatWindow
+	},
+	computed: {
+		user() {
+			return this.$store.state.user
+		},
+		isLoggedIn() {
+			return this.user != 'undetermined' && this.user != null
+		},
+		usersAvalibility() {
+			const activeUIDs = this.onlineClassmates.reduce((prev, obj) => {
+				prev[obj.uid] = true
+				return prev
+			}, {})
+			return this.enrolledStudents.map(user => {
+				return {
+					displayName: user.displayName,
+					isOnline: activeUIDs[user.uid] ? true : false
+				}
+			})
+		}
+	},
+	data() {
+		return {
+			subject: {},
+			studyGroups: [],
+			loadingGroups: true,
+			showPopup: false,
+			isEditting: false,
+			editTitle: '',
+			editID: '',
+			enrolledStudents: [],
+			onlineClassmates: [],
+			defaultTitles: [
+				'Edit title here...',
+				'Edit title here...',
+				'Edit title here...'
+			]
+		}
+	},
+	async created() {
+		const subject_id = this.$route.params.subject_id
+		const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
+		const studentsRef = db
+			.collection('users')
+			.where('enrolledSubjects', 'array-contains', subject_id)
+		// .where('isOnline', '==', true)
+		const onlineClassmates = db
+			.collection('users')
+			.where('enrolledSubjects', 'array-contains', subject_id)
+			.where('isOnline', '==', true)
+		Promise.all([
+			this.$bind('enrolledStudents', studentsRef),
+			this.$bind('onlineClassmates', onlineClassmates),
+			this.$bind('studyGroups', ref)
+		])
+		// load the chat from the subject
+		// const subjectRef = db.collection('subjects').doc(subject_id)
+		// await this.$bind('subject', subjectRef)
+		// console.log('subject messages =', this.subject.messages)
+		this.loadingGroups = false
+	},
+	methods: {
+		isOwner(group) {
+			return (
+				this.user.uid == group.owner.uid || this.user.displayName == 'Elton Lin'
+			)
+		},
+		async updateUser() {
+			const ref = db.collection('users').doc(this.user.uid)
+			await ref.update({
+				firstTimeViewingGroups: false
+			})
+		},
+		async createGroup() {
+			if (!this.isLoggedIn) {
+				return
+			}
+			const subject_id = this.$route.params.subject_id
+			// designate a chatroom for it (and the associated whiteboard)
+			const simplifiedUser = {
+				displayName: this.user.displayName,
+				uid: this.user.uid
+			}
+			const randomNumber =
+				Math.floor(Math.random() * this.defaultTitles.length - 1) + 1
+			const chosenTitle = this.defaultTitles[randomNumber]
+			const chatRef = db.collection('chatrooms')
+			const result = await chatRef.add({
+				messages: [],
+				whoIsTyping: {},
+				participants: [simplifiedUser],
+				forSubject: subject_id,
+				title: chosenTitle,
+				owner: simplifiedUser,
+				whoIsTyping: {}
+			})
+			const chatroomID = result.id
+			const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
+			await whiteboardRef.set({
+				allPaths: []
+			})
+			this.feedback = 'Success'
+			setTimeout(() => (this.feedback = ''), 500)
+		},
+		async editGroup(group) {
+			this.isEditting = true
+			this.editTitle = group.title
+			this.editID = group.id
+		},
+		async saveTitle(group) {
+			this.isEditting = false
+			const ref = db.collection('chatrooms').doc(this.editID)
+			await ref.update({
+				title: this.editTitle
+			})
+			this.editTitle = ''
+		},
+		async deleteGroup({ id, forSubject }) {
+			const ref = db.collection('chatrooms').doc(id)
+			await ref.delete()
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 .responsive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 15px;
-  max-width: 90%;
-  margin: 0 auto 30px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 15px;
+	max-width: 90%;
+	margin: 0 auto 30px;
 }
 
 .card-info {
-  font-size: 0.7em;
+	font-size: 0.7em;
 }
 
 .grid-item {
-  border-radius: 5px;
-  padding: 20px;
-  font-size: 150%;
+	border-radius: 5px;
+	padding: 20px;
+	font-size: 150%;
 }
 
 .user-online {
-  font-size: 10px; 
-  color: #4aba34;
+	font-size: 10px;
+	color: #4aba34;
 }
 </style>
