@@ -92,7 +92,7 @@ export default {
 		drawPath(data) {
 			var path = new Path()
 			this.paper.activate()
-			path.strokeColor = 'pink'
+			path.strokeColor = 'purple'
 			path.strokeWidth = STROKE_WIDTH
 			path.strokeCap = 'round'
 			path.strockJoin = 'round'
