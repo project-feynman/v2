@@ -89,6 +89,8 @@ export default {
 				prev[obj.uid] = true
 				return prev
 			}, {})
+			console.log('activeUIDs =', activeUIDs)
+			console.log('this.enrolledStudents =', this.enrolledStudents)
 			return this.enrolledStudents.map(user => {
 				return {
 					displayName: user.displayName,
@@ -154,7 +156,6 @@ export default {
 				return
 			}
 			const subject_id = this.$route.params.subject_id
-
 			// designate a chatroom for it (and the associated whiteboard)
 			const simplifiedUser = {
 				displayName: this.user.displayName,

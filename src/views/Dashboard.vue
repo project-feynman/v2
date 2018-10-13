@@ -90,9 +90,16 @@ export default {
 			this.loading = false
 		},
 		async deleteSubject({ id }) {
+			console.log('deleteSubject()')
 			const ref = db.collection('users').doc(this.user.uid)
+			// remove user's reference
 			await ref.update({
 				enrolledSubjects: firebase.firestore.FieldValue.arrayRemove(id)
+			})
+			// remove subject's reference
+			const subjectRef = db.collection('subjects').doc(id)
+			await subjectRef.update({
+				enrolledUsers: firebase.firestore.FieldValue.arrayRemove(this.user.uid)
 			})
 		},
 		numberOfOnlineClassmates({ enrolledUsers }) {

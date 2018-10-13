@@ -93,6 +93,7 @@ export default {
 						subjectNumber
 					)
 				})
+				console.log('added subject to user')
 				// user reference to the user
 				const subjectRef = db.collection('subjects').doc(subjectNumber)
 				await subjectRef.update({
