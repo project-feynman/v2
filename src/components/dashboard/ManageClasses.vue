@@ -74,7 +74,7 @@ export default {
 		}
 	},
 	async created() {
-		const ref = db.collection('betaSubjects')
+		const ref = db.collection('subjects')
 		// dead pointers
 
 		await this.$bind('classes', ref)
@@ -97,7 +97,7 @@ export default {
 					)
 				})
 				// user reference to the user
-				const subjectRef = db.collection('betaSubjects').doc(subjectNumber)
+				const subjectRef = db.collection('subjects').doc(subjectNumber)
 				await subjectRef.update({
 					enrolledUsers: firebase.firestore.FieldValue.arrayUnion(this.user.uid)
 				})
@@ -116,7 +116,7 @@ export default {
 				numOnline: 0,
 				numEnrolled: 0
 			}
-			const ref = db.collection('betaSubjects').doc(this.newSubject)
+			const ref = db.collection('subjects').doc(this.newSubject)
 			this.newSubject = ''
 			await ref.set(newObject)
 		}

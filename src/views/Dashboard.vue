@@ -84,7 +84,7 @@ export default {
 				return
 			}
 			const enrolledSubjects = db
-				.collection('betaSubjects')
+				.collection('subjects')
 				.where('enrolledUsers', 'array-contains', this.user.uid)
 			this.$bind('betaSubjects', enrolledSubjects)
 			this.loading = false
