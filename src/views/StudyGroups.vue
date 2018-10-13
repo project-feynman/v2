@@ -154,6 +154,7 @@ export default {
 				return
 			}
 			const subject_id = this.$route.params.subject_id
+
 			// designate a chatroom for it (and the associated whiteboard)
 			const simplifiedUser = {
 				displayName: this.user.displayName,
@@ -173,6 +174,12 @@ export default {
 				whoIsTyping: {}
 			})
 			const chatroomID = result.id
+			// add reference to the room for the user
+			const userRef = db.collection('users').doc(this.user.uid)
+			userRef.update({
+				chatrooms: firebase.firestore.FieldValue.arrayUnion(chatroomID)
+			})
+			// setup whiteboard for the chatroom
 			const whiteboardRef = db.collection('whiteboards').doc(chatroomID)
 			await whiteboardRef.set({
 				allPaths: []

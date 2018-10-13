@@ -16,6 +16,7 @@
         :allResults="objectOfClasses"   
         @select="payload => addClass(payload)"/>
     </div>
+    <!-- Input for creating a new subject on Feynman -->
     <div style="width: 50%; margin: auto;">
       <div class="row">
         <div class="col s12">
@@ -41,6 +42,7 @@ import 'firebase/firestore'
 import SearchBox from '@/components/reusables/SearchBox.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
@@ -49,9 +51,7 @@ export default {
 		PulseButton
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
+		...mapState(['user', 'hasFetchedUser']),
 		isLoggedIn() {
 			return this.user != 'undetermined' && this.user != null
 		},
@@ -86,7 +86,6 @@ export default {
 		},
 		async addClass(subjectNumber) {
 			if (this.isLoggedIn) {
-				console.log('addClass is executing')
 				// user reference to the subject
 				const ref = db.collection('users').doc(this.user.uid)
 				await ref.update({
