@@ -1,10 +1,18 @@
 <template>
   <div>
     <h1>Feynman Project (Beta)</h1>
-    <div style="display: flex; justify-content: space-around;">
-      <doodle :allStrokes="featureThree"></doodle>
-      <doodle :allStrokes="showcase"></doodle>
-      <doodle :allStrokes="featureTwo"></doodle>
+    <div style="display: flex; justify-content: space-evenly;">
+      <div id="first">
+        <!-- this is getting populated in the second - why the fuck is that happening -->
+        <!-- the draw targets are still correct according to print statements - but then when board 2 and board 3 just keep drawing on 1 for some reason -->
+        <doodle :allStrokes="featureThree" strokeColor="red"></doodle>
+      </div>
+      <div id="second">
+        <doodle :allStrokes="showcase" strokeColor="green"></doodle>
+      </div>
+      <div>
+        <doodle :allStrokes="featureTwo" strokeColor="purple"></doodle>
+      </div>
     </div>
     <hr>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
@@ -100,10 +108,6 @@ export default {
 <style lang="scss" scoped>
 p {
 	@extend .black-text;
-}
-
-.showcase-container {
-	margin: auto;
 }
 
 .light-card {

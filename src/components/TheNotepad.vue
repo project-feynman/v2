@@ -6,10 +6,17 @@
 import paper from 'paper'
 
 export default {
+	data() {
+		return {
+			paperScope: null
+		}
+	},
 	mounted() {
 		let notepad = document.getElementById('notepad')
+
 		paper.setup(notepad) // create an empty project and view for the canvas
 		console.log('paper.projects =', paper.projects)
+		console.log('scope id =', paper)
 		// draw path
 		let path = new paper.Path()
 		path.strokeColor = 'pink'
@@ -18,6 +25,10 @@ export default {
 		path.add(start)
 		path.add(end)
 		paper.view.draw()
+
+		this.paper = new paper.PaperScope()
+		this.paper.activate()
+		console.log('new paper =', paper.paper)
 	}
 }
 </script>

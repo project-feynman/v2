@@ -8,12 +8,20 @@
 import paper from 'paper'
 import db from '@/firebase/init.js'
 
-var PATH = null
 var STROKE_WIDTH = 2
+
+let local = {
+	path: null,
+	group: null
+}
 
 export default {
 	props: {
-		allStrokes: Array
+		allStrokes: Array,
+		strokeColor: {
+			type: String,
+			default: 'purple'
+		}
 	},
 	data() {
 		return {
@@ -23,9 +31,7 @@ export default {
 			height: null,
 			width: null,
 			whiteboard: null,
-			numOfPaths: 0,
 			loadedPreviousDrawings: false,
-			onMouseUpInitialized: false,
 			paper: null,
 			id: null
 		}
@@ -33,12 +39,17 @@ export default {
 	created() {
 		console.log('allStrokes (from Doodle) =', this.allStrokes)
 		this.id = 'wb' + this._uid
+		console.log('this._uid =,', this._uid)
 		this.paper = new paper.PaperScope()
+		console.log('whiteboard, paper =', this.id, this.paper._id)
 		this.paper.install(window)
 	},
 	mounted() {
 		this.canvas = document.getElementById(this.id)
 		this.paper.setup(this.id)
+		console.log(
+			`during setup, whiteboard ${this.id}'s view is ${this.paper.view}`
+		)
 		this.drawAllPaths()
 	},
 	watch: {
@@ -49,7 +60,7 @@ export default {
 			// will probably only trigger once
 			this.height = this.canvas.scrollHeight
 			this.width = this.canvas.scrollWidth
-			this.scaleFactorX = this.canvas.scrollWidth / 900
+			this.scaleFactorX = this.canvas.scrollWidth / 1000
 			this.scaleFactorY = this.canvas.scrollHeight / 500
 		}
 	},
@@ -70,7 +81,7 @@ export default {
 			const strokes = this.allStrokes
 			const n = strokes.length
 			// determine drawing speed
-			var strokePeriod = 0
+			let strokePeriod = 0
 			if (n < 10) {
 				strokePeriod = 600
 			} else if (n < 20) {
@@ -80,19 +91,27 @@ export default {
 			} else {
 				strokePeriod = 50
 			}
-			for (var i = 0; i < n; i++) {
+			for (let i = 0; i < n; i++) {
 				this.drawPath(strokes[i])
 				await timeout(strokePeriod)
+				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
 				if (this.paper === undefined || this.paper === null) {
 					return
 				}
 			}
+			// console.log('finished drawing')
+			// console.log('whiteboard, paper =', this.id, this.paper._id)
 			this.loadedPreviousDrawings = true
 		},
 		drawPath(data) {
-			var path = new Path()
+			let path = new Path()
 			this.paper.activate()
-			path.strokeColor = 'purple'
+			// console.log(
+			// 	`drawing: component ID = ${this._uid}, scope ID = ${
+			// 		this.paper._id
+			// 	}, view = ${this.paper.view}, stroke color ${this.strokeColor}`
+			// )
+			path.strokeColor = this.strokeColor
 			path.strokeWidth = STROKE_WIDTH
 			path.strokeCap = 'round'
 			path.strockJoin = 'round'

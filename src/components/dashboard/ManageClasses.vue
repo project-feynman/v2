@@ -9,6 +9,7 @@
       </popup-modal>
     </template>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+    <!-- This is the search form for the collection of classes -->
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
         label="Find and add existing subject to dashboard" 
@@ -42,83 +43,97 @@ import PopupModal from '@/components/reusables/PopupModal.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 
 export default {
-  components: {
-    SearchBox,
-    PopupModal,
-    PulseButton
-  },
-  computed: {
-    user () {
-      return this.$store.state.user 
-    },
-    isLoggedIn () {
-      return this.user != 'undetermined' && this.user != null 
-    },
-    objectOfClasses () {
-      if (this.classes) {
-        var output = {}
-        this.classes.forEach(c => {
-          output[c.subjectNumber] = null 
-        })
-        return output 
-      }
-    }
-  },
-  data () {
-    return {
-      classes: [],
-      hasFetchedClasses: false,
-      feedback: '',
-      newSubject: '',
-    }
-  },
-  async created () {
-    const ref = db.collection('subjects')
-    await this.$bind('classes', ref)
-  },
-  methods: {
-    async updateUser () {
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.update({
-        firstTimePickingClasses: false 
-      })
-    },
-    async addClass (subjectNumber) {
-      if (this.isLoggedIn) {
-        const ref = db.collection('users').doc(this.user.uid)
-        await ref.update({
-          enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(subjectNumber)
-        })
-        this.$emit('add-class')
-      }
-    },
-    async resetClasses () {
-      const ref = db.collection('users').doc(this.user.uid) 
-      await ref.update({
-        enrolledSubjects: [] 
-      })
-    },
-    async addSubject () {
-      const newObject = {
-        subjectNumber: this.newSubject,
-        psets: [1]
-      }
-      const ref = db.collection('subjects').doc(this.newSubject)
-      this.newSubject = ''
-      await ref.set(newObject)
-    }
-  },
-  watch: {
-    isLoggedIn () {
-      if (this.isLoggedIn) {
-        if (!this.user.enrolledSubjects) {
-          this.feedback = "Welcome - to get started, select classes you're taking this term" 
-        } else if (this.user.enrolledSubjects.length == 0) {
-          this.feedback = "Welcome - to get started, select classes you're taking this term" 
-        }
-      }
-    }
-  }
+	components: {
+		SearchBox,
+		PopupModal,
+		PulseButton
+	},
+	computed: {
+		user() {
+			return this.$store.state.user
+		},
+		isLoggedIn() {
+			return this.user != 'undetermined' && this.user != null
+		},
+		objectOfClasses() {
+			if (this.classes) {
+				var output = {}
+				this.classes.forEach(c => {
+					output[c.id] = null
+				})
+				return output
+			}
+		}
+	},
+	data() {
+		return {
+			classes: [],
+			hasFetchedClasses: false,
+			feedback: '',
+			newSubject: ''
+		}
+	},
+	async created() {
+		const ref = db.collection('betaSubjects')
+		// dead pointers
+
+		await this.$bind('classes', ref)
+	},
+	methods: {
+		async updateUser() {
+			const ref = db.collection('users').doc(this.user.uid)
+			await ref.update({
+				firstTimePickingClasses: false
+			})
+		},
+		async addClass(subjectNumber) {
+			if (this.isLoggedIn) {
+				console.log('addClass is executing')
+				// user reference to the subject
+				const ref = db.collection('users').doc(this.user.uid)
+				await ref.update({
+					enrolledSubjects: firebase.firestore.FieldValue.arrayUnion(
+						subjectNumber
+					)
+				})
+				// user reference to the user
+				const subjectRef = db.collection('betaSubjects').doc(subjectNumber)
+				await subjectRef.update({
+					enrolledUsers: firebase.firestore.FieldValue.arrayUnion(this.user.uid)
+				})
+				this.$emit('add-class')
+			}
+		},
+		async resetClasses() {
+			const ref = db.collection('users').doc(this.user.uid)
+			await ref.update({
+				enrolledSubjects: []
+			})
+		},
+		async addSubject() {
+			const newObject = {
+				messages: [],
+				numOnline: 0,
+				numEnrolled: 0
+			}
+			const ref = db.collection('betaSubjects').doc(this.newSubject)
+			this.newSubject = ''
+			await ref.set(newObject)
+		}
+	},
+	watch: {
+		isLoggedIn() {
+			if (this.isLoggedIn) {
+				if (!this.user.enrolledSubjects) {
+					this.feedback =
+						"Welcome - to get started, select classes you're taking this term"
+				} else if (this.user.enrolledSubjects.length == 0) {
+					this.feedback =
+						"Welcome - to get started, select classes you're taking this term"
+				}
+			}
+		}
+	}
 }
 </script>
 
