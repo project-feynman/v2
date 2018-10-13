@@ -14,10 +14,10 @@
         <input slot="header" class="teal-text center" v-model="editTitle">
       </popup-modal>
     </template>
-    <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }} Study Groups</h2>
-    <collection-list :title="`All classmates in ${$route.params.subject_id}`" 
+    <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
+    <collection-list :title="`${$route.params.subject_id} Classmates`" 
                      :listItems="usersAvalibility"
-                     style="width: 50%; margin: auto;">
+                     style="width: 20%; margin: auto;">
       <template slot-scope="{ item }">
         {{ item.displayName }}
         <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
@@ -110,8 +110,8 @@ export default {
 			onlineClassmates: [],
 			defaultTitles: [
 				'Edit title here...',
-				'Edit title here...',
-				'Edit title here...'
+				'e.g. Working on midterm',
+				'e.g. Working on pset question 3'
 			]
 		}
 	},

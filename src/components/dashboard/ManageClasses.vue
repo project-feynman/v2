@@ -102,12 +102,6 @@ export default {
 				this.$emit('add-class')
 			}
 		},
-		async resetClasses() {
-			const ref = db.collection('users').doc(this.user.uid)
-			await ref.update({
-				enrolledSubjects: []
-			})
-		},
 		async addSubject() {
 			const newObject = {
 				messages: [],
@@ -135,6 +129,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
 
