@@ -2,49 +2,150 @@
   <div class="card">
     <div class="card-content">
       <ul class="messages" v-chat-scroll>
-        <li v-for="message in messages" :key="message.id">
-          <span class="teal-text">{{ message.author }}: </span>
+        <li v-for="message in chatroom.messages" :key="message.id">
+          <span class="teal-text">{{ message.author.displayName }}: </span>
           <span class="grey-text text-darken-3">{{ message.content }}</span>
           <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
         </li>
-        <li>
-          <span class="grey-text time"> 
-            <!-- <template v-if="chatroom.whoIsTyping">
-              <template v-if="Object.keys(chatroom.whoIsTyping).length > 0">{{Object.keys(chatroom.whoIsTyping).map(key => chatroom.whoIsTyping[key]).join(", ")}} is typing...</template> 
-            </template> -->
-          </span>              
-        </li>
       </ul>
+      <span class="grey-text time">
+        {{typingIndicator}}
+      </span>    
     </div>
     <div class="card-action">
       <div class="new-message">
         <form autocomplete="off" @submit.prevent="addMessage">
           <label for="new-message">Write a new message below...</label>
-          <input type="text" name="new-message" v-model="newMessage">
+          <input type="text" name="new-message" @input="newChatMessageChange" v-model="newMessage">
         </form>
       </div>
-      <chat-new-message :participants="participants"/>
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
-import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
+import moment from "moment";
+import firebase from 'firebase/app'
+// import 'firebase'
+// import 'firebase/firestore'
+import db from '@/firebase/init.js'
+// import ChatNewMessage from "@/components/chat/ChatNewMessage.vue";
 
 export default {
-  props: ['messages'],
-  data () {
+  // components: {
+  //   ChatNewMessage
+  // },
+  props: ["chatroom"],
+  data() {
     return {
-      participants: ['Elton', 'John', 'Qiantan']
-    }
+      participants: ["Elton", "John", "Qiantan"],
+      newMessage: ""
+    };
+  },
+  computed: {
+		user() {
+			return this.$store.state.user
+    },
+    typingIndicator() {
+			if (
+				this.chatroom.whoIsTyping &&
+				Object.keys(this.chatroom.whoIsTyping).length > 0
+			) {
+				return (
+					Object.keys(this.chatroom.whoIsTyping)
+						.map(key => this.chatroom.whoIsTyping[key])
+						.join(', ') + ' is typing...'
+				)
+			}
+			return '\xa0'
+		}
   },
   methods: {
-    prettifyDate (timestamp) {
-      return moment(timestamp).format("lll")
+    prettifyDate(timestamp) {
+      return moment(timestamp).format("lll");
+    },
+    addMessage() {
+			if (this.newMessage) {
+				const content = this.newMessage
+        this.newMessage = null
+        const whoIsTyping = this.chatroom.whoIsTyping
+				delete whoIsTyping[this.user.uid]
+        const author = {
+					displayName: this.user.displayName,
+					uid: this.user.uid
+				}
+        this.chatroom.messages.push({
+					content,
+					author,
+					timestamp: Date.now()
+				})
+				let chatRoomRef = db.collection('chatrooms').doc(this.chatroom.id)
+				chatRoomRef.update({
+					messages: this.chatroom.messages,
+					participants: firebase.firestore.FieldValue.arrayUnion(author),
+					whoIsTyping
+				})
+				// const roomID = this.$route.params.room_id
+				// let chatRoomRef = db.collection('chatrooms').doc(roomID)
+				// let chatRoom = await chatRoomRef.get()
+				// const data = chatRoom.data()
+				// this.messages = data.messages
+				// const whoIsTyping = data.whoIsTyping
+				// delete whoIsTyping[this.user.uid]
+				// const author = {
+				// 	displayName: this.user.displayName,
+				// 	uid: this.user.uid
+				// }
+				// this.messages.push({
+				// 	content,
+				// 	author,
+				// 	timestamp: Date.now()
+				// })
+				// await chatRoomRef.update({
+				// 	messages: this.messages,
+				// 	participants: firebase.firestore.FieldValue.arrayUnion(author),
+				// 	whoIsTyping
+				// })
+			}
+    },
+    async newChatMessageChange(event) {
+			if (!this.user.uid) {
+				// early exit if user isn't loaded from db yet
+				return
+			}
+			if (
+				this.chatroom.whoIsTyping &&
+				((event.target.value.length > 0 &&
+					this.chatroom.whoIsTyping[this.user.uid]) ||
+					(event.target.value.length === 0 &&
+						!this.chatroom.whoIsTyping[this.user.uid]))
+			) {
+				// early exit condition so we don't have to query database everytime
+				return
+			}
+			const chatRoomRef = db.collection('chatrooms').doc(this.chatroom.id)
+			let chatRoom = await chatRoomRef.get()
+			const whoIsTyping = chatRoom.data().whoIsTyping || {}
+			event.target.value.length > 0
+				? (whoIsTyping[this.user.uid] = this.user.displayName)
+				: delete whoIsTyping[this.user.uid]
+			chatRoomRef.update({
+				whoIsTyping
+			})
     }
-  }
-}
+  },
+  created(){
+    window.onbeforeunload = async () => {
+      let chatRoomRef = db.collection('chatrooms').doc(this.chatroom.id)
+  		let chatRoom = await chatRoomRef.get()
+      const whoIsTyping = chatRoom.data().whoIsTyping
+      delete whoIsTyping[this.user.uid]
+      await chatRoomRef.update({
+				whoIsTyping
+			})
+    }
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -54,6 +155,10 @@ h2 {
 
 .button-wrapper {
   margin: auto;
+}
+
+input {
+	color: black;
 }
 
 span {
@@ -88,7 +193,7 @@ span {
 }
 
 .user-online {
-  font-size: 10px; 
+  font-size: 10px;
   color: #4aba34;
 }
 </style>
