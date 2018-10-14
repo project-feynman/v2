@@ -89,8 +89,6 @@ export default {
 				prev[obj.uid] = true
 				return prev
 			}, {})
-			console.log('activeUIDs =', activeUIDs)
-			console.log('this.enrolledStudents =', this.enrolledStudents)
 			return this.enrolledStudents.map(user => {
 				return {
 					displayName: user.displayName,
