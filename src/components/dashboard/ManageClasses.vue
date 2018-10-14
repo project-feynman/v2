@@ -102,16 +102,31 @@ export default {
 				this.$emit('add-class')
 			}
 		},
-		async addSubject() {
-			const newObject = {
-				messages: [],
-				numOnline: 0,
-				numEnrolled: 0
-			}
-			const ref = db.collection('subjects').doc(this.newSubject)
-			this.newSubject = ''
-			await ref.set(newObject)
-		}
+    async addSubject() {
+      const chatRef = db.collection("chatrooms");
+      const result = await chatRef.add({
+        messages: [],
+        whoIsTyping: {},
+        // participants: [],
+        // forSubject: subject_id,
+        // psetNumber: pset_number,
+        // title: chosenTitle,
+        owner: {
+          displayName: this.user.displayName,
+          uid: this.user.uid
+        },
+        whoIsTyping: {}
+      });
+      const chatroomID = result.id;
+      const newSubject = {
+        subjectNumber: this.newSubject,
+        psets: [1],
+        subjectChatID: chatroomID
+      };
+      const ref = db.collection("subjects").doc(this.newSubject);
+      this.newSubject = "";
+      await ref.set(newSubject);
+    }
 	},
 	watch: {
 		isLoggedIn() {
