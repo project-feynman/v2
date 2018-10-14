@@ -14,18 +14,18 @@
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <div class="row" style="margin-top: 50px;">
-    <template v-if="chatroom">
-      <div class="col s10 m3">
-        <base-button @click="updateParticipants()">Join group</base-button>
-        <base-button @click="leaveGroup()">Leave group</base-button>
-        <collection-list title="Members" :listItems="usersAvalibility">
-          <template slot-scope="{ item }">
-            {{ item.displayName }}
-            <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
-          </template>
-        </collection-list>
-      </div>
-    </template>
+      <template v-if="chatroom">
+        <div class="col s10 m3">
+          <base-button @click="updateParticipants()">Join group</base-button>
+          <base-button @click="leaveGroup()">Leave group</base-button>
+          <collection-list title="Members" :listItems="usersAvalibility">
+            <template slot-scope="{ item }">
+              {{ item.displayName }}
+              <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
+            </template>
+          </collection-list>
+        </div>
+      </template>
     <div class="col s10 m4 offset-m1">
       <div class="chat-wrapper">
         <base-button @click="resetMessages()">Reset chat</base-button>

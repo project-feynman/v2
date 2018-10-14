@@ -1,6 +1,5 @@
 <template>
   <div>
-    <chat-window :chatroom="subjectChat"></chat-window>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -15,14 +14,20 @@
       </popup-modal>
     </template>
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
-    <collection-list :title="`${$route.params.subject_id} Classmates`" 
-                     :listItems="usersAvalibility"
-                     style="width: 20%; margin: auto;">
-      <template slot-scope="{ item }">
-        {{ item.displayName }}
-        <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
-      </template>
-    </collection-list>
+    <div class="row">
+      <div class="col s10 m3 offset-m1">
+        <collection-list :title="Classmates" 
+                        :listItems="usersAvalibility">
+          <template slot-scope="{ item }">
+            {{ item.displayName }}
+            <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
+          </template>
+        </collection-list>
+      </div>
+      <div class="col s10 m5 offset-m2">
+        <chat-window :chatroom="subjectChat"></chat-window>
+      </div>
+    </div>
     <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
@@ -60,17 +65,16 @@
 </template>
 
 <script>
-import db from "@/firebase/init.js";
-import CollectionList from "@/components/reusables/CollectionList.vue";
-import PulseButton from "@/components/reusables/PulseButton.vue";
-import FloatingButton from "@/components/reusables/FloatingButton.vue";
-import PopupModal from "@/components/reusables/PopupModal.vue";
-import ChatWindow from "@/components/reusables/ChatWindow.vue";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import db from '@/firebase/init.js'
+import CollectionList from '@/components/reusables/CollectionList.vue'
+import PulseButton from '@/components/reusables/PulseButton.vue'
+import FloatingButton from '@/components/reusables/FloatingButton.vue'
+import PopupModal from '@/components/reusables/PopupModal.vue'
+import ChatWindow from '@/components/reusables/ChatWindow.vue'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 export default {
-<<<<<<< HEAD
 	components: {
 		CollectionList,
 		PulseButton,
@@ -101,6 +105,7 @@ export default {
 	data() {
 		return {
 			subject: {},
+			subjectChat: {},
 			studyGroups: [],
 			loadingGroups: true,
 			showPopup: false,
@@ -111,13 +116,39 @@ export default {
 			onlineClassmates: [],
 			defaultTitles: [
 				'Edit title here...',
-				'e.g. Working on midterm',
-				'e.g. Working on pset question 3'
+				'Edit title here...',
+				'Edit title here...'
 			]
 		}
 	},
 	async created() {
 		const subject_id = this.$route.params.subject_id
+		const subjectRef = db.collection('subjects').doc(subject_id)
+		await this.$bind('subject', subjectRef).then(async sub => {
+			if (!sub.subjectChatID) {
+				const chatRef = db.collection('chatrooms')
+				const result = await chatRef.add({
+					messages: [],
+					whoIsTyping: {},
+					// participants: [],
+					// forSubject: subject_id,
+					// psetNumber: pset_number,
+					// title: chosenTitle,
+					owner: {
+						displayName: this.user.displayName,
+						uid: this.user.uid
+					},
+					whoIsTyping: {}
+				})
+				subjectRef.update({
+					subjectChatID: result.id
+				})
+				this.$bind('subjectChat', result)
+			} else {
+				const subjectChatRef = db.collection('chatrooms').doc(sub.subjectChatID)
+				this.$bind('subjectChat', subjectChatRef)
+			}
+		})
 		const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
 		const studentsRef = db
 			.collection('users')
@@ -127,7 +158,7 @@ export default {
 			.collection('users')
 			.where('enrolledSubjects', 'array-contains', subject_id)
 			.where('isOnline', '==', true)
-		Promise.all([
+		await Promise.all([
 			this.$bind('enrolledStudents', studentsRef),
 			this.$bind('onlineClassmates', onlineClassmates),
 			this.$bind('studyGroups', ref)
@@ -148,6 +179,32 @@ export default {
 			const ref = db.collection('users').doc(this.user.uid)
 			await ref.update({
 				firstTimeViewingGroups: false
+			})
+		},
+		async newChatMessageChange(event) {
+			if (!this.user.uid) {
+				// early exit if user isn't loaded from db yet
+				return
+			}
+			if (
+				this.chatroom.whoIsTyping &&
+				((event.target.value.length > 0 &&
+					this.chatroom.whoIsTyping[this.user.uid]) ||
+					(event.target.value.length === 0 &&
+						!this.chatroom.whoIsTyping[this.user.uid]))
+			) {
+				// early exit condition so we don't have to query database everytime
+				return
+			}
+			const roomID = this.$route.params.room_id
+			const chatRoomRef = db.collection('chatrooms').doc(roomID)
+			let chatRoom = await chatRoomRef.get()
+			const whoIsTyping = chatRoom.data().whoIsTyping || {}
+			event.target.value.length > 0
+				? (whoIsTyping[this.user.uid] = this.user.displayName)
+				: delete whoIsTyping[this.user.uid]
+			chatRoomRef.update({
+				whoIsTyping
 			})
 		},
 		async createGroup() {
@@ -206,204 +263,6 @@ export default {
 		}
 	}
 }
-=======
-  components: {
-    CollectionList,
-    PulseButton,
-    FloatingButton,
-    PopupModal,
-    ChatWindow
-  },
-  computed: {
-    user() {
-      return this.$store.state.user;
-    },
-    isLoggedIn() {
-      return this.user != "undetermined" && this.user != null;
-    },
-    usersAvalibility() {
-      const activeUIDs = this.onlineClassmates.reduce((prev, obj) => {
-        prev[obj.uid] = true;
-        return prev;
-      }, {});
-      return this.enrolledStudents.map(user => {
-        return {
-          displayName: user.displayName,
-          isOnline: activeUIDs[user.uid] ? true : false
-        };
-      });
-    }
-  },
-  data() {
-    return {
-      subject: {},
-      subjectChat: {},
-      studyGroups: [],
-      loadingGroups: true,
-      showPopup: false,
-      isEditting: false,
-      editTitle: "",
-      editID: "",
-      enrolledStudents: [],
-      onlineClassmates: [],
-      defaultTitles: [
-        "Edit title here...",
-        "Edit title here...",
-        "Edit title here..."
-      ]
-    };
-  },
-  async created() {
-    const subject_id = this.$route.params.subject_id;
-    const subjectRef = db.collection("subjects").doc(subject_id);
-    await this.$bind("subject", subjectRef).then(async sub => {
-      if (!sub.subjectChatID){
-        const chatRef = db.collection("chatrooms");
-        const result = await chatRef.add({
-          messages: [],
-          whoIsTyping: {},
-          // participants: [],
-          // forSubject: subject_id,
-          // psetNumber: pset_number,
-          // title: chosenTitle,
-          owner: {
-            displayName: this.user.displayName,
-            uid: this.user.uid
-          },
-          whoIsTyping: {}
-        });
-        subjectRef.update({
-          subjectChatID: result.id
-        })
-        this.$bind("subjectChat", result);        
-      } else {
-        const subjectChatRef = db.collection("chatrooms").doc(sub.subjectChatID);
-        this.$bind("subjectChat", subjectChatRef);
-      }
-    });    
-    const ref = db
-      .collection("chatrooms")
-      .where("forSubject", "==", subject_id);
-    const studentsRef = db
-      .collection("users")
-      .where("enrolledSubjects", "array-contains", subject_id);
-    // .where('isOnline', '==', true)
-    const onlineClassmates = db
-      .collection("users")
-      .where("enrolledSubjects", "array-contains", subject_id)
-      .where("isOnline", "==", true);
-    await Promise.all([
-      this.$bind("enrolledStudents", studentsRef),
-      this.$bind("onlineClassmates", onlineClassmates),
-      this.$bind("studyGroups", ref)
-    ]);
-    // load the chat from the subject
-    // const subjectRef = db.collection('subjects').doc(subject_id)
-    // await this.$bind('subject', subjectRef)
-    // console.log('subject messages =', this.subject.messages)
-    this.loadingGroups = false;
-  },
-  methods: {
-    isOwner(group) {
-      return (
-        this.user.uid == group.owner.uid || this.user.displayName == "Elton Lin"
-      );
-    },
-    async newChatMessageChange(event) {
-      if (!this.user.uid) {
-        // early exit if user isn't loaded from db yet
-        return;
-      }
-      if (
-        this.chatroom.whoIsTyping &&
-        ((event.target.value.length > 0 &&
-          this.chatroom.whoIsTyping[this.user.uid]) ||
-          (event.target.value.length === 0 &&
-            !this.chatroom.whoIsTyping[this.user.uid]))
-      ) {
-        // early exit condition so we don't have to query database everytime
-        return;
-      }
-      const roomID = this.$route.params.room_id;
-      const chatRoomRef = db.collection("chatrooms").doc(roomID);
-      let chatRoom = await chatRoomRef.get();
-      const whoIsTyping = chatRoom.data().whoIsTyping || {};
-      event.target.value.length > 0
-        ? (whoIsTyping[this.user.uid] = this.user.displayName)
-        : delete whoIsTyping[this.user.uid];
-      chatRoomRef.update({
-        whoIsTyping
-      });
-    },
-    async updateUser() {
-      const ref = db.collection("users").doc(this.user.uid);
-      await ref.update({
-        firstTimeViewingGroups: false
-      });
-    },
-    async createGroup() {
-      if (!this.isLoggedIn) {
-        return;
-      }
-      const subject_id = this.$route.params.subject_id;
-      const pset_number = this.$route.params.pset_number;
-      // designate a chatroom for it (and the associated whiteboard)
-      const simplifiedUser = {
-        displayName: this.user.displayName,
-        uid: this.user.uid
-      };
-      const randomNumber =
-        Math.floor(Math.random() * this.defaultTitles.length - 1) + 1;
-      const chosenTitle = this.defaultTitles[randomNumber];
-      const chatRef = db.collection("chatrooms");
-      const result = await chatRef.add({
-        messages: [],
-        whoIsTyping: {},
-        participants: [simplifiedUser],
-        forSubject: subject_id,
-        psetNumber: pset_number,
-        title: chosenTitle,
-        owner: simplifiedUser,
-        whoIsTyping: {}
-      });
-      const chatroomID = result.id;
-      const whiteboardRef = db.collection("whiteboards").doc(chatroomID);
-      await whiteboardRef.set({
-        allPaths: []
-      });
-      this.feedback = "Success";
-      setTimeout(() => (this.feedback = ""), 500);
-    },
-    async editGroup(group) {
-      this.isEditting = true;
-      this.editTitle = group.title;
-      this.editID = group.id;
-    },
-    async saveTitle(group) {
-      this.isEditting = false;
-      const ref = db.collection("chatrooms").doc(this.editID);
-      await ref.update({
-        title: this.editTitle
-      });
-      this.editTitle = "";
-    },
-    async deleteGroup({ id, forSubject }) {
-      const ref = db.collection("chatrooms").doc(id);
-      await ref.delete();
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    // remove user from whoIsTyping
-    let chatRoomRef = db.collection('chatrooms').doc(this.subjectChat.id)
-    const whoIsTyping = this.subjectChat.whoIsTyping
-    delete whoIsTyping[this.user.uid]
-    chatRoomRef.update({
-      whoIsTyping
-    })
-    next()
-  }
-};
->>>>>>> a8814636bb8bdef47e37550100a0c641b66fa422
 </script>
 
 <style lang="scss" scoped>
