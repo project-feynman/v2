@@ -196,7 +196,7 @@ export default {
 		const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
 		const journeyRef = db
 			.collection('conversations')
-			.where('psetID', '==', psetID)
+			.where('forGroup', '==', this.chatroom.id)
 		this.$bind('journeys', journeyRef)
 	},
 	beforeRouteLeave(to, from, next) {
@@ -309,15 +309,17 @@ export default {
 			}
 			this.isSharingJourney = false
 			this.feedback = 'Saving the doodle as an animation...'
-			const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
+			// const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
 			// upload the journey to Firestore
+
 			const conversation = {
 				doodle: this.whiteboard.allPaths,
 				messages: this.chatroom.messages,
 				participants: this.chatroom.participants,
 				title: this.newJourneyTitle,
+				forGroup: this.chatroom.id
 				// psetID should be changed - just associate it with the group
-				psetID
+				// psetID
 			}
 			const convoRef = db.collection('conversations')
 			await convoRef.add(conversation)

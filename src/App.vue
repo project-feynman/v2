@@ -11,24 +11,28 @@ import store from '@/store/index.js'
 import TheNavbar from '@/components/TheNavbar.vue'
 
 export default {
-  name: 'App',
-  store, // injects Vuex to all children
-  components: {
-    TheNavbar
-  },
-  created () {
-    console.log('App instance is created') 
-  }
+	name: 'App',
+	store, // injects Vuex to all children
+	components: {
+		TheNavbar
+	}
 }
 </script>
 
 <style>
 /* default global styles */
-h2, h3, h4, h4, p, div, span, input {
-  color: white;
+h2,
+h3,
+h4,
+h4,
+p,
+div,
+span,
+input {
+	color: white;
 }
 
 body {
-  background-color: #41403F;
+	background-color: #41403f;
 }
 </style>

@@ -94,7 +94,8 @@ export default {
 	},
 	methods: {
 		signInWithPopup() {
-			var provider = new firebase.auth.GoogleAuthProvider()
+			let provider = new firebase.auth.GoogleAuthProvider()
+			console.log('provider =', provider)
 			firebase
 				.auth()
 				.signInWithPopup(provider)
