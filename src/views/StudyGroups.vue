@@ -16,7 +16,7 @@
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
     <div class="row">
       <div class="col s10 m3 offset-m1">
-        <collection-list :title="Classmates" 
+        <collection-list title="Classmates" 
                         :listItems="usersAvalibility">
           <template slot-scope="{ item }">
             {{ item.displayName }}
