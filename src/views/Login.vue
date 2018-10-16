@@ -2,9 +2,9 @@
   <div>
     <h1>Feynman Project (Beta)</h1>
     <div style="display: flex; justify-content: space-evenly;">
-      <div id="first">
-        <!-- this is getting populated in the second - why the fuck is that happening -->
+       <!-- this is getting populated in the second - why the fuck is that happening -->
         <!-- the draw targets are still correct according to print statements - but then when board 2 and board 3 just keep drawing on 1 for some reason -->
+      <div id="first">
         <doodle :allStrokes="featureThree" strokeColor="red"></doodle>
       </div>
       <div id="second">
@@ -17,7 +17,7 @@
     <hr>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <template v-if="hasFetchedUser">
-      <template v-if="user != null">
+      <template v-if="user">
         <div class="dashboard-button">
           <router-link to="/subjects">
             <pulse-button size="large" iconName="dashboard"/>
@@ -26,7 +26,7 @@
       </template>
       <template v-else>
         <div class="center">
-          <base-button @click="signInWithPopup()">Login with Google</base-button>
+          <base-button buttonColor="pink" @click="signInWithPopup()">Login with Google</base-button>
         </div>
       </template>
     </template>
@@ -40,6 +40,7 @@ import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import Doodle from '@/components/reusables/Doodle.vue'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
@@ -55,12 +56,7 @@ export default {
 		}
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
-		hasFetchedUser() {
-			return this.$store.state.hasFetchedUser
-		}
+		...mapState(['user', 'hasFetchedUser'])
 	},
 	async created() {
 		// fetch document with where queries on the title - duh
@@ -95,7 +91,6 @@ export default {
 	methods: {
 		signInWithPopup() {
 			let provider = new firebase.auth.GoogleAuthProvider()
-			console.log('provider =', provider)
 			firebase
 				.auth()
 				.signInWithPopup(provider)

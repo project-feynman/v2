@@ -6,7 +6,6 @@
 
 <script>
 import paper from 'paper'
-import db from '@/firebase/init.js'
 
 var STROKE_WIDTH = 2
 
@@ -42,7 +41,6 @@ export default {
 		console.log('this._uid =,', this._uid)
 		this.paper = new paper.PaperScope()
 		console.log('whiteboard, paper =', this.id, this.paper._id)
-		this.paper.install(window)
 	},
 	mounted() {
 		this.canvas = document.getElementById(this.id)
@@ -104,7 +102,7 @@ export default {
 			this.loadedPreviousDrawings = true
 		},
 		drawPath(data) {
-			let path = new Path()
+			let path = new paper.Path()
 			this.paper.activate()
 			// console.log(
 			// 	`drawing: component ID = ${this._uid}, scope ID = ${
@@ -117,7 +115,10 @@ export default {
 			path.strockJoin = 'round'
 			data.points.forEach(point => {
 				path.add(
-					new Point(this.scaleFactorX * point.x, this.scaleFactorY * point.y)
+					new paper.Point(
+						this.scaleFactorX * point.x,
+						this.scaleFactorY * point.y
+					)
 				)
 			})
 			path.smooth()
