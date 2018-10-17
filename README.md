@@ -1,4 +1,12 @@
 ## ...by giving every student a study group and a magic whiteboard
+
+# John
+Global chat...
+Green dot... 
+Someone is typing...
+
+# Hubert joins 
+
 Table of contents:
   - [Harnessing the potential of student interactions](./doc/harness_potential.md)
   - [Feynman vs Messenger vs Piazza](./doc/facebook_piazza.md) 
