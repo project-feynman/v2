@@ -111,8 +111,8 @@ export default {
 			// )
 			path.strokeColor = this.strokeColor
 			path.strokeWidth = STROKE_WIDTH
-			path.strokeCap = 'round'
-			path.strockJoin = 'round'
+			// path.strokeCap = 'round'
+			// path.strockJoin = 'round'
 			data.points.forEach(point => {
 				path.add(
 					new paper.Point(
@@ -121,7 +121,8 @@ export default {
 					)
 				)
 			})
-			path.smooth()
+			// path.smooth()
+			path.simplify()
 		}
 	}
 }

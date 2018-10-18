@@ -5,7 +5,7 @@
        <!-- this is getting populated in the second - why the fuck is that happening -->
         <!-- the draw targets are still correct according to print statements - but then when board 2 and board 3 just keep drawing on 1 for some reason -->
       <div id="first">
-        <doodle :allStrokes="featureThree" strokeColor="red"></doodle>
+        <doodle id="doodle-first" :allStrokes="featureThree" strokeColor="red"></doodle>
       </div>
       <div id="second">
         <doodle :allStrokes="showcase" strokeColor="green"></doodle>
@@ -14,7 +14,7 @@
         <doodle :allStrokes="featureTwo" strokeColor="purple"></doodle>
       </div>
     </div>
-    <hr>
+    <!-- <hr> -->
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <template v-if="hasFetchedUser">
       <template v-if="user">
@@ -59,32 +59,38 @@ export default {
 		...mapState(['user', 'hasFetchedUser'])
 	},
 	async created() {
-		// fetch document with where queries on the title - duh
 		const firstFeatureRef = db
 			.collection('conversations')
 			.where('title', '==', 'Feature #1')
-		const docs = await firstFeatureRef.get()
-		let data = null
-		this.showcase = docs.docs.forEach(doc => {
-			data = doc.data()
-		})
-		let dataTwo = null
+
 		const secondFeatureRef = db
 			.collection('conversations')
 			.where('title', '==', 'Feature #2')
-		const docsTwo = await secondFeatureRef.get()
-		this.featureTwo = docsTwo.docs.forEach(doc => {
-			dataTwo = doc.data()
-		})
-		let dataThree = null
+
 		const thirdRef = db
 			.collection('conversations')
 			.where('title', '==', 'Feature #3 v3')
-		const docsThree = await thirdRef.get()
-		this.featureThree = docsThree.docs.forEach(doc => {
+
+		const results = await Promise.all([
+			firstFeatureRef.get(),
+			secondFeatureRef.get(),
+			thirdRef.get()
+		])
+
+		let dataOne = null
+		let dataTwo = null
+		let dataThree = null
+
+		results[0].docs.forEach(doc => {
+			dataOne = doc.data()
+		})
+		results[1].docs.forEach(doc => {
+			dataTwo = doc.data()
+		})
+		results[2].docs.forEach(doc => {
 			dataThree = doc.data()
 		})
-		this.showcase = data.doodle
+		this.showcase = dataOne.doodle
 		this.featureTwo = dataTwo.doodle
 		this.featureThree = dataThree.doodle
 	},
