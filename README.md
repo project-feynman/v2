@@ -1,13 +1,8 @@
+# Feynman 
+
 Animated explanations are good, but they take too long to make.  
 
 Here, animated explanations can be created effortlessly. 
-
-# John
-Global chat...
-Green dot... 
-Someone is typing...
-
-# Hubert joins 
 
 Table of contents:
   - [Harnessing the potential of student interactions](./doc/harness_potential.md)
