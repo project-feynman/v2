@@ -1,15 +1,10 @@
 <template>
   <div>
     <h1>Feynman Project (Beta)</h1>
-    <carousel>  
-      <doodle slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
-      <doodle slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
-      <doodle slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
-    </carousel>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <template v-if="hasFetchedUser">
       <template v-if="user">
-        <div class="dashboard-button">
+        <div class="dashboard-button" style="margin-bottom: 35px;">
           <router-link to="/subjects">
             <pulse-button size="large" iconName="dashboard"/>
           </router-link>
@@ -21,6 +16,12 @@
         </div>
       </template>
     </template>
+    <carousel>  
+      <doodle slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
+      <doodle slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
+      <doodle slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
+    </carousel>
+    
   </div>
 </template>
 
@@ -115,7 +116,6 @@ p {
 }
 
 h1 {
-	padding-bottom: 30px;
 	@extend .center;
 }
 
