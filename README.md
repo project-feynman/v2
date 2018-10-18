@@ -1,5 +1,7 @@
 # Feynman Project 
-Despite the advent of digital learning, there just aren't enough high quality academic resources on the internet. Feynman is a platform where elegant explanations are created constantly.
+Despite the advent of digital learning, most academic resources are neither visual nor intuitive.
+
+The Feynman Project lets large volumes of elegant explanations to be created constantly. 
 
 ## Table of contents:
   - [How Feynman works](./doc/harness_potential.md)
