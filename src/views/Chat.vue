@@ -16,8 +16,13 @@
     <div class="row" style="margin-top: 50px;">
       <template v-if="chatroom">
         <div class="col s10 m3">
-          <base-button @click="updateParticipants()">Join group</base-button>
-          <base-button @click="leaveGroup()">Leave group</base-button>
+          <base-button 
+            @click="updateParticipants()">
+            Join group
+          </base-button>
+          <base-button @click="leaveGroup()">
+            Leave group
+          </base-button>
           <collection-list title="Members" :listItems="usersAvalibility">
             <template slot-scope="{ item }">
               {{ item.displayName }}
@@ -33,14 +38,13 @@
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
               <li v-for="message in chatroom.messages" :key="message.id">
-                <!-- <p>{{ chatroom.messages }}</p> -->
                 <span class="teal-text">{{ message.author.displayName }}: </span>
                 <span class="grey-text text-darken-3">{{ message.content }}</span>
                 <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
               </li>
             </ul>
             <span class="grey-text time">
-              {{typingIndicator}}
+              {{ typingIndicator }}
             </span>
           </div>
           <div class="card-action">
@@ -65,7 +69,10 @@
     </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
     <div class="center">
-      <pulse-button iconName="share" @click="isSharingJourney = true" tooltipText="Save the discussion, reset the board and the chat messages"/>
+      <pulse-button 
+        iconName="share" 
+        @click="isSharingJourney = true" 
+        tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
     <div style="width: 90%; margin: auto;">
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
@@ -84,6 +91,7 @@ import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 import db from '@/firebase/init.js'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
@@ -106,9 +114,7 @@ export default {
 		}
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
+		...mapState(['user', 'hasFetchedUser']),
 		typingIndicator() {
 			if (
 				this.chatroom.whoIsTyping &&
@@ -138,9 +144,6 @@ export default {
 				return personCopy
 			})
 			return output
-		},
-		hasFetchedUser() {
-			return this.$store.state.hasFetchedUser
 		},
 		isLoggedIn() {
 			return this.user != null && this.user != 'undetermined'
@@ -308,33 +311,17 @@ export default {
 				return
 			}
 			this.isSharingJourney = false
-			this.feedback = 'Saving the doodle as an animation...'
-			// const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
-			// upload the journey to Firestore
-
+			this.feedback = 'Saving your explanation...'
 			const conversation = {
 				doodle: this.whiteboard.allPaths,
 				messages: this.chatroom.messages,
 				participants: this.chatroom.participants,
 				title: this.newJourneyTitle,
-				forGroup: this.chatroom.id
-				// psetID should be changed - just associate it with the group
-				// psetID
+				forGroup: this.chatroom.id,
+				owner: this.user.uid
 			}
 			const convoRef = db.collection('conversations')
 			await convoRef.add(conversation)
-			// reset the messages and the boards afterwards
-			this.feedback = 'Resetting messages'
-			const roomID = this.$route.params.room_id
-			const chatroomRef = db.collection('chatrooms').doc(roomID)
-			await chatroomRef.update({
-				messages: []
-			})
-			this.feedback = 'Resetting whiteboard...'
-			const whiteboardRef = db.collection('whiteboards').doc(roomID)
-			await whiteboardRef.update({
-				allPaths: []
-			})
 			this.feedback = 'Success'
 			setTimeout(() => (this.feedback = ''), 1000)
 		},
@@ -353,7 +340,7 @@ export default {
 			}
 		},
 		async processDeleteAttempt(journey) {
-			if (this.user.displayName == 'Elton Lin') {
+			if (journey.owner == this.user.uid) {
 				const ref = db.collection('conversations').doc(journey.id)
 				await ref.delete()
 			}

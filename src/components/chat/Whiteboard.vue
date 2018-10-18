@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <div class="center">
-    <base-button @click="resetBoard()">Reset Board</base-button>
-    </div> -->
     <canvas :id="id" resize></canvas>
   </div>
 </template>
@@ -11,6 +8,7 @@
 import paper from 'paper'
 import { version } from 'moment'
 import db from '@/firebase/init.js'
+import { mapState } from 'vuex'
 
 var PATH = null
 var STROKE_WIDTH = 2
@@ -24,13 +22,11 @@ export default {
 		this.id = 'awb' + this.uid
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		}
+		...mapState(['user', 'hasFetchedUser'])
 	},
 	watch: {
 		user() {
-			if (this.user != null && this.user != 'undetermined') {
+			if (this.user && this.hasFetchedUser) {
 				if (!this.onMouseUpInitialized) {
 					this.initOnMouseUp()
 				}
@@ -47,9 +43,10 @@ export default {
 		}
 	},
 	mounted() {
-		// setup paper.js
 		paper.setup(this.id)
+
 		var tool = new Tool()
+
 		tool.onMouseDown = event => {
 			PATH = new Path()
 			PATH.strokeColor = 'black'
@@ -61,6 +58,7 @@ export default {
 			PREV_Y = event.point.y
 			PREV_RECORDED = true
 		}
+
 		tool.onMouseDrag = event => {
 			var s = PATH.getSegments()
 			var ep = event.point
@@ -71,7 +69,6 @@ export default {
 				PREV_Y = ep.y
 				PREV_RECORDED = true
 				PATH.add(event.point)
-				PATH.smooth()
 			} else {
 				if (!PREV_RECORDED) {
 					PATH.removeSegment(s.length - 1)
@@ -80,7 +77,7 @@ export default {
 				PREV_RECORDED = false
 			}
 		}
-		if (this.user != null && this.user != 'undetermined') {
+		if (this.user && this.hasFetchedUser) {
 			if (!this.onMouseUpInitialized) {
 				this.initOnMouseUp()
 			}
@@ -89,24 +86,27 @@ export default {
 		const roomID = this.$route.params.room_id
 		const ref = db.collection('whiteboards').doc(roomID)
 		ref.onSnapshot(doc => {
-			this.whiteboard = doc.data()
+			const data = doc.data()
+			this.whiteboard = data
 			if (!this.loadedPreviousDrawings) {
+				// initial load
 				this.drawAllPaths()
 				this.numOfPaths = this.whiteboard.allPaths.length
 			} else {
-				const updatedPaths = doc.data().allPaths
+				const updatedPaths = data.allPaths
 				const n = updatedPaths.length
 				// probably means user's board is outdated
 				if (n >= this.numOfPaths) {
 					this.numOfPaths = n
 					const newestPath = updatedPaths[n - 1]
-					if (newestPath.author != this.user.uid) {
-						var whiteboardPath = new Path()
-						whiteboardPath.strokeColor = 'green'
-						newestPath.points.forEach(point => {
-							whiteboardPath.add(new Point(point.x, point.y))
-						})
+					if (newestPath.author == this.user.uid) {
+						return
 					}
+					let whiteboardPath = new Path()
+					whiteboardPath.strokeColor = 'green'
+					newestPath.points.forEach(point => {
+						whiteboardPath.add(new Point(point.x, point.y))
+					})
 				} else {
 					this.numOfPaths = n // probably means board has been reset
 					project.activeLayer.removeChildren()
@@ -141,7 +141,7 @@ export default {
 			this.onMouseUpInitialized = true
 			tool.onMouseUp = async event => {
 				PATH.add(event.point)
-				PATH.smooth()
+				PATH.simplify()
 				// const segments = this.path.getSegments()
 				const segments = PATH.getSegments()
 				// save the "path" that the user has just drawn
