@@ -132,7 +132,7 @@ export default {
 canvas {
 	position: absolute;
 	top: -100px;
-	left: -230px;
+	left: -222px;
 	// margin: auto;
 	width: 650px;
 	height: 350px;
