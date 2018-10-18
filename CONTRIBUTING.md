@@ -1,4 +1,5 @@
 # Get Started
+
 I'm happy to get you started through Google Hangouts - reach me on 
 [Facebook](https://www.facebook.com/elton.lin.338)
 or 
