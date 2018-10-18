@@ -4,7 +4,7 @@
       <div class="nav-wrapper grey lighten-5">
         <a v-show="isLoggedIn" class="brand-logo">
           <router-link to="/">
-            <i class="material-icons right">home</i>
+            <!-- <i class="material-icons right">home</i> -->
             Feynman
           </router-link>
         </a>

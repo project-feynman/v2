@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>Feynman Project (Beta)</h1>
-    <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
-    <template v-if="hasFetchedUser">
+    <p v-if="!hasFetchedUser" class="white-text center" style="margin-bottom: 35px;">Fetching your information...</p>
+    <template v-else>
       <template v-if="user">
         <div class="dashboard-button" style="margin-bottom: 35px;">
           <router-link to="/subjects">
@@ -17,11 +17,10 @@
       </template>
     </template>
     <carousel>  
-      <doodle slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
-      <doodle slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
-      <doodle slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
     </carousel>
-    
   </div>
 </template>
 
@@ -46,7 +45,8 @@ export default {
 		return {
 			showcase: [],
 			featureTwo: [],
-			featureThree: []
+			featureThree: [],
+			paperScopes: []
 		}
 	},
 	computed: {
@@ -96,6 +96,10 @@ export default {
 				.signInWithPopup(provider)
 				.then(console.log('successfully logged in'))
 				.catch(error => console.log(error))
+		},
+		handleScope(payload) {
+			console.log('keeping track of new paper scope')
+			this.paperScopes.push(payload)
 		}
 	}
 }
