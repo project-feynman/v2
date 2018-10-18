@@ -1,6 +1,6 @@
 Animated explanations are good, but they take too long to make.  
 
-Here, animated explanations are created effortlessly. 
+Here, animated explanations can be created effortlessly. 
 
 # John
 Global chat...
