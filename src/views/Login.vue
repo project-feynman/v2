@@ -1,20 +1,11 @@
 <template>
   <div>
     <h1>Feynman Project (Beta)</h1>
-    <div style="display: flex; justify-content: space-evenly;">
-       <!-- this is getting populated in the second - why the fuck is that happening -->
-        <!-- the draw targets are still correct according to print statements - but then when board 2 and board 3 just keep drawing on 1 for some reason -->
-      <div id="first">
-        <doodle id="doodle-first" :allStrokes="featureThree" strokeColor="red"></doodle>
-      </div>
-      <div id="second">
-        <doodle :allStrokes="showcase" strokeColor="green"></doodle>
-      </div>
-      <div>
-        <doodle :allStrokes="featureTwo" strokeColor="purple"></doodle>
-      </div>
-    </div>
-    <!-- <hr> -->
+    <carousel>  
+      <doodle slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
+      <doodle slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
+      <doodle slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
+    </carousel>
     <p v-if="!hasFetchedUser" class="white-text center">Fetching your information...</p>
     <template v-if="hasFetchedUser">
       <template v-if="user">
@@ -40,13 +31,15 @@ import db from '@/firebase/init.js'
 import Journey from '@/components/reusables/Journey.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import Doodle from '@/components/reusables/Doodle.vue'
+import Carousel from '@/components/reusables/Carousel.vue'
 import { mapState } from 'vuex'
 
 export default {
 	components: {
 		Journey,
 		PulseButton,
-		Doodle
+		Doodle,
+		Carousel
 	},
 	data() {
 		return {
@@ -100,7 +93,7 @@ export default {
 			firebase
 				.auth()
 				.signInWithPopup(provider)
-				.then(result => console.log('successfully logged in'))
+				.then(console.log('successfully logged in'))
 				.catch(error => console.log(error))
 		}
 	}
@@ -112,42 +105,21 @@ p {
 	@extend .black-text;
 }
 
-.light-card {
-	padding: 20px;
-}
-
 .flex-container {
 	display: flex;
 	justify-content: space-evenly;
 }
 
 .dashboard-button {
-	padding-top: 30px;
-	padding-bottom: 30px;
 	@extend .center;
 }
 
-h1,
-h5 {
+h1 {
+	padding-bottom: 30px;
 	@extend .center;
 }
 
 h1 {
 	color: white;
-	padding-top: 10px;
-	padding-bottom: 30px;
-}
-
-.subtitle {
-	color: white;
-}
-
-hr {
-	margin-top: 20px;
-	margin-bottom: 10px;
-}
-
-.spinner-wrapper {
-	margin-left: 49%;
 }
 </style>

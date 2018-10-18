@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas :id="this.id" resize></canvas>
+    <canvas :id="this.id" class="doodle-element" resize></canvas>
   </div>
 </template>
 
@@ -130,8 +130,12 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
-	width: 400px;
-	height: 300px;
+	position: absolute;
+	top: -100px;
+	left: -230px;
+	// margin: auto;
+	width: 650px;
+	height: 350px;
 	background: white;
 }
 </style>
