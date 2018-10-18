@@ -16,10 +16,10 @@
         </div>
       </template>
     </template>
-    <carousel>  
-      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="featureThree" strokeColor="red"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="showcase" strokeColor="green"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureTwo" strokeColor="purple"></doodle>
+    <carousel>      
+      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" strokeColor="green"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" strokeColor="red"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" strokeColor="purple"></doodle>
     </carousel>
   </div>
 </template>

@@ -81,7 +81,7 @@ export default {
 			}
 			const strokes = this.allStrokes
 			const n = strokes.length
-			// determine drawing speed
+			// determine drawing speedq
 			let strokePeriod = 0
 			if (n < 10) {
 				strokePeriod = 500
@@ -100,30 +100,20 @@ export default {
 					return
 				}
 			}
-			// console.log('finished drawing')
 			// console.log('whiteboard, paper =', this.id, this.paper._id)
 			this.loadedPreviousDrawings = true
 		},
 		drawPath(data) {
 			this.paper.activate()
+			// so the autodrawing phase doesn't fuck
 			let path = new this.paper.Path()
-			console.log('this.paper._id =', this.paper)
-			console.log(
-				'this.paper.project.view.element =',
-				this.paper.project.view.element
-			)
-			// console.log(
-			// 	`drawing: component ID = ${this._uid}, scope ID = ${
-			// 		this.paper._id
-			// 	}, view = ${this.paper.view}, stroke color ${this.strokeColor}`
-			// )
 			path.strokeColor = this.strokeColor
 			path.strokeWidth = STROKE_WIDTH
 			// path.strokeCap = 'round'
 			// path.strockJoin = 'round'
 			data.points.forEach(point => {
 				path.add(
-					new paper.Point(
+					new this.paper.Point(
 						this.scaleFactorX * point.x,
 						this.scaleFactorY * point.y
 					)
