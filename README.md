@@ -1,4 +1,6 @@
-## ...by giving every student a study group and a magic whiteboard
+Animated explanations are good, but they take too long to make.  
+
+Here, animated explanations are created effortlessly. 
 
 # John
 Global chat...
