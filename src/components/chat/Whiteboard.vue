@@ -17,6 +17,7 @@ var PREV_Y = null
 var PREV_RECORDED = false
 
 export default {
+	props: ['isEraser'],
 	created() {
 		paper.install(window)
 		this.id = 'awb' + this.uid
@@ -49,8 +50,15 @@ export default {
 
 		tool.onMouseDown = event => {
 			PATH = new Path()
-			PATH.strokeColor = 'black'
-			PATH.strokeWidth = STROKE_WIDTH
+			if(this.isEraser) {
+				console.log('eraser')
+				PATH.strokeColor = 'white'
+				PATH.strokeWidth = 30
+			} else {
+				console.log('pen')
+				PATH.strokeColor = 'black'
+				PATH.strokeWidth = STROKE_WIDTH
+			}
 			PATH.strokeCap = 'round'
 			PATH.strokeJoin = 'round'
 			PATH.add(event.point)
@@ -103,7 +111,12 @@ export default {
 						return
 					}
 					let whiteboardPath = new Path()
-					whiteboardPath.strokeColor = 'green'
+					if(newestPath.isEraser) {
+						whiteboardPath.strokeColor = 'white'
+						whiteboardPath.strokeWidth = 30
+					} else {
+						whiteboardPath.strokeColor = 'green'
+					}
 					newestPath.points.forEach(point => {
 						whiteboardPath.add(new Point(point.x, point.y))
 					})
@@ -155,6 +168,7 @@ export default {
 				})
 				pathObj.points = points
 				pathObj.author = this.user.uid
+				pathObj.isEraser = this.isEraser
 				this.whiteboard.allPaths.push(pathObj)
 				// push the new "path" to Firestore
 				const updatedPaths = this.whiteboard.allPaths

@@ -76,7 +76,9 @@
     </div>
     <div style="width: 90%; margin: auto;">
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
-      <whiteboard ref="whiteboard"/>
+			<base-button @click="isEraser = true">Erase</base-button>
+			<base-button @click="isEraser = false">Pen</base-button>
+      <whiteboard ref="whiteboard" v-bind:isEraser="isEraser"/>
     </div>
   </div>
 </template>
@@ -110,7 +112,8 @@ export default {
 			journeys: [],
 			newJourneyTitle: '',
 			feedback: '',
-			usersViewingPage: []
+			usersViewingPage: [],
+			isEraser: false
 		}
 	},
 	computed: {
