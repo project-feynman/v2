@@ -323,6 +323,7 @@ export default {
 				forGroup: this.chatroom.id,
 				owner: this.user.uid
 			}
+			this.newJourneyTitle = ''
 			const convoRef = db.collection('conversations')
 			await convoRef.add(conversation)
 			this.feedback = 'Success'

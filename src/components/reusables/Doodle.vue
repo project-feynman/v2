@@ -43,9 +43,12 @@ export default {
 	mounted() {
 		this.canvas = document.getElementById(this.id)
 		this.paper.setup(this.id)
-		console.log('vue _uid =', this._uid)
-		console.log('this.paper._id =', this.paper._id)
-		console.log('this.paper.project =', this.paper.project.view.element)
+		this.paper.project.view.onResize = function(event) {
+			// Whenever the view is resized, move the path to its center:
+			console.log('view was resized!')
+			console.log('event =', event)
+		}
+
 		this.drawAllPaths()
 	},
 	watch: {
@@ -53,15 +56,11 @@ export default {
 			this.drawAllPaths()
 		},
 		canvas() {
-			// will probably only trigger once
+			// will probably only trigger once - not actually reactive
 			this.height = this.canvas.scrollHeight
 			this.width = this.canvas.scrollWidth
 			this.scaleFactorX = this.canvas.scrollWidth / 1300
 			this.scaleFactorY = this.canvas.scrollHeight / 500
-		},
-		paper() {
-			console.log('paper changed, vue._uid =', this._uid)
-			console.log('paper was changed, this.paper._id is now =', this.paper._id)
 		}
 	},
 	beforeDestroy() {
