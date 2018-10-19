@@ -141,8 +141,13 @@ export default {
 			}
 			this.whiteboard.allPaths.forEach(stroke => {
 				var path = new Path()
-				path.strokeColor = 'pink'
-				path.strokeWidth = STROKE_WIDTH
+				if (stroke.isEraser) {
+					path.StrokeColor = 'white'
+					path.strokeWidth = 30
+				} else {
+					path.strokeColor = 'pink'
+					path.strokeWidth = STROKE_WIDTH
+				}
 				stroke.points.forEach(p => {
 					path.add(new Point(p.x, p.y))
 				})
