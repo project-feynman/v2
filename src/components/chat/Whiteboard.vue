@@ -56,10 +56,11 @@ export default {
 		////
 		// this.tool.minDistance = 0.5
 		////
+		// this.tool.maxDistance = 2
 		this.tool.onMouseDown = event => {
-			// get access to height
-			// get access to width
 			PATH = new paper.Path()
+			PATH.strokeCap = 'round'
+			PATH.strokeJoin = 'round'
 			if (this.isEraser) {
 				PATH.strokeColor = 'white'
 				PATH.strokeWidth = 30
@@ -67,8 +68,6 @@ export default {
 				PATH.strokeColor = 'black'
 				PATH.strokeWidth = STROKE_WIDTH
 			}
-			// PATH.strokeCap = 'round'
-			// PATH.strokeJoin = 'round'
 			PATH.add(event.point)
 		}
 		this.tool.onMouseDrag = event => {
@@ -92,7 +91,7 @@ export default {
 				const updatedPaths = data.allPaths
 				const n = updatedPaths.length
 				if (n == 0) {
-					project.activeLayer.removeChildren()
+					paper.project.activeLayer.removeChildren()
 				} else if (updatedPaths[n - 1].author == this.user.uid) {
 					return
 				} else {
@@ -125,6 +124,8 @@ export default {
 			}
 			this.whiteboard.allPaths.forEach(stroke => {
 				let path = new paper.Path()
+				path.strokeCap = 'round'
+				path.strokeJoin = 'round'
 				if (stroke.isEraser) {
 					path.StrokeColor = 'white'
 					path.strokeWidth = 30
@@ -132,13 +133,12 @@ export default {
 					path.strokeColor = 'pink'
 					path.strokeWidth = STROKE_WIDTH
 				}
-				path.strokeCap = 'round'
-				path.strokeJoin = 'round'
 				const height = this.height
 				const width = this.width
 				stroke.points.forEach(p => {
 					path.add(new paper.Point(p.x * width, p.y * height))
 				})
+				path.smooth()
 			})
 			this.loadedPreviousDrawings = true
 		},
@@ -146,7 +146,8 @@ export default {
 			this.onMouseUpInitialized = true
 			this.tool.onMouseUp = async event => {
 				PATH.add(event.point) // make sure the end is the end
-				// PATH.simplify(0.5)
+				PATH.smooth() // smooth's the drawer's whiteboard
+				PATH.simplify()
 				const segments = PATH.getSegments()
 				// create the path object that the user has just drawn
 				let pathObj = {}
@@ -158,6 +159,7 @@ export default {
 					}
 					points.push(unitPoint)
 				})
+				console.log('# of points =', points.length)
 				pathObj.points = points
 				pathObj.author = this.user.uid
 				pathObj.isEraser = this.isEraser

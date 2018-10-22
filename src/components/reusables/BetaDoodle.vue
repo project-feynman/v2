@@ -111,9 +111,10 @@ export default {
 			}
 		},
 		drawPath(data) {
-			this.paper.activate()
-			// so the autodrawing phase doesn't fuck
+			this.paper.activate() // so the autodrawing phase doesn't fuck up
 			let path = new this.paper.Path()
+			path.strokeCap = 'round'
+			path.strockJoin = 'round'
 			if (data.isEraser) {
 				path.strokeColor = 'white'
 				path.strokeWidth = 30
@@ -121,15 +122,12 @@ export default {
 				path.strokeColor = 'green'
 				path.strokeWidth = STROKE_WIDTH
 			}
-			// path.strokeColor = this.strokeColor
-			// path.strokeCap = 'round'
-			// path.strockJoin = 'round'
 			data.points.forEach(point => {
 				path.add(
 					new this.paper.Point(this.width * point.x, this.height * point.y)
 				)
 			})
-			// path.smooth()
+			path.smooth()
 		}
 	}
 }
