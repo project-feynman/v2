@@ -74,11 +74,11 @@
         @click="isSharingJourney = true" 
         tooltipText="Save the discussion, reset the board and the chat messages"/>
     </div>
-    <div style="width: 90%; margin: auto;">
+    <div style="width: 90%; margin-left: 120px;">
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
 			<base-button @click="isEraser = true">Erase</base-button>
 			<base-button @click="isEraser = false">Pen</base-button>
-      <whiteboard ref="whiteboard" v-bind:isEraser="isEraser"/>
+      <whiteboard ref="whiteboard" :isEraser="isEraser"/>
     </div>
   </div>
 </template>

@@ -95,7 +95,7 @@ export default {
 				this.drawPath(strokes[i])
 				await timeout(strokePeriod)
 				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
-				if (this.paper === undefined || this.paper === null) {
+				if (!this.paper) {
 					return
 				}
 			}
