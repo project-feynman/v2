@@ -108,8 +108,8 @@ export default {
 			let path = new this.paper.Path()
 			path.strokeColor = this.strokeColor
 			path.strokeWidth = STROKE_WIDTH
-			// path.strokeCap = 'round'
-			// path.strockJoin = 'round'
+			path.strokeCap = 'round'
+			path.strockJoin = 'round'
 			data.points.forEach(point => {
 				path.add(
 					new this.paper.Point(
@@ -118,7 +118,7 @@ export default {
 					)
 				)
 			})
-			// path.smooth()
+			path.smooth()
 		}
 	}
 }

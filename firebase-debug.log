@@ -1,0 +1,30 @@
+[debug] [2018-10-22T13:18:42.272Z] ----------------------------------------------------------------------
+[debug] [2018-10-22T13:18:42.277Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only hosting
+[debug] [2018-10-22T13:18:42.278Z] CLI Version:   5.1.1
+[debug] [2018-10-22T13:18:42.278Z] Platform:      darwin
+[debug] [2018-10-22T13:18:42.278Z] Node Version:  v8.12.0
+[debug] [2018-10-22T13:18:42.279Z] Time:          Mon Oct 22 2018 09:18:42 GMT-0400 (EDT)
+[debug] [2018-10-22T13:18:42.280Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-22T13:18:42.314Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-22T13:18:42.314Z] > authorizing via signed-in user
+[debug] [2018-10-22T13:18:42.314Z] [iam] checking project feynman-village for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2018-10-22T13:18:42.316Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/feynman-village:testIamPermissions  
+
+[debug] [2018-10-22T13:18:43.507Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-22T13:18:43.508Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/feynman-village  
+ 
+[debug] [2018-10-22T13:18:44.223Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'feynman-village'...
+[info] 
+[info] i  deploying hosting
+[debug] [2018-10-22T13:18:49.406Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/feynman-village/versions  
+
+[debug] [2018-10-22T13:18:51.190Z] <<< HTTP RESPONSE 200
+[info] i  hosting[feynman-village]: beginning deploy...
+[info] i  hosting[feynman-village]: found 54 files in dist
+[debug] [2018-10-22T13:18:52.303Z] [hosting] hash cache [ZGlzdA] stored for 54 files
+[debug] [2018-10-22T13:18:52.304Z] [hosting][hash queue][FINAL]
+[debug] [2018-10-22T13:18:52.304Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/feynman-village/versions/e0684f437eb79d15:populateFiles  
+ <request body omitted>
