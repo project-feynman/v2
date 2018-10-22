@@ -29,7 +29,6 @@ export default {
 		}
 	},
 	created() {
-		paper.install(window)
 		this.id = 'awb' + this.uid
 	},
 	computed: {
@@ -106,7 +105,7 @@ export default {
 						whiteboardPath.strokeColor = 'green'
 					}
 					newPath.points.forEach(point => {
-						whiteboardPath.add(new Point(point.x, point.y))
+						whiteboardPath.add(new paper.Point(point.x, point.y))
 					})
 				}
 			}
@@ -138,7 +137,7 @@ export default {
 				const height = this.height
 				const width = this.width
 				stroke.points.forEach(p => {
-					path.add(new Point(p.x * width, p.y * height))
+					path.add(new paper.Point(p.x * width, p.y * height))
 				})
 			})
 			this.loadedPreviousDrawings = true
