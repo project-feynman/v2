@@ -22,8 +22,8 @@ export default {
 	props: ['isEraser'],
 	data() {
 		return {
+			tool: null,
 			whiteboard: null,
-			numOfPaths: 0,
 			loadedPreviousDrawings: false,
 			onMouseUpInitialized: false,
 			id: null
@@ -47,15 +47,15 @@ export default {
 	},
 	mounted() {
 		paper.setup(this.id)
-		var tool = new Tool()
-		tool.onMouseDown = event => {
+		this.tool = new paper.Tool()
+		this.tool.onMouseDown = event => {
+			// get access to height
+			// get access to width
 			PATH = new Path()
 			if (this.isEraser) {
-				console.log('eraser')
 				PATH.strokeColor = 'white'
 				PATH.strokeWidth = 30
 			} else {
-				console.log('pen')
 				PATH.strokeColor = 'black'
 				PATH.strokeWidth = STROKE_WIDTH
 			}
@@ -67,7 +67,7 @@ export default {
 			PREV_RECORDED = true
 		}
 
-		tool.onMouseDrag = event => {
+		this.tool.onMouseDrag = event => {
 			var s = PATH.getSegments()
 			var ep = event.point
 			var dx = ep.x - PREV_X
@@ -99,30 +99,25 @@ export default {
 			if (!this.loadedPreviousDrawings) {
 				// initial load
 				this.drawAllPaths()
-				this.numOfPaths = this.whiteboard.allPaths.length
 			} else {
 				const updatedPaths = data.allPaths
 				const n = updatedPaths.length
-				// probably means user's board is outdated
-				if (n >= this.numOfPaths) {
-					this.numOfPaths = n
-					const newestPath = updatedPaths[n - 1]
-					if (newestPath.author == this.user.uid) {
-						return
-					}
+				if (n == 0) {
+					project.activeLayer.removeChildren()
+				} else if (updatedPaths[n - 1].author == this.user.uid) {
+					return
+				} else {
+					const newPath = updatedPaths[n - 1]
 					let whiteboardPath = new Path()
-					if (newestPath.isEraser) {
+					if (newPath.isEraser) {
 						whiteboardPath.strokeColor = 'white'
 						whiteboardPath.strokeWidth = 30
 					} else {
 						whiteboardPath.strokeColor = 'green'
 					}
-					newestPath.points.forEach(point => {
+					newPath.points.forEach(point => {
 						whiteboardPath.add(new Point(point.x, point.y))
 					})
-				} else {
-					this.numOfPaths = n // probably means board has been reset
-					project.activeLayer.removeChildren()
 				}
 			}
 		})
@@ -136,8 +131,7 @@ export default {
 			})
 		},
 		drawAllPaths() {
-			console.log('drawAllPaths()')
-			if (this.whiteboard == null) {
+			if (!this.whiteboard) {
 				return
 			}
 			this.whiteboard.allPaths.forEach(stroke => {
@@ -152,18 +146,16 @@ export default {
 				stroke.points.forEach(p => {
 					path.add(new Point(p.x, p.y))
 				})
-				// path.smooth()
 			})
 			this.loadedPreviousDrawings = true
 		},
 		initOnMouseUp() {
 			this.onMouseUpInitialized = true
-			tool.onMouseUp = async event => {
-				// PATH.add(event.point)
+			this.tool.onMouseUp = async event => {
+				PATH.add(event.point) // make sure the end is the end
 				PATH.simplify()
-				// const segments = this.path.getSegments()
 				const segments = PATH.getSegments()
-				// save the "path" that the user has just drawn
+				// create the path object that the user has just drawn
 				var pathObj = {}
 				var points = []
 				segments.forEach(segment => {
@@ -175,7 +167,6 @@ export default {
 				pathObj.points = points
 				pathObj.author = this.user.uid
 				pathObj.isEraser = this.isEraser
-
 				// update the whiteboard
 				const roomID = this.$route.params.room_id
 				const ref = db.collection('whiteboards').doc(roomID)
@@ -184,7 +175,6 @@ export default {
 				})
 				PATH = null
 			}
-			// console.log('view.onFrame =', project)
 		}
 	}
 }
