@@ -9,8 +9,8 @@
         </p>
       </popup-modal>
     </template>
-    <popup-modal v-if="isSharingJourney" @close="shareJourney()" @dismiss="shareDismiss()">
-      <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" class="teal-text center">
+    <popup-modal v-show="isSharingJourney" @close="shareJourney()" @dismiss="shareDismiss()">
+      <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" ref="journey" id="journey-input" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <div class="row" style="margin-top: 50px;">
@@ -71,8 +71,7 @@
     <div class="center">
       <pulse-button 
         iconName="share" 
-        @click="isSharingJourney = true" 
-        tooltipText="Save the discussion, reset the board and the chat messages"/>
+        @click="openJourneyPopup()"/>
     </div>
     <div style="width: 90%; margin-left: 120px;">
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
@@ -225,6 +224,13 @@ export default {
 		})
 	},
 	methods: {
+		openJourneyPopup() {
+			this.isSharingJourney = true
+			const journeyInput = this.$refs.journey
+			this.$nextTick(() => {
+				journeyInput.select()
+			})
+		},
 		showGreenDot(isOnline) {
 			return isOnline ? 'fiber_manual_record' : null
 		},

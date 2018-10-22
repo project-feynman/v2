@@ -46,7 +46,7 @@ export default {
 		this.paper.setup(this.id)
 		this.width = this.paper.project.view.viewSize.width
 		this.height = this.paper.project.view.viewSize.height
-		this.paper.project.view.onResize = function(event) {
+		this.paper.project.view.onResize = event => {
 			this.width = event.size.width
 			this.height = event.size.height
 		}
@@ -114,7 +114,6 @@ export default {
 			this.paper.activate()
 			// so the autodrawing phase doesn't fuck
 			let path = new this.paper.Path()
-			console.log('data =', data)
 			if (data.isEraser) {
 				path.strokeColor = 'white'
 				path.strokeWidth = 30
