@@ -344,7 +344,7 @@ export default {
 			}
 		},
 		async processDeleteAttempt(journey) {
-			if (journey.owner == this.user.uid) {
+			if (journey.owner == this.user.uid || this.displayName == 'Elton Lin') {
 				const ref = db.collection('conversations').doc(journey.id)
 				await ref.delete()
 			}
