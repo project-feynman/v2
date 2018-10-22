@@ -46,11 +46,14 @@ export default {
 		paper.setup(this.id)
 		this.tool = new paper.Tool()
 		// the mouse has to move 10 before the next onMouseDrag is called
-		this.tool.minDistance = 1
+		////
+		// this.tool.minDistance = 0.5
+		////
 		this.tool.onMouseDown = event => {
+			console.log('width =', paper.project.view.width)
 			// get access to height
 			// get access to width
-			PATH = new Path()
+			PATH = new paper.Path()
 			if (this.isEraser) {
 				PATH.strokeColor = 'white'
 				PATH.strokeWidth = 30
@@ -88,7 +91,7 @@ export default {
 					return
 				} else {
 					const newPath = updatedPaths[n - 1]
-					let whiteboardPath = new Path()
+					let whiteboardPath = new paper.Path()
 					if (newPath.isEraser) {
 						whiteboardPath.strokeColor = 'white'
 						whiteboardPath.strokeWidth = 30
@@ -115,7 +118,7 @@ export default {
 				return
 			}
 			this.whiteboard.allPaths.forEach(stroke => {
-				let path = new Path()
+				let path = new paper.Path()
 				if (stroke.isEraser) {
 					path.StrokeColor = 'white'
 					path.strokeWidth = 30
@@ -123,6 +126,8 @@ export default {
 					path.strokeColor = 'pink'
 					path.strokeWidth = STROKE_WIDTH
 				}
+				path.strokeCap = 'round'
+				path.strokeJoin = 'round'
 				stroke.points.forEach(p => {
 					path.add(new Point(p.x, p.y))
 				})
@@ -133,7 +138,7 @@ export default {
 			this.onMouseUpInitialized = true
 			this.tool.onMouseUp = async event => {
 				PATH.add(event.point) // make sure the end is the end
-				PATH.simplify(0.5)
+				// PATH.simplify(0.5)
 				const segments = PATH.getSegments()
 				// create the path object that the user has just drawn
 				let pathObj = {}
