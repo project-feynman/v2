@@ -48,6 +48,8 @@ export default {
 	mounted() {
 		paper.setup(this.id)
 		this.tool = new paper.Tool()
+		// the mouse has to move 10 before the next onMouseDrag is called
+		this.tool.minDistance = 10
 		this.tool.onMouseDown = event => {
 			// get access to height
 			// get access to width
@@ -62,28 +64,9 @@ export default {
 			PATH.strokeCap = 'round'
 			PATH.strokeJoin = 'round'
 			PATH.add(event.point)
-			PREV_X = event.point.x
-			PREV_Y = event.point.y
-			PREV_RECORDED = true
 		}
-
 		this.tool.onMouseDrag = event => {
-			var s = PATH.getSegments()
-			var ep = event.point
-			var dx = ep.x - PREV_X
-			var dy = ep.y - PREV_Y
-			if (dx * dx + dy * dy > 10) {
-				PREV_X = ep.x
-				PREV_Y = ep.y
-				PREV_RECORDED = true
-				PATH.add(event.point)
-			} else {
-				if (!PREV_RECORDED) {
-					PATH.removeSegment(s.length - 1)
-				}
-				PATH.add(event.point)
-				PREV_RECORDED = false
-			}
+			PATH.add(event.point)
 		}
 		if (this.user && this.hasFetchedUser) {
 			if (!this.onMouseUpInitialized) {
