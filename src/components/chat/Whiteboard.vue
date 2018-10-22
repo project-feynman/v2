@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import paper from 'paper'
 import { version } from 'moment'
 import db from '@/firebase/init.js'
@@ -18,6 +20,15 @@ var PREV_RECORDED = false
 
 export default {
 	props: ['isEraser'],
+	data() {
+		return {
+			whiteboard: null,
+			numOfPaths: 0,
+			loadedPreviousDrawings: false,
+			onMouseUpInitialized: false,
+			id: null
+		}
+	},
 	created() {
 		paper.install(window)
 		this.id = 'awb' + this.uid
@@ -34,23 +45,12 @@ export default {
 			}
 		}
 	},
-	data() {
-		return {
-			whiteboard: null,
-			numOfPaths: 0,
-			loadedPreviousDrawings: false,
-			onMouseUpInitialized: false,
-			id: null
-		}
-	},
 	mounted() {
 		paper.setup(this.id)
-
 		var tool = new Tool()
-
 		tool.onMouseDown = event => {
 			PATH = new Path()
-			if(this.isEraser) {
+			if (this.isEraser) {
 				console.log('eraser')
 				PATH.strokeColor = 'white'
 				PATH.strokeWidth = 30
@@ -111,7 +111,7 @@ export default {
 						return
 					}
 					let whiteboardPath = new Path()
-					if(newestPath.isEraser) {
+					if (newestPath.isEraser) {
 						whiteboardPath.strokeColor = 'white'
 						whiteboardPath.strokeWidth = 30
 					} else {
@@ -136,11 +136,12 @@ export default {
 			})
 		},
 		drawAllPaths() {
+			console.log('drawAllPaths()')
 			if (this.whiteboard == null) {
 				return
 			}
 			this.whiteboard.allPaths.forEach(stroke => {
-				var path = new Path()
+				let path = new Path()
 				if (stroke.isEraser) {
 					path.StrokeColor = 'white'
 					path.strokeWidth = 30
@@ -151,14 +152,14 @@ export default {
 				stroke.points.forEach(p => {
 					path.add(new Point(p.x, p.y))
 				})
-				path.smooth()
+				// path.smooth()
 			})
 			this.loadedPreviousDrawings = true
 		},
 		initOnMouseUp() {
 			this.onMouseUpInitialized = true
 			tool.onMouseUp = async event => {
-				PATH.add(event.point)
+				// PATH.add(event.point)
 				PATH.simplify()
 				// const segments = this.path.getSegments()
 				const segments = PATH.getSegments()
@@ -174,16 +175,16 @@ export default {
 				pathObj.points = points
 				pathObj.author = this.user.uid
 				pathObj.isEraser = this.isEraser
-				this.whiteboard.allPaths.push(pathObj)
-				// push the new "path" to Firestore
-				const updatedPaths = this.whiteboard.allPaths
+
+				// update the whiteboard
 				const roomID = this.$route.params.room_id
 				const ref = db.collection('whiteboards').doc(roomID)
 				ref.update({
-					allPaths: updatedPaths
+					allPaths: firebase.firestore.FieldValue.arrayUnion(pathObj)
 				})
 				PATH = null
 			}
+			// console.log('view.onFrame =', project)
 		}
 	}
 }
