@@ -14,9 +14,6 @@ import { mapState } from 'vuex'
 
 var PATH = null
 var STROKE_WIDTH = 2
-var PREV_X = null
-var PREV_Y = null
-var PREV_RECORDED = false
 
 export default {
 	props: ['isEraser'],
@@ -49,7 +46,7 @@ export default {
 		paper.setup(this.id)
 		this.tool = new paper.Tool()
 		// the mouse has to move 10 before the next onMouseDrag is called
-		this.tool.minDistance = 10
+		this.tool.minDistance = 1
 		this.tool.onMouseDown = event => {
 			// get access to height
 			// get access to width
@@ -136,13 +133,13 @@ export default {
 			this.onMouseUpInitialized = true
 			this.tool.onMouseUp = async event => {
 				PATH.add(event.point) // make sure the end is the end
-				PATH.simplify()
+				PATH.simplify(0.5)
 				const segments = PATH.getSegments()
 				// create the path object that the user has just drawn
-				var pathObj = {}
-				var points = []
+				let pathObj = {}
+				let points = []
 				segments.forEach(segment => {
-					var point = {}
+					let point = {}
 					point.x = segment.point.x
 					point.y = segment.point.y
 					points.push(point)
