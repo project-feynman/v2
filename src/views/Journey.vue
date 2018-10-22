@@ -1,6 +1,9 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
+    <div class="center">
+      <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
+    </div>
     <div style="margin: auto; width: 90%;">
       <template v-if="!doodle">
          <p>Fetching doodle...</p>
@@ -39,6 +42,7 @@ export default {
 			title: '',
 			doodle: [],
 			messages: [],
+			forGroup: '',
 			hasFetchedConversation: false
 		}
 	},
@@ -49,6 +53,11 @@ export default {
 		}
 	},
 	methods: {
+		redirectToGroup() {
+			if (this.forGroup) {
+				this.$router.push(`/chat/${this.forGroup}`)
+			}
+		},
 		async fetchConversation() {
 			if (this.hasFetchedConversation) {
 				return
@@ -67,6 +76,7 @@ export default {
 				this.messages = data.messages
 				this.title = data.title
 				this.hasFetchedConversation = true
+				this.forGroup = data.forGroup
 			}
 		}
 	}

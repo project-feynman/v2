@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1>Feynman Project (Beta)</h1>
-    <p v-if="!hasFetchedUser" class="white-text center" style="margin-bottom: 35px;">Fetching your information...</p>
+    <p v-if="!hasFetchedUser" class="white-text center" style="margin-bottom: 35px;">
+      "If you cannot explain it simply, you don't understand it" - Richard Feynman
+    </p>
     <template v-else>
       <template v-if="user">
         <div class="dashboard-button" style="margin-bottom: 35px;">

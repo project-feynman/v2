@@ -2,13 +2,17 @@
   <div>
     <nav>
       <div class="nav-wrapper grey lighten-5">
-        <a v-show="isLoggedIn" class="brand-logo">
+        <a v-show="!atHomePage" class="brand-logo">
           <router-link to="/">
-            <!-- <i class="material-icons right">home</i> -->
             Feynman
           </router-link>
         </a>
         <ul class="right hide-on-med-and-down">
+          <!-- <li v-if="user && hasFetchedUser">
+            <router-link to="/6.046">
+              6.046
+            </router-link>
+          </li> -->
           <li v-show="isLoggedIn && user.chatrooms">
             <a id="dropdown-trigger" href="#!" data-target="dropdown">
               Chats
@@ -54,10 +58,11 @@ import {
 	getSubscription,
 	sendSubscriptionToFirestore
 } from '@/api/push_notifications.js'
-import {
-	getPermissionForGeolocation,
-	sendPositionToFirestore
-} from '@/api/geolocation.js'
+// import {
+// 	getPermissionForGeolocation,
+// 	sendPositionToFirestore
+// } from '@/api/geolocation.js'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
@@ -87,11 +92,12 @@ export default {
 		M.Dropdown.init(elem)
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
+		...mapState(['user', 'hasFetchedUser']),
 		isLoggedIn() {
 			return this.user != null && this.user != 'undetermined'
+		},
+		atHomePage() {
+			return this.$route.path == '/'
 		}
 	},
 	data() {

@@ -13,6 +13,7 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" ref="journey" id="journey-input" class="teal-text center">
     </popup-modal>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
+    <h5 v-if="!isLoggedIn" class="yellow-text text center">If you want to ask and answer questions, make sure to log in (top left) :></h5>
     <div class="row" style="margin-top: 50px;">
       <template v-if="chatroom">
         <div class="col s10 m3">
@@ -197,6 +198,7 @@ export default {
 			this.$bind('whiteboard', whiteboardDoc)
 		])
 		await this.$bind('chatroom', chatRef)
+		console.log('this.chatroom =', this.chatroom)
 		// change psetNumber here - this is atrocious
 		const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
 		const journeyRef = db
