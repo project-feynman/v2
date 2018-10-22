@@ -114,8 +114,15 @@ export default {
 			this.paper.activate()
 			// so the autodrawing phase doesn't fuck
 			let path = new this.paper.Path()
-			path.strokeColor = this.strokeColor
-			path.strokeWidth = STROKE_WIDTH
+			console.log('data =', data)
+			if (data.isEraser) {
+				path.strokeColor = 'white'
+				path.strokeWidth = 30
+			} else {
+				path.strokeColor = 'green'
+				path.strokeWidth = STROKE_WIDTH
+			}
+			// path.strokeColor = this.strokeColor
 			// path.strokeCap = 'round'
 			// path.strockJoin = 'round'
 			data.points.forEach(point => {
