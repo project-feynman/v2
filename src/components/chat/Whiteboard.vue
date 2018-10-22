@@ -52,11 +52,8 @@ export default {
 			this.height = event.size.height
 		}
 		this.tool = new paper.Tool()
-		// the mouse has to move 10 before the next onMouseDrag is called
-		////
-		// this.tool.minDistance = 0.5
-		////
-		// this.tool.maxDistance = 2
+		// this.tool.minDistance = 0.01
+		this.tool.maxDistance = 1
 		this.tool.onMouseDown = event => {
 			PATH = new paper.Path()
 			PATH.strokeCap = 'round'
@@ -147,7 +144,9 @@ export default {
 			this.tool.onMouseUp = async event => {
 				PATH.add(event.point) // make sure the end is the end
 				PATH.smooth() // smooth's the drawer's whiteboard
-				PATH.simplify()
+				console.log('initial path length =', PATH.segments.length)
+				PATH.simplify(0.2)
+				console.log('simplified path length =', PATH.segments.length)
 				const segments = PATH.getSegments()
 				// create the path object that the user has just drawn
 				let pathObj = {}
