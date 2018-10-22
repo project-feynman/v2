@@ -6,7 +6,8 @@
          <p>Fetching doodle...</p>
       </template>
       <template v-else>
-        <doodle :allStrokes="doodle"/>
+        <beta-doodle :allStrokes="doodle"/>
+        <!-- <doodle :allStrokes="doodle"/> -->
       </template>
     </div>
     <div class="flexbox-container">
@@ -20,20 +21,18 @@
 <script>
 import db from '@/firebase/init.js'
 import Doodle from '@/components/reusables/Doodle.vue'
+import BetaDoodle from '@/components/reusables/BetaDoodle.vue'
 import MessageHistory from '@/components/reusables/MessageHistory.vue'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
 		Doodle,
+		BetaDoodle,
 		MessageHistory
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
-		hasFetchedUser() {
-			return this.$store.state.hasFetchedUser
-		}
+		...mapState(['user', 'hasFetchedUser'])
 	},
 	data() {
 		return {

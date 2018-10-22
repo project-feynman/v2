@@ -23,7 +23,9 @@ export default {
 			whiteboard: null,
 			loadedPreviousDrawings: false,
 			onMouseUpInitialized: false,
-			id: null
+			id: null,
+			width: 0,
+			height: 0
 		}
 	},
 	created() {
@@ -44,13 +46,18 @@ export default {
 	},
 	mounted() {
 		paper.setup(this.id)
+		this.width = paper.project.view.viewSize.width
+		this.height = paper.project.view.viewSize.height
+		paper.project.view.onResize = function(event) {
+			this.width = event.size.width
+			this.height = event.size.height
+		}
 		this.tool = new paper.Tool()
 		// the mouse has to move 10 before the next onMouseDrag is called
 		////
 		// this.tool.minDistance = 0.5
 		////
 		this.tool.onMouseDown = event => {
-			console.log('width =', paper.project.view.width)
 			// get access to height
 			// get access to width
 			PATH = new paper.Path()
@@ -61,8 +68,8 @@ export default {
 				PATH.strokeColor = 'black'
 				PATH.strokeWidth = STROKE_WIDTH
 			}
-			PATH.strokeCap = 'round'
-			PATH.strokeJoin = 'round'
+			// PATH.strokeCap = 'round'
+			// PATH.strokeJoin = 'round'
 			PATH.add(event.point)
 		}
 		this.tool.onMouseDrag = event => {
@@ -128,8 +135,10 @@ export default {
 				}
 				path.strokeCap = 'round'
 				path.strokeJoin = 'round'
+				const height = this.height
+				const width = this.width
 				stroke.points.forEach(p => {
-					path.add(new Point(p.x, p.y))
+					path.add(new Point(p.x * width, p.y * height))
 				})
 			})
 			this.loadedPreviousDrawings = true
@@ -144,10 +153,11 @@ export default {
 				let pathObj = {}
 				let points = []
 				segments.forEach(segment => {
-					let point = {}
-					point.x = segment.point.x
-					point.y = segment.point.y
-					points.push(point)
+					const unitPoint = {
+						x: segment.point.x / this.width,
+						y: segment.point.y / this.height
+					}
+					points.push(unitPoint)
 				})
 				pathObj.points = points
 				pathObj.author = this.user.uid
