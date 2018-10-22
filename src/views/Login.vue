@@ -19,9 +19,9 @@
       </template>
     </template>
     <carousel>      
-      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" strokeColor="green"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" strokeColor="red"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" strokeColor="purple"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" strokeColor="purple"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" strokeColor="black"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" strokeColor="orange"></doodle>
     </carousel>
   </div>
 </template>
