@@ -1,6 +1,7 @@
 <template>
   <div>
     <base-button @click="playAnimation()">Replay Doodle</base-button>
+    <!-- <base-button @click="speedUpReplay()">Speed Up Replay</base-button> -->
     <canvas :id="this.id" class="doodle-element" resize></canvas>
   </div>
 </template>
@@ -33,7 +34,9 @@ export default {
 			whiteboard: null,
 			loadedPreviousDrawings: false,
 			paper: null,
-			id: null
+			id: null,
+			pointPeriod: 1,
+			strokeSpeed: 2
 		}
 	},
 	created() {
@@ -62,6 +65,10 @@ export default {
 		this.paper = null
 	},
 	methods: {
+		speedUpReplay() {
+			this.pointPeriod = 0.00000001
+			this.strokeSpeed = 64
+		},
 		renderEntireNote() {
 			if (!this.allStrokes) {
 				return
@@ -103,8 +110,8 @@ export default {
 				strokePeriod = 30
 			}
 			for (let i = 0; i < n; i++) {
-				this.drawPath(strokes[i], false) // draw incrementally, not instantly
-				await timeout(strokePeriod / 2)
+				await this.drawPath(strokes[i], false) // draw incrementally, not instantly
+				await timeout(strokePeriod / this.strokeSpeed)
 				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
 				if (!this.paper) {
 					return
@@ -133,21 +140,14 @@ export default {
 				const point = data.points[i]
 				TOTAL_POINTS += 1
 				if (!instant) {
-					await timeout(1)
+					await timeout(this.pointPeriod)
 				}
-				console.log('adding a new point')
 				path.add(
 					new this.paper.Point(this.width * point.x, this.height * point.y)
 				)
 			}
-
-			// data.points.forEach(point => {
-			// 	TOTAL_POINTS += 1
-			// 	path.add(
-			// 		new this.paper.Point(this.width * point.x, this.height * point.y)
-			// 	)
-			// })
 			path.smooth()
+			return new Promise(resolve => setTimeout(resolve, 0))
 		}
 	}
 }
@@ -156,7 +156,7 @@ export default {
 <style lang="scss" scoped>
 canvas {
 	width: 100%;
-	height: 100%;
+	height: 800px;
 	background: white;
 }
 </style>

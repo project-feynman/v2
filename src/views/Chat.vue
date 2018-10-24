@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-show="isDebugging">
-      <h2 v-show="isDebugging" v-if="PRINT">Data Object = {{ PRINT }}</h2>
+      <h2>Data Object = {{ PRINT }}</h2>
     </template>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
@@ -71,7 +71,7 @@
       </div> 
     </template>
     </div>
-          <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
+      <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
 			<base-button @click="isEraser = true">Erase</base-button>
 			<base-button @click="isEraser = false">Pen</base-button>
@@ -119,7 +119,7 @@ export default {
 			usersViewingPage: [],
 			isEraser: false,
 			PRINT: null,
-			isDebuggin: false
+			isDebugging: false
 		}
 	},
 	computed: {
@@ -328,7 +328,6 @@ export default {
 			this.isSharingJourney = false
 			this.feedback = 'Saving your explanation...'
 			const allPaths = this.$refs.whiteboard.allPaths
-			console.log('allPaths =', allPaths)
 			const conversation = {
 				doodle: allPaths,
 				messages: this.chatroom.messages,
