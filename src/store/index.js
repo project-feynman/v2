@@ -59,7 +59,6 @@ function checkOnlineStatusAndSetDisconnectHook(user) {
 
 const actions = {
 	fetchUser: async context => {
-		console.log('fetchUser()')
 		firebase.auth().onAuthStateChanged(async user => {
 			console.log('auth state changed...')
 			if (user) {
@@ -82,6 +81,9 @@ const actions = {
 						firstTimePickingClasses: true,
 						firstTimeViewingGroups: true,
 						firstTimeInChat: true
+					}
+					if (user.isAnonymous) {
+						newUser.displayName = 'Anonymous'
 					}
 					context.commit('setUser', newUser)
 					const countRef = db.collection('statistics').doc('users')

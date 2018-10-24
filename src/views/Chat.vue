@@ -1,5 +1,14 @@
 <template>
   <div>
+      <base-button @click="resetBoard()">Reset whiteboard</base-button>
+			<base-button @click="isEraser = true">Erase</base-button>
+			<base-button @click="isEraser = false">Pen</base-button>
+      <div class="center">
+        <pulse-button 
+          iconName="save" 
+          @click="openJourneyPopup()"/>
+      </div>
+      <whiteboard ref="whiteboard" :isEraser="isEraser"/>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -69,17 +78,8 @@
     </template>
     </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <div class="center">
-      <pulse-button 
-        iconName="share" 
-        @click="openJourneyPopup()"/>
-    </div>
-    <div style="width: 90%; margin-left: 120px;">
-      <base-button @click="resetBoard()">Reset whiteboard</base-button>
-			<base-button @click="isEraser = true">Erase</base-button>
-			<base-button @click="isEraser = false">Pen</base-button>
-      <whiteboard ref="whiteboard" :isEraser="isEraser"/>
-    </div>
+    <!-- <div style="width: 90%; margin-left: 120px;"> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -118,6 +118,9 @@ export default {
 	},
 	computed: {
 		...mapState(['user', 'hasFetchedUser']),
+		isLoggedIn() {
+			return this.user && this.hasFetchedUser
+		},
 		typingIndicator() {
 			if (
 				this.chatroom.whoIsTyping &&
@@ -147,9 +150,6 @@ export default {
 				return personCopy
 			})
 			return output
-		},
-		isLoggedIn() {
-			return this.user != null && this.user != 'undetermined'
 		},
 		usersAvalibility() {
 			if (!this.chatroom) {
@@ -198,9 +198,7 @@ export default {
 			this.$bind('whiteboard', whiteboardDoc)
 		])
 		await this.$bind('chatroom', chatRef)
-		console.log('this.chatroom =', this.chatroom)
 		// change psetNumber here - this is atrocious
-		const psetID = this.chatroom.forSubject + '/' + this.chatroom.psetNumber
 		const journeyRef = db
 			.collection('conversations')
 			.where('forGroup', '==', this.chatroom.id)
@@ -314,7 +312,7 @@ export default {
 			const url = '/conversation/' + id
 			this.$router.push(url)
 		},
-		async shareDismiss() {
+		shareDismiss() {
 			this.isSharingJourney = false
 		},
 		async shareJourney() {
@@ -323,8 +321,10 @@ export default {
 			}
 			this.isSharingJourney = false
 			this.feedback = 'Saving your explanation...'
+      const allPaths = this.$refs.whiteboard.allPaths
+      console.log('allPaths =', allPaths)
 			const conversation = {
-				doodle: this.whiteboard.allPaths,
+				doodle: allPaths,
 				messages: this.chatroom.messages,
 				participants: this.chatroom.participants,
 				title: this.newJourneyTitle,
@@ -396,11 +396,6 @@ span {
 .time {
 	display: block;
 	font-size: 0.8em;
-}
-
-.whiteboard-wrapper {
-	width: 50%;
-	height: 484px;
 }
 
 .messages {

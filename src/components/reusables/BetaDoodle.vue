@@ -9,6 +9,7 @@
 import paper from 'paper'
 
 var STROKE_WIDTH = 2
+var TOTAL_POINTS = 0
 
 let local = {
 	path: null,
@@ -68,6 +69,7 @@ export default {
 			if (this.allStrokes.length == 0 || this.loadedPreviousDrawings) {
 				return
 			}
+			console.log('this.allStrokes =', this.allStrokes)
 			this.allStrokes.forEach(stroke => {
 				this.drawPath(stroke)
 				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
@@ -109,6 +111,7 @@ export default {
 					return
 				}
 			}
+			console.log('total # of points =', TOTAL_POINTS)
 		},
 		drawPath(data) {
 			this.paper.activate() // so the autodrawing phase doesn't fuck up
@@ -123,6 +126,7 @@ export default {
 				path.strokeWidth = STROKE_WIDTH
 			}
 			data.points.forEach(point => {
+				TOTAL_POINTS += 1
 				path.add(
 					new this.paper.Point(this.width * point.x, this.height * point.y)
 				)

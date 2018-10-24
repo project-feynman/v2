@@ -45,8 +45,6 @@ export default {
 		this.paper.setup(this.id)
 		this.paper.project.view.onResize = function(event) {
 			// Whenever the view is resized, move the path to its center:
-			console.log('view was resized!')
-			console.log('event =', event)
 		}
 
 		this.drawAllPaths()
@@ -54,14 +52,14 @@ export default {
 	watch: {
 		allStrokes() {
 			this.drawAllPaths()
-		},
-		canvas() {
-			// will probably only trigger once - not actually reactive
-			this.height = this.canvas.scrollHeight
-			this.width = this.canvas.scrollWidth
-			this.scaleFactorX = this.canvas.scrollWidth / 1300
-			this.scaleFactorY = this.canvas.scrollHeight / 500
 		}
+		// canvas() {
+		// 	// will probably only trigger once - not actually reactive
+		// 	this.height = this.canvas.scrollHeight
+		// 	this.width = this.canvas.scrollWidth
+		// 	this.scaleFactorX = this.canvas.scrollWidth / 1300
+		// 	this.scaleFactorY = this.canvas.scrollHeight / 500
+		// }
 	},
 	beforeDestroy() {
 		this.paper = null
@@ -110,6 +108,7 @@ export default {
 			path.strokeWidth = STROKE_WIDTH
 			path.strokeCap = 'round'
 			path.strockJoin = 'round'
+			console.log('drawing for path =', data)
 			data.points.forEach(point => {
 				path.add(
 					new this.paper.Point(

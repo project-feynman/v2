@@ -14,6 +14,7 @@
       </template>
       <template v-else>
         <div class="center">
+          <base-button @click="signInAnonymously()">Login in Anonymously</base-button>
           <base-button buttonColor="pink" @click="signInWithPopup()">Login with Google</base-button>
         </div>
       </template>
@@ -98,6 +99,18 @@ export default {
 				.signInWithPopup(provider)
 				.then(console.log('successfully logged in'))
 				.catch(error => console.log(error))
+		},
+		signInAnonymously() {
+			firebase
+				.auth()
+				.signInAnonymously()
+				.catch(function(error) {
+					// Handle Errors here.
+					console.log('error =', error)
+					var errorCode = error.code
+					var errorMessage = error.message
+					// ...
+				})
 		},
 		handleScope(payload) {
 			console.log('keeping track of new paper scope')

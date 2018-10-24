@@ -9,6 +9,7 @@ const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const StudyGroups = () => import('@/views/StudyGroups.vue')
 const TheNotepad = () => import('@/components/TheNotepad.vue')
+const Whiteboard = () => import('@/components/chat/Whiteboard.vue')
 
 export default new Router({
 	mode: 'history',
@@ -20,7 +21,7 @@ export default new Router({
 		},
 		{
 			path: '/paper',
-			component: TheNotepad
+			component: Whiteboard
 		},
 		{
 			path: '/subjects',
@@ -33,10 +34,6 @@ export default new Router({
 		{
 			path: '/chat/:room_id',
 			component: Chat
-		},
-		{
-			path: '/study-groups/:subject_id/:pset_number',
-			component: StudyGroups
 		},
 		{
 			path: '/conversation/:convo_id',
