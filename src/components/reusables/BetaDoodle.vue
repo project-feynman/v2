@@ -147,7 +147,9 @@ export default {
 				)
 			}
 			path.smooth()
-			return new Promise(resolve => setTimeout(resolve, 0))
+			let promise = new Promise(resolve => setTimeout(resolve, 0))
+			promise.catch(error => console.log('error =', error))
+			return promise
 		}
 	}
 }

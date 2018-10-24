@@ -1,7 +1,7 @@
 <template>
   <div>
-    <template v-show="isDebugging">
-      <h2>Data Object = {{ PRINT }}</h2>
+    <template v-if="isDebugging">
+      <h2># of paths = {{ PRINT.doodle.length }}</h2>
     </template>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">

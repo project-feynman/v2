@@ -100,7 +100,7 @@ export default {
 				this.ctx.lineCap = 'round'
 			} else {
 				this.ctx.strokeStyle = 'purple'
-				this.ctx.lineWidth = 3
+				this.ctx.lineWidth = 2
 				this.ctx.lineCap = 'round'
 			}
 			// start new

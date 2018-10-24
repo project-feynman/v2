@@ -4,6 +4,11 @@
     <div class="center">
       <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
     </div>
+    <div class="flexbox-container">
+      <div class="messages-wrapper">
+        <message-history v-if="messages.length != 0" :messages="messages"/>
+      </div>
+    </div>
     <div style="margin: auto; width: 90%;">
       <template v-if="!doodle">
          <p>Fetching doodle...</p>
@@ -12,11 +17,6 @@
         <beta-doodle :allStrokes="doodle"/>
         <!-- <doodle :allStrokes="doodle"/> -->
       </template>
-    </div>
-    <div class="flexbox-container">
-      <div class="messages-wrapper">
-        <message-history v-if="messages" :messages="messages"/>
-      </div>
     </div>
   </div>
 </template>
