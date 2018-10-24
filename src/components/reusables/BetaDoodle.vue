@@ -69,7 +69,6 @@ export default {
 			if (this.allStrokes.length == 0 || this.loadedPreviousDrawings) {
 				return
 			}
-			console.log('this.allStrokes =', this.allStrokes)
 			this.allStrokes.forEach(stroke => {
 				this.drawPath(stroke)
 				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
@@ -92,7 +91,7 @@ export default {
 			this.paper.project.activeLayer.removeChildren()
 			const strokes = this.allStrokes
 			const n = strokes.length
-			// determine drawing speedq
+			// determine drawing speed
 			let strokePeriod = 0
 			if (n < 10) {
 				strokePeriod = 500
@@ -104,8 +103,8 @@ export default {
 				strokePeriod = 30
 			}
 			for (let i = 0; i < n; i++) {
-				this.drawPath(strokes[i])
-				await timeout(strokePeriod)
+				this.drawPath(strokes[i], false) // draw incrementally, not instantly
+				await timeout(strokePeriod / 2)
 				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
 				if (!this.paper) {
 					return
@@ -113,7 +112,7 @@ export default {
 			}
 			console.log('total # of points =', TOTAL_POINTS)
 		},
-		drawPath(data) {
+		async drawPath(data, instant = true) {
 			this.paper.activate() // so the autodrawing phase doesn't fuck up
 			let path = new this.paper.Path()
 			path.strokeCap = 'round'
@@ -125,12 +124,29 @@ export default {
 				path.strokeColor = 'green'
 				path.strokeWidth = STROKE_WIDTH
 			}
-			data.points.forEach(point => {
+
+			function timeout(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms))
+			}
+			const n = data.points.length
+			for (let i = 0; i < n; i++) {
+				const point = data.points[i]
 				TOTAL_POINTS += 1
+				if (!instant) {
+					await timeout(1)
+				}
+				console.log('adding a new point')
 				path.add(
 					new this.paper.Point(this.width * point.x, this.height * point.y)
 				)
-			})
+			}
+
+			// data.points.forEach(point => {
+			// 	TOTAL_POINTS += 1
+			// 	path.add(
+			// 		new this.paper.Point(this.width * point.x, this.height * point.y)
+			// 	)
+			// })
 			path.smooth()
 		}
 	}

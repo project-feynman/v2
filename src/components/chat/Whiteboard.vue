@@ -1,10 +1,6 @@
 <template>
   <div>
-    <!-- Touched  -->
-    <p>All paths = {{ allPaths }}</p>
-    <p>Whiteboard offset = {{ offset }}</p> 
-    <p>Touch location = {{ touchLocation }}</p> 
-    <canvas id="paper" width="1000" height="500"/>
+    <canvas id="paper" width="1000" height="800"/>
   </div>
 </template>
 
@@ -107,9 +103,6 @@ export default {
 				this.ctx.lineWidth = 3
 				this.ctx.lineCap = 'round'
 			}
-			// save previous point
-			this.allPaths.push(this.currentPath)
-			this.currentPath = []
 			// start new
 			this.ctx.beginPath()
 			const x =
@@ -154,13 +147,13 @@ export default {
 			this.savePoint(x, y)
 			// store current path
 			this.savePoint(x, y)
-			// reset current path, and store it to allPaths
+			// save current path, and then reset it
 			const pathObject = {
 				author: this.user.uid,
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
-			this.allPaths.push(this.pathObject)
+			this.allPaths.push(pathObject)
 			this.currentPath = []
 		},
 		dragStart(event) {
@@ -190,8 +183,8 @@ export default {
 			this.drawLine(position)
 			// store current path
 			this.savePoint(position.x, position.y)
-      console.log('# of points =', this.currentPath.length)
-      console.log('this.user =', this.user)
+			console.log('# of points =', this.currentPath.length)
+			console.log('this.user =', this.user)
 			const pathObject = {
 				author: this.user.uid,
 				isEraser: this.isEraser,
@@ -223,8 +216,8 @@ export default {
 			this.dragStartLocation.y = position.y
 		},
 		async resetBoard() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      this.allPaths = [] 
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+			this.allPaths = []
 			// const roomID = this.$route.params.room_id
 			// const ref = db.collection('whiteboards').doc(roomID)
 			// await ref.update({

@@ -1,14 +1,8 @@
 <template>
   <div>
-      <base-button @click="resetBoard()">Reset whiteboard</base-button>
-			<base-button @click="isEraser = true">Erase</base-button>
-			<base-button @click="isEraser = false">Pen</base-button>
-      <div class="center">
-        <pulse-button 
-          iconName="save" 
-          @click="openJourneyPopup()"/>
-      </div>
-      <whiteboard ref="whiteboard" :isEraser="isEraser"/>
+    <template v-show="isDebugging">
+      <h2 v-show="isDebugging" v-if="PRINT">Data Object = {{ PRINT }}</h2>
+    </template>
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -77,9 +71,19 @@
       </div> 
     </template>
     </div>
+          <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
+      <base-button @click="resetBoard()">Reset whiteboard</base-button>
+			<base-button @click="isEraser = true">Erase</base-button>
+			<base-button @click="isEraser = false">Pen</base-button>
+      <div class="center">
+        <pulse-button 
+          iconName="save" 
+          @click="openJourneyPopup()"/>
+      </div>
+      <div style="margin-left: 120px;">
+        <whiteboard ref="whiteboard" :isEraser="isEraser"/>
+      </div>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
-    <!-- <div style="width: 90%; margin-left: 120px;"> -->
-    <!-- </div> -->
   </div>
 </template>
 
@@ -113,7 +117,9 @@ export default {
 			newJourneyTitle: '',
 			feedback: '',
 			usersViewingPage: [],
-			isEraser: false
+			isEraser: false,
+			PRINT: null,
+			isDebuggin: false
 		}
 	},
 	computed: {
@@ -321,18 +327,20 @@ export default {
 			}
 			this.isSharingJourney = false
 			this.feedback = 'Saving your explanation...'
-      const allPaths = this.$refs.whiteboard.allPaths
-      console.log('allPaths =', allPaths)
+			const allPaths = this.$refs.whiteboard.allPaths
+			console.log('allPaths =', allPaths)
 			const conversation = {
 				doodle: allPaths,
 				messages: this.chatroom.messages,
-				participants: this.chatroom.participants,
 				title: this.newJourneyTitle,
 				forGroup: this.chatroom.id,
 				owner: this.user.uid
 			}
+			this.PRINT = conversation
+			this.feedback = 'So far so good...'
 			this.newJourneyTitle = ''
 			const convoRef = db.collection('conversations')
+			this.feedback = 'Now the database call...'
 			await convoRef.add(conversation)
 			this.feedback = 'Success'
 			setTimeout(() => (this.feedback = ''), 1000)
