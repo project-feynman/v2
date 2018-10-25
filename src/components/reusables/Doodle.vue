@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="center">
-      <base-button @click="playAnimation()">Replay Doodle</base-button>
+      <base-button @click="playAnimation()">Replay</base-button>
       <!-- <base-button @click="speedUpReplay()">Speed Up Replay</base-button> -->
     </div>
     <div class="center">
@@ -11,20 +11,12 @@
 </template>
 
 <script>
-var STROKE_WIDTH = 2
 var TOTAL_POINTS = 0
 
-let local = {
-	path: null,
-	group: null
-}
 export default {
 	props: {
 		allStrokes: Array,
-		strokeColor: {
-			type: String,
-			default: 'purple'
-		}
+		small: Boolean
 	},
 	data() {
 		return {
@@ -40,7 +32,13 @@ export default {
 	},
 	mounted() {
 		this.canvas = document.getElementById(this.id)
-		this.canvas.width = window.innerWidth * 0.8
+		if (this.small) {
+			this.canvas.width = 800
+			this.canvas.height = 1000
+		} else {
+			this.canvas.width = window.innerWidth * 0.8
+			this.canvas.width = window.innerHeight
+		}
 		this.ctx = this.canvas.getContext('2d')
 		this.renderEntireNote()
 	},
@@ -138,5 +136,7 @@ export default {
 <style lang="scss" scoped>
 canvas {
 	background: white;
+	display: block;
+	margin: 0 auto;
 }
 </style>

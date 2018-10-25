@@ -17,3 +17,9 @@ export default {
 	}
 }
 </script>
+<style>
+.carousel-item {
+	padding-right: 52%;
+}
+</style>
+
