@@ -36,7 +36,7 @@ export default {
 			paper: null,
 			id: null,
 			pointPeriod: 0.000001,
-			strokeSpeed: 16
+			strokeSpeed: 100
 		}
 	},
 	created() {

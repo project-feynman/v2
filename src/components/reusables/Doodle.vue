@@ -1,13 +1,18 @@
 <template>
   <div>
-    <canvas :id="this.id" class="doodle-element" resize></canvas>
+    <div class="center">
+      <base-button @click="playAnimation()">Replay Doodle</base-button>
+      <!-- <base-button @click="speedUpReplay()">Speed Up Replay</base-button> -->
+    </div>
+    <div class="center">
+      <canvas :id="this.id" width="1000" height="1200"></canvas>
+    </div>
   </div>
 </template>
 
 <script>
-import paper from 'paper'
-
 var STROKE_WIDTH = 2
+var TOTAL_POINTS = 0
 
 let local = {
 	path: null,
@@ -23,62 +28,58 @@ export default {
 	},
 	data() {
 		return {
-			scaleFactorX: 1,
-			scaleFactorY: 1,
 			canvas: null,
-			height: null,
-			width: null,
-			whiteboard: null,
 			loadedPreviousDrawings: false,
-			paper: null,
-			id: null
+			id: null,
+			pointPeriod: 0.000001,
+			strokeSpeed: 100
 		}
 	},
 	created() {
 		this.id = 'wb' + this._uid
-		this.paper = new paper.PaperScope()
-		let newScope = this.paper
-		this.$emit('new-scope', newScope)
 	},
 	mounted() {
 		this.canvas = document.getElementById(this.id)
-		this.paper.setup(this.id)
-		this.paper.project.view.onResize = function(event) {
-			// Whenever the view is resized, move the path to its center:
-		}
-
-		this.drawAllPaths()
+		this.canvas.width = window.innerWidth * 0.8
+		this.ctx = this.canvas.getContext('2d')
+		this.renderEntireNote()
 	},
 	watch: {
 		allStrokes() {
-			this.drawAllPaths()
+			this.renderEntireNote()
 		}
-		// canvas() {
-		// 	// will probably only trigger once - not actually reactive
-		// 	this.height = this.canvas.scrollHeight
-		// 	this.width = this.canvas.scrollWidth
-		// 	this.scaleFactorX = this.canvas.scrollWidth / 1300
-		// 	this.scaleFactorY = this.canvas.scrollHeight / 500
-		// }
-	},
-	beforeDestroy() {
-		this.paper = null
 	},
 	methods: {
-		async drawAllPaths() {
+		speedUpReplay() {
+			this.pointPeriod = 1
+			this.strokeSpeed = 2
+		},
+		renderEntireNote() {
 			if (!this.allStrokes) {
 				return
 			}
 			if (this.allStrokes.length == 0 || this.loadedPreviousDrawings) {
 				return
 			}
+			this.allStrokes.forEach(stroke => {
+				this.drawPath(stroke)
+			})
 			this.loadedPreviousDrawings = true
+		},
+		async playAnimation() {
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+			if (!this.allStrokes) {
+				return
+			}
+			if (this.allStrokes.length == 0) {
+				return
+			}
 			function timeout(ms) {
 				return new Promise(resolve => setTimeout(resolve, ms))
 			}
 			const strokes = this.allStrokes
 			const n = strokes.length
-			// determine drawing speedq
+			// determine drawing speed
 			let strokePeriod = 0
 			if (n < 10) {
 				strokePeriod = 500
@@ -90,34 +91,45 @@ export default {
 				strokePeriod = 30
 			}
 			for (let i = 0; i < n; i++) {
-				this.drawPath(strokes[i])
-				await timeout(strokePeriod)
-				// so the whiteboard does not keep drawing on any available view even if this instance is destroyed
-				if (!this.paper) {
-					return
+				await this.drawPath(strokes[i], false) // draw incrementally, not instantly
+				await timeout(strokePeriod / this.strokeSpeed)
+			}
+			console.log('total # of points =', TOTAL_POINTS)
+		},
+		async drawPath(data, instant = true) {
+			if (data.isEraser) {
+				this.ctx.strokeStyle = 'white'
+				this.ctx.lineWidth = 20
+				this.ctx.lineCap = 'round'
+			} else {
+				this.ctx.strokeStyle = 'purple'
+				this.ctx.lineWidth = 2
+				this.ctx.lineCap = 'round'
+			}
+			const points = data.points
+			this.ctx.beginPath()
+			// move to the first point
+			this.ctx.moveTo(
+				points[0].x * this.canvas.width,
+				points[0].y * this.canvas.height
+			)
+			const n = points.length
+			for (let i = 1; i < n; i++) {
+				this.ctx.lineTo(
+					points[i].x * this.canvas.width,
+					points[i].y * this.canvas.height
+				)
+				this.ctx.stroke()
+				if (!instant) {
+					await timeout(this.pointPeriod)
 				}
 			}
-			// console.log('whiteboard, paper =', this.id, this.paper._id)
-			this.loadedPreviousDrawings = true
-		},
-		drawPath(data) {
-			this.paper.activate()
-			// so the autodrawing phase doesn't fuck
-			let path = new this.paper.Path()
-			path.strokeColor = this.strokeColor
-			path.strokeWidth = STROKE_WIDTH
-			path.strokeCap = 'round'
-			path.strockJoin = 'round'
-			console.log('drawing for path =', data)
-			data.points.forEach(point => {
-				path.add(
-					new this.paper.Point(
-						this.scaleFactorX * point.x,
-						this.scaleFactorY * point.y
-					)
-				)
-			})
-			path.smooth()
+			function timeout(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms))
+			}
+			let promise = new Promise(resolve => setTimeout(resolve, 0))
+			promise.catch(error => console.log('error =', error))
+			return promise
 		}
 	}
 }
@@ -125,11 +137,6 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
-	position: absolute;
-	top: -100px;
-	left: -222px;
-	width: 650px;
-	height: 350px;
 	background: white;
 }
 </style>
