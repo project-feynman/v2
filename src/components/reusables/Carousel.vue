@@ -11,7 +11,7 @@ export default {
 	mounted() {
 		const elems = document.querySelectorAll('.carousel')
 		const options = {
-			dist: -30
+			dist: -100
 		}
 		M.Carousel.init(elems, options)
 	}
