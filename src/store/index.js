@@ -86,13 +86,6 @@ const actions = {
 						newUser.displayName = 'Anonymous'
 					}
 					context.commit('setUser', newUser)
-					const countRef = db.collection('statistics').doc('users')
-					const doc = await countRef.get()
-					const numOfUsers = doc.data().count
-					newUser.feynmanNumber = numOfUsers + 1
-					countRef.update({
-						count: numOfUsers + 1
-					})
 					await ref.set(newUser) // we want to minimize the # of updates we make before setting up an onSnapshot callback
 					ref.onSnapshot(mirror => {
 						context.commit('setUser', mirror.data())

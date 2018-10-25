@@ -130,10 +130,6 @@ export default {
 				const result = await chatRef.add({
 					messages: [],
 					whoIsTyping: {},
-					// participants: [],
-					// forSubject: subject_id,
-					// psetNumber: pset_number,
-					// title: chosenTitle,
 					owner: {
 						displayName: this.user.displayName,
 						uid: this.user.uid
@@ -153,7 +149,7 @@ export default {
 		const studentsRef = db
 			.collection('users')
 			.where('enrolledSubjects', 'array-contains', subject_id)
-		// .where('isOnline', '==', true)
+
 		const onlineClassmates = db
 			.collection('users')
 			.where('enrolledSubjects', 'array-contains', subject_id)
@@ -163,10 +159,6 @@ export default {
 			this.$bind('onlineClassmates', onlineClassmates),
 			this.$bind('studyGroups', ref)
 		])
-		// load the chat from the subject
-		// const subjectRef = db.collection('subjects').doc(subject_id)
-		// await this.$bind('subject', subjectRef)
-		// console.log('subject messages =', this.subject.messages)
 		this.loadingGroups = false
 	},
 	methods: {

@@ -5,7 +5,6 @@
       <input type="text" name="new-message" @input="emitChange" v-model="newMessage">
     </form>
   </div>
-  <!-- Add comments and remove print statements -->
 </template>
 
 
@@ -40,23 +39,22 @@ export default {
 				const content = this.newMessage
 				this.newMessage = null
 				const roomID = this.$route.params.room_id
-				let chatRoomRef = db.collection('chatrooms').doc(roomID)
+				const chatRoomRef = db.collection('chatrooms').doc(roomID)
 				let chatRoom = await chatRoomRef.get()
 				const data = chatRoom.data()
-				this.messages = data.messages
 				const whoIsTyping = data.whoIsTyping
 				delete whoIsTyping[this.user.uid]
 				const author = {
 					displayName: this.user.displayName,
 					uid: this.user.uid
 				}
-				this.messages.push({
+				const newMessage = {
 					content,
 					author,
 					timestamp: Date.now()
-				})
+				}
 				await chatRoomRef.update({
-					messages: this.messages,
+					messages: firebase.firestore.FieldValue.arrayUnion(newMessage),
 					participants: firebase.firestore.FieldValue.arrayUnion(author),
 					whoIsTyping
 				})

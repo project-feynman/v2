@@ -9,6 +9,7 @@
       </popup-modal>
     </template>
     <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+
     <!-- This is the search form for the collection of classes -->
     <div style="width: 50%; margin: auto;">
       <search-box v-if="objectOfClasses"
@@ -16,6 +17,7 @@
         :allResults="objectOfClasses"   
         @select="payload => addClass(payload)"/>
     </div>
+    
     <!-- Input for creating a new subject on Feynman -->
     <div style="width: 50%; margin: auto;">
       <div class="row">
@@ -102,31 +104,31 @@ export default {
 				this.$emit('add-class')
 			}
 		},
-    async addSubject() {
-      const chatRef = db.collection("chatrooms");
-      const result = await chatRef.add({
-        messages: [],
-        whoIsTyping: {},
-        // participants: [],
-        // forSubject: subject_id,
-        // psetNumber: pset_number,
-        // title: chosenTitle,
-        owner: {
-          displayName: this.user.displayName,
-          uid: this.user.uid
-        },
-        whoIsTyping: {}
-      });
-      const chatroomID = result.id;
-      const newSubject = {
-        subjectNumber: this.newSubject,
-        psets: [1],
-        subjectChatID: chatroomID
-      };
-      const ref = db.collection("subjects").doc(this.newSubject);
-      this.newSubject = "";
-      await ref.set(newSubject);
-    }
+		async addSubject() {
+			const chatRef = db.collection('chatrooms')
+			const result = await chatRef.add({
+				messages: [],
+				whoIsTyping: {},
+				// participants: [],
+				// forSubject: subject_id,
+				// psetNumber: pset_number,
+				// title: chosenTitle,
+				owner: {
+					displayName: this.user.displayName,
+					uid: this.user.uid
+				},
+				whoIsTyping: {}
+			})
+			const chatroomID = result.id
+			const newSubject = {
+				subjectNumber: this.newSubject,
+				psets: [1],
+				subjectChatID: chatroomID
+			}
+			const ref = db.collection('subjects').doc(this.newSubject)
+			this.newSubject = ''
+			await ref.set(newSubject)
+		}
 	},
 	watch: {
 		isLoggedIn() {

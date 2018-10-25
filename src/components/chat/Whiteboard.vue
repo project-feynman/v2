@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas id="paper" height="1200"/>
+    <canvas id="paper" width="1000" height="1200"/>
   </div>
 </template>
 
@@ -84,6 +84,7 @@ export default {
 	methods: {
 		initPaper() {
 			this.canvas = document.getElementById('paper')
+			this.canvas.width = window.innerWidth - 120
 			this.ctx = this.canvas.getContext('2d')
 			this.canvas.addEventListener('mousedown', this.dragStart, false)
 			this.canvas.addEventListener('mousemove', this.drag, false)
@@ -250,7 +251,6 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
-	width: 100%;
 	background: white;
 }
 </style>

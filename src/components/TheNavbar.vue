@@ -8,11 +8,6 @@
           </router-link>
         </a>
         <ul class="right hide-on-med-and-down">
-          <!-- <li v-if="user && hasFetchedUser">
-            <router-link to="/6.046">
-              6.046
-            </router-link>
-          </li> -->
           <li v-show="isLoggedIn && user.chatrooms">
             <a id="dropdown-trigger" href="#!" data-target="dropdown">
               Chats
@@ -54,14 +49,10 @@ import db from '@/firebase/init.js'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import PopupModal from '@/components/reusables/PopupModal.vue'
-import {
-	getSubscription,
-	sendSubscriptionToFirestore
-} from '@/api/push_notifications.js'
 // import {
-// 	getPermissionForGeolocation,
-// 	sendPositionToFirestore
-// } from '@/api/geolocation.js'
+// 	getSubscription,
+// 	sendSubscriptionToFirestore
+// } from '@/api/push_notifications.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -73,17 +64,15 @@ export default {
 		async user() {
 			if (this.isLoggedIn) {
 				this.fetchChatDocs()
-				if (!this.hasFetchedToken) {
-					// generate tokens if the user is new
-					this.hasFetchedToken = true
-					sendSubscriptionToFirestore(this.user.uid)
-					var subscription = getSubscription()
-					if (subscription) {
-						const ref = db.collection('users').doc(this.user.uid)
-					}
-				}
-				// UPDATE: don't store locations for current MVP
-				// this.getPermissionForGeolocation()
+				// if (!this.hasFetchedToken) {
+				// 	// generate tokens if the user is new
+				// 	this.hasFetchedToken = true
+				// 	sendSubscriptionToFirestore(this.user.uid)
+				// 	var subscription = getSubscription()
+				// 	if (subscription) {
+				// 		const ref = db.collection('users').doc(this.user.uid)
+				// 	}
+				// }
 			}
 		}
 	},
@@ -94,7 +83,7 @@ export default {
 	computed: {
 		...mapState(['user', 'hasFetchedUser']),
 		isLoggedIn() {
-			return this.user != null && this.user != 'undetermined'
+			return this.user && this.hasFetchedUser
 		},
 		atHomePage() {
 			return this.$route.path == '/'
