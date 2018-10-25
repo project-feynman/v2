@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas id="paper" width="1000" height="1200"/>
+    <canvas id="paper" height="1200"/>
   </div>
 </template>
 
@@ -183,8 +183,6 @@ export default {
 			this.drawLine(position)
 			// store current path
 			this.savePoint(position.x, position.y)
-			console.log('# of points =', this.currentPath.length)
-			console.log('this.user =', this.user)
 			const pathObject = {
 				author: this.user.uid,
 				isEraser: this.isEraser,
@@ -252,6 +250,7 @@ export default {
 
 <style lang="scss" scoped>
 canvas {
+	width: 100%;
 	background: white;
 }
 </style>

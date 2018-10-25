@@ -1,23 +1,21 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
-    <div class="center">
+    <!-- <div class="center">
       <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
-    </div>
-    <div class="flexbox-container">
-      <div class="messages-wrapper">
-        <message-history v-if="messages.length != 0" :messages="messages"/>
+    </div> -->
+    <p class="white-text center" v-if="isLoading">There is only one reason to be in college - to be able to learn with companions.</p>
+    <template v-else>
+      <div class="flexbox-container">
+        <div class="messages-wrapper">
+          <message-history v-if="messages.length != 0" :messages="messages"/>
+        </div>
       </div>
-    </div>
-    <div style="margin: auto; width: 90%;">
-      <template v-if="!doodle">
-         <p>Fetching doodle...</p>
-      </template>
-      <template v-else>
-        <beta-doodle :allStrokes="doodle"/>
-        <!-- <doodle :allStrokes="doodle"/> -->
-      </template>
-    </div>
+      <div style="margin: auto; width: 90%;">
+        <p v-if="doodle.length == 0">Fetching doodle...</p>
+        <beta-doodle v-else :allStrokes="doodle"/>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -43,7 +41,8 @@ export default {
 			doodle: [],
 			messages: [],
 			forGroup: '',
-			hasFetchedConversation: false
+			hasFetchedConversation: false,
+			isLoading: true
 		}
 	},
 	watch: {
@@ -59,10 +58,7 @@ export default {
 			}
 		},
 		async fetchConversation() {
-			if (this.hasFetchedConversation) {
-				return
-			}
-			if (!this.hasFetchedUser) {
+			if (this.hasFetchedConversation || !this.hasFetchedUser) {
 				return
 			}
 			// get document from firestore
@@ -70,13 +66,13 @@ export default {
 			const ref = db.collection('conversations').doc(id)
 			const doc = await ref.get()
 			if (doc.exists) {
-				// display Doodle
 				const data = doc.data()
 				this.doodle = data.doodle
 				this.messages = data.messages
 				this.title = data.title
 				this.hasFetchedConversation = true
 				this.forGroup = data.forGroup
+				this.isLoading = false
 			}
 		}
 	}

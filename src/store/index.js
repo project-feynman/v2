@@ -110,7 +110,6 @@ const actions = {
 	logOut: async context => {
 		await firebase.auth().signOut()
 		context.commit('setUser', null)
-		Promise.resolve()
 	}
 }
 

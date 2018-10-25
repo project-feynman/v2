@@ -35,8 +35,8 @@ export default {
 			loadedPreviousDrawings: false,
 			paper: null,
 			id: null,
-			pointPeriod: 1,
-			strokeSpeed: 2
+			pointPeriod: 0.000001,
+			strokeSpeed: 16
 		}
 	},
 	created() {

@@ -8,7 +8,6 @@ const Dashboard = () => import('@/views/Dashboard.vue')
 const Journey = () => import('@/views/Journey.vue')
 const Chat = () => import('@/views/Chat.vue')
 const StudyGroups = () => import('@/views/StudyGroups.vue')
-const TheNotepad = () => import('@/components/TheNotepad.vue')
 const Whiteboard = () => import('@/components/chat/Whiteboard.vue')
 
 export default new Router({
