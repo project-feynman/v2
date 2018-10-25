@@ -4,18 +4,14 @@
     <!-- <div class="center">
       <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
     </div> -->
-    <p class="white-text center" v-if="isLoading">There is only one reason to be in college - to be able to learn with companions.</p>
-    <template v-else>
-      <div class="flexbox-container">
-        <div class="messages-wrapper">
+    <h4 class="white-text center" v-if="isLoading">There is only one reason to be in college - to be able to learn with companions.</h4>
+        <p class="white-text center" v-if="doodle.length == 0">Fetching chat log...</p>
+        <div class="messages-wrapper" style="width: 45%; margin: auto;">
           <message-history v-if="messages.length != 0" :messages="messages"/>
         </div>
-      </div>
-      <div style="margin: auto; width: 90%;">
-        <p v-if="doodle.length == 0">Fetching doodle...</p>
-        <beta-doodle v-else :allStrokes="doodle"/>
-      </div>
-    </template>
+        <p class="white-text center" v-if="doodle.length == 0">Fetching doodle...</p>
+        <doodle :allStrokes="doodle"/>
+        <!-- <beta-doodle v-else :allStrokes="doodle"/> -->
   </div>
 </template>
 
@@ -80,10 +76,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-canvas {
-	position: absolute;
-}
-
 h2 {
 	@extend .center;
 }
@@ -94,10 +86,6 @@ h2 {
 }
 
 .doodle-wrapper,
-.messages-wrapper {
-	width: 45%;
-}
-
 .doodle-wrapper {
 	height: 600px;
 }

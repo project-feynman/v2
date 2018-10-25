@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Tutorial popup -->
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeViewingGroups" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -8,12 +9,55 @@
         </p>
       </popup-modal>
     </template>
+
+    <!-- Edit study group name -->
     <template v-if="isEditting">
       <popup-modal @close="saveTitle()">
         <input slot="header" class="teal-text center" v-model="editTitle">
       </popup-modal>
     </template>
+
+    <!-- Ask a question -->
+    <popup-modal v-if="isAskingQuestion" @close="submitQuestion()" @dismiss="isAskingQuestion = false">
+      <div class="row" slot="header">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="textarea1" class="materialize-textarea" v-model="questionInput"></textarea>
+              <label for="textarea1">Question</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </popup-modal>
+
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
+
+    <!-- Questions -->
+    <div class="row">
+      <base-button @click="askQuestion">Ask A Question</base-button>
+      <div class="col s10 m5 offset-m4">
+        <collection-list
+          title="Questions"
+          :listItems="subject.questions"
+          @item-click="loadingGroups = false">
+            <template slot-scope="{ item }">
+            <p>{{ item.owner.displayName }} asks: {{ item.content }}</p>
+            <router-link v-if="item.isAnswered" to="/">Answer: www.google.com</router-link>
+            <div v-else style="display: flex;">
+              <template v-if="item.owner.uid != user.uid">
+                <!-- <pulse-button iconName="phone"></pulse-button> -->
+                <base-button>Explain Directly (Live)</base-button>
+                <base-button>Answer With A Journey URL</base-button>
+              <!-- <pulse-button iconName="phone"></pulse-button> -->
+              </template>
+            </div>
+          </template>
+        </collection-list>
+      </div>
+    </div>
+    
+    <!-- Classmates -->
     <div class="row">
       <div class="col s10 m3 offset-m1">
         <collection-list title="Classmates" 
@@ -73,6 +117,7 @@ import PopupModal from '@/components/reusables/PopupModal.vue'
 import ChatWindow from '@/components/reusables/ChatWindow.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { mapState } from 'vuex'
 
 export default {
 	components: {
@@ -83,11 +128,9 @@ export default {
 		ChatWindow
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		},
+		...mapState(['user', 'hasFetchedUser']),
 		isLoggedIn() {
-			return this.user != 'undetermined' && this.user != null
+			return this.user && this.hasFetchedUser
 		},
 		usersAvalibility() {
 			const activeUIDs = this.onlineClassmates.reduce((prev, obj) => {
@@ -110,10 +153,12 @@ export default {
 			loadingGroups: true,
 			showPopup: false,
 			isEditting: false,
+			isAskingQuestion: false,
 			editTitle: '',
 			editID: '',
 			enrolledStudents: [],
 			onlineClassmates: [],
+			questionInput: '',
 			defaultTitles: [
 				'Edit title here...',
 				'Edit title here...',
@@ -162,6 +207,27 @@ export default {
 		this.loadingGroups = false
 	},
 	methods: {
+		askQuestion() {
+			this.isAskingQuestion = true
+			return
+		},
+		async submitQuestion() {
+			this.isAskingQuestion = false
+			const newQuestion = {
+				content: this.questionInput,
+				owner: {
+					displayName: this.user.displayName,
+					uid: this.user.uid
+				},
+				isAnswered: false
+			}
+			const subject_id = this.$route.params.subject_id
+			const ref = db.collection('subjects').doc(subject_id)
+			await ref.update({
+				questions: firebase.firestore.FieldValue.arrayUnion(newQuestion)
+			})
+			this.questionInput = ''
+		},
 		isOwner(group) {
 			return (
 				this.user.uid == group.owner.uid || this.user.displayName == 'Elton Lin'

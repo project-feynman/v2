@@ -55,7 +55,7 @@ export default {
 	computed: {
 		...mapState(['user', 'hasFetchedUser']),
 		isLoggedIn() {
-			return this.user != 'undetermined' && this.user != null
+			return this.user && this.hasFetchedUser
 		},
 		objectOfClasses() {
 			if (this.classes) {
@@ -116,8 +116,7 @@ export default {
 				owner: {
 					displayName: this.user.displayName,
 					uid: this.user.uid
-				},
-				whoIsTyping: {}
+				}
 			})
 			const chatroomID = result.id
 			const newSubject = {

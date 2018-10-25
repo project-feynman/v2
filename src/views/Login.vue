@@ -6,7 +6,7 @@
     </p>
     <template v-else>
       <template v-if="user">
-        <div class="dashboard-button" style="margin-bottom: 35px;">
+        <div class="dashboard-button">
           <router-link to="/subjects">
             <pulse-button size="large" iconName="dashboard"/>
           </router-link>
@@ -19,10 +19,10 @@
         </div>
       </template>
     </template>
-    <carousel>      
-      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" strokeColor="purple"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" strokeColor="black"></doodle>
-      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" strokeColor="orange"></doodle>
+    <carousel>     
+      <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" :small="true"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" :small="true"></doodle>
+      <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" :small="true"></doodle>
     </carousel>
   </div>
 </template>
@@ -31,7 +31,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import db from '@/firebase/init.js'
-import Journey from '@/components/reusables/Journey.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import Doodle from '@/components/reusables/Doodle.vue'
 import Carousel from '@/components/reusables/Carousel.vue'
@@ -39,7 +38,6 @@ import { mapState } from 'vuex'
 
 export default {
 	components: {
-		Journey,
 		PulseButton,
 		Doodle,
 		Carousel
@@ -48,8 +46,7 @@ export default {
 		return {
 			showcase: [],
 			featureTwo: [],
-			featureThree: [],
-			paperScopes: []
+			featureThree: []
 		}
 	},
 	computed: {
@@ -58,15 +55,15 @@ export default {
 	async created() {
 		const firstFeatureRef = db
 			.collection('conversations')
-			.where('title', '==', 'Feature #1')
+			.where('title', '==', '1-2(c) Case 1')
 
 		const secondFeatureRef = db
 			.collection('conversations')
-			.where('title', '==', 'Feature #2')
+			.where('title', '==', '1-2(b) Case 2')
 
 		const thirdRef = db
 			.collection('conversations')
-			.where('title', '==', 'Feature #3 v3')
+			.where('title', '==', 'Payoff Graph Part 3')
 
 		const results = await Promise.all([
 			firstFeatureRef.get(),
@@ -111,10 +108,6 @@ export default {
 					var errorMessage = error.message
 					// ...
 				})
-		},
-		handleScope(payload) {
-			console.log('keeping track of new paper scope')
-			this.paperScopes.push(payload)
 		}
 	}
 }

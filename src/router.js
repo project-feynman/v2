@@ -6,9 +6,8 @@ Vue.use(Router)
 const Login = () => import('@/views/Login.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
 const Journey = () => import('@/views/Journey.vue')
-const Chat = () => import('@/views/Chat.vue')
+const Notepad = () => import('@/views/Notepad.vue')
 const StudyGroups = () => import('@/views/StudyGroups.vue')
-const Whiteboard = () => import('@/components/chat/Whiteboard.vue')
 
 export default new Router({
 	mode: 'history',
@@ -17,10 +16,6 @@ export default new Router({
 		{
 			path: '/',
 			component: Login
-		},
-		{
-			path: '/paper',
-			component: Whiteboard
 		},
 		{
 			path: '/subjects',
@@ -32,10 +27,10 @@ export default new Router({
 		},
 		{
 			path: '/chat/:room_id',
-			component: Chat
+			component: Notepad
 		},
 		{
-			path: '/conversation/:convo_id',
+			path: '/journey/:convo_id',
 			component: Journey
 		}
 	]
