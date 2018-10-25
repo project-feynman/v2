@@ -33,33 +33,11 @@
 
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
 
-    <!-- Questions -->
+
     <div class="row">
-      <base-button @click="askQuestion">Ask A Question</base-button>
-      <div class="col s10 m5 offset-m4">
-        <collection-list
-          title="Questions"
-          :listItems="subject.questions"
-          @item-click="loadingGroups = false">
-            <template slot-scope="{ item }">
-            <p>{{ item.owner.displayName }} asks: {{ item.content }}</p>
-            <router-link v-if="item.isAnswered" to="/">Answer: www.google.com</router-link>
-            <div v-else style="display: flex;">
-              <template v-if="item.owner.uid != user.uid">
-                <!-- <pulse-button iconName="phone"></pulse-button> -->
-                <base-button>Explain Directly (Live)</base-button>
-                <base-button>Answer With A Journey URL</base-button>
-              <!-- <pulse-button iconName="phone"></pulse-button> -->
-              </template>
-            </div>
-          </template>
-        </collection-list>
-      </div>
-    </div>
-    
-    <!-- Classmates -->
-    <div class="row">
-      <div class="col s10 m3 offset-m1">
+
+      <!-- Classmates -->
+      <div class="col s10 m2">
         <collection-list title="Classmates" 
                         :listItems="usersAvalibility">
           <template slot-scope="{ item }">
@@ -68,10 +46,37 @@
           </template>
         </collection-list>
       </div>
-      <div class="col s10 m5 offset-m2">
+
+      <!-- Questions -->
+      <div class="col s10 m5">
+        <collection-list
+          title="Questions"
+          :listItems="subject.questions"
+          @item-click="loadingGroups = false">
+            <template slot-scope="{ item }">
+            <p>{{ item.owner.displayName }} asks: {{ item.content }}</p>
+            <div v-if="item.answerURL">
+              <a :href="item.answerURL">{{ item.answerURL }}</a>
+            </div>
+            <div v-else>
+              <template v-if="item.owner.uid != user.uid">
+                <div style="display: flex; justify-content: space-evenly;">
+                  <input slot="header" class="teal-text center" placeholder="Answer with a journey URL" v-model="answerURL">
+                  <floating-button @click="answerQuestion(item)" iconName="send"></floating-button>
+                </div>
+              </template>
+            </div>
+          </template>
+        </collection-list>
+        <base-button @click="askQuestion">Ask A Question</base-button>
+      </div>
+
+      <!-- Chat -->
+      <div class="col s10 m5 offset-1">
         <chat-window :chatroom="subjectChat"></chat-window>
       </div>
     </div>
+
     <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
@@ -83,15 +88,15 @@
                   Created by {{ group.owner.displayName }} 
                 </p>
                 <floating-button iconName="slideshow" 
-                                color="green" 
-                                @click="$router.push('/chat/' + group.id)"/>
+                                 color="green" 
+                                 @click="$router.push('/chat/' + group.id)"/>
                 <template v-if="isOwner(group)">
                   <floating-button iconName="mode_edit" 
-                                  color="yellow darken-2" 
-                                  @click="editGroup(group)"/>
+                                   color="yellow darken-2" 
+                                   @click="editGroup(group)"/>
                   <floating-button iconName="delete" 
-                                  color="red" 
-                                  @click="deleteGroup(group)"/>
+                                   color="red" 
+                                   @click="deleteGroup(group)"/>
                 </template>
               </base-card>
             </div>
@@ -154,6 +159,7 @@ export default {
 			showPopup: false,
 			isEditting: false,
 			isAskingQuestion: false,
+			answerURL: '',
 			editTitle: '',
 			editID: '',
 			enrolledStudents: [],
@@ -178,8 +184,7 @@ export default {
 					owner: {
 						displayName: this.user.displayName,
 						uid: this.user.uid
-					},
-					whoIsTyping: {}
+					}
 				})
 				subjectRef.update({
 					subjectChatID: result.id
@@ -191,6 +196,7 @@ export default {
 			}
 		})
 		const ref = db.collection('chatrooms').where('forSubject', '==', subject_id)
+
 		const studentsRef = db
 			.collection('users')
 			.where('enrolledSubjects', 'array-contains', subject_id)
@@ -199,6 +205,7 @@ export default {
 			.collection('users')
 			.where('enrolledSubjects', 'array-contains', subject_id)
 			.where('isOnline', '==', true)
+
 		await Promise.all([
 			this.$bind('enrolledStudents', studentsRef),
 			this.$bind('onlineClassmates', onlineClassmates),
@@ -207,6 +214,23 @@ export default {
 		this.loadingGroups = false
 	},
 	methods: {
+		async answerQuestion(question) {
+			const subjectRef = db.collection('subjects').doc(this.subject.id)
+			const oldQuestion = question
+			const newQuestion = question
+			newQuestion.isAnswered = true
+			newQuestion.answerURL = this.answerURL
+			this.answerURL = ''
+			await subjectRef.update({
+				questions: firebase.firestore.FieldValue.arrayRemove(oldQuestion)
+			})
+			await subjectRef.update({
+				questions: firebase.firestore.FieldValue.arrayUnion(newQuestion)
+			})
+		},
+		submitJourneyURL(question) {
+			return
+		},
 		askQuestion() {
 			this.isAskingQuestion = true
 			return
