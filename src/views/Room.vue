@@ -21,7 +21,7 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" ref="journey" id="journey-input" class="teal-text center">
     </popup-modal>
     
-    <h3 class="white-text" v-if="!chatroom.title" >Fetching Content...</h3>
+    <h3 class="center" v-if="!chatroom.title" >Fetching Content...</h3>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
     <div class="row" style="margin-top: 50px;">
       <template v-if="chatroom">
@@ -40,49 +40,51 @@
           </base-button>
         </div>
       </template>
-    <div class="col s10 m7 offset">
-      <div class="chat-wrapper">
-        <div class="card">
-          <div class="card-content">
-            <ul class="messages" v-chat-scroll>
-              <li v-for="message in chatroom.messages" :key="message.id">
-                <span class="teal-text">{{ message.author.displayName }}: </span>
-                <span class="grey-text text-darken-3">{{ message.content }}</span>
-                <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
-              </li>
-            </ul>
-            <span class="grey-text time">
-              {{ typingIndicator }}
-            </span>
-          </div>
-          <div class="card-action">
-            <chat-new-message @onInputChange="newChatMessageChange" :participants="chatroom.participants"/>
+
+      <!-- Chat  -->
+      <div class="col s10 m7 offset">
+        <div class="chat-wrapper">
+          <div class="card">
+            <div class="card-content">
+              <ul class="messages" v-chat-scroll>
+                <li v-for="message in chatroom.messages" :key="message.id">
+                  <span class="teal-text">{{ message.author.displayName }}: </span>
+                  <span class="grey-text text-darken-3">{{ message.content }}</span>
+                  <span class="grey-text time">{{ prettifyDate(message.timestamp) }}</span>
+                </li>
+              </ul>
+              <span class="grey-text time">
+                {{ typingIndicator }}
+              </span>
+            </div>
+            <div class="card-action">
+              <chat-new-message @onInputChange="newChatMessageChange" :participants="chatroom.participants"/>
+            </div>
           </div>
         </div>
+        <base-button @click="resetMessages()">Reset chat</base-button>
       </div>
-      <base-button @click="resetMessages()">Reset chat</base-button>
-    </div>
-    <template v-if="journeys">
-        <div class="col s10 m3">
-        <collection-list title="Journeys"
-                    :listItems="journeys"
-                    actionIcon="delete"
-                    @item-click="journey => processDeleteAttempt(journey)"
-                    @entire-click="journey => redirect(journey)">
-          <template slot-scope="{ item }">
-            {{ item.title }}
-          </template>
-        </collection-list>
-      </div> 
-    </template>
+
+      <!-- Journeys -->
+      <template v-if="journeys">
+          <div class="col s10 m3">
+          <collection-list title="Journeys"
+                      :listItems="journeys"
+                      actionIcon="delete"
+                      @item-click="journey => processDeleteAttempt(journey)"
+                      @entire-click="journey => redirect(journey)">
+            <template slot-scope="{ item }">
+              {{ item.title }}
+            </template>
+          </collection-list>
+        </div> 
+      </template>
     </div>
       <div class="row">
     <div class="col s12">
       <ul class="tabs" id="tabs">
         <li class="tab col s3"><a class="active" href="#tab1">Notepad</a></li>
-        <li class="tab col s3"><a href="#whiteboard">Whiteboard</a></li>
-        <!-- <li class="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
-        <li class="tab col s3"><a href="#test4">Test 4</a></li> -->
+        <li class="tab col s3"><a href="#tab2">Whiteboard</a></li>
       </ul>
     </div>
     <div id="tab1" class="col s12">
@@ -101,9 +103,10 @@
       </div>
         <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
       </div>
-    <div id="whiteboard" class="col s12">Whiteboard</div>
-    <!-- <div id="test3" class="col s12">Test 3</div>
-    <div id="test4" class="col s12">Test 4</div> -->
+    <div id="tab2" class="col s12">
+      <!-- Whiteboard -->
+      <whiteboard :isEraser="isEraser"/>
+    </div>
   </div>
         
 
@@ -116,6 +119,7 @@ import 'firebase/firestore'
 import moment from 'moment'
 import ChatNewMessage from '@/components/room/ChatNewMessage.vue'
 import Paper from '@/components/room/Paper.vue'
+import Whiteboard from '@/components/room/Whiteboard.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
@@ -128,7 +132,8 @@ export default {
 		Paper,
 		PulseButton,
 		CollectionList,
-		PopupModal
+		PopupModal,
+		Whiteboard
 	},
 	data() {
 		return {

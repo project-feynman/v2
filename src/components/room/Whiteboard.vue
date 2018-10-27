@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>{{ whiteboard }}</div>
-    <canvas id="paper" width="1000" height="1200"/>
+    <base-button @click="clearBoard">Clear Board</base-button>
+    <div>
+      <canvas id="whiteboard" width="1000" height="1200"/>
+    </div>
   </div>
 </template>
 
@@ -18,8 +21,7 @@ export default {
 		return {
 			tool: null,
 			whiteboard: null,
-			loadedPreviousDrawings: false,
-			onMouseUpInitialized: false,
+			loadSavedDrawing: false,
 			id: null,
 			width: 0,
 			height: 0,
@@ -28,7 +30,8 @@ export default {
 			canvas: null,
 			ctx: null,
 			dragging: false,
-			dragStartLocation: null
+			dragStartLocation: null,
+			roomID: null
 		}
 	},
 	computed: {
@@ -45,44 +48,74 @@ export default {
 		}
 	},
 	async created() {
-		const roomID = this.$route.params.room_id
-		console.log('roomID =', roomID)
-		const ref = db.collection('whiteboards').doc(roomID)
-		await this.$bind('whiteboard', ref)
+		this.roomID = this.$route.params.room_id
+		this.ref = db.collection('whiteboards').doc(this.roomID)
+		await this.$bind('whiteboard', this.ref)
 	},
 	mounted() {
-		this.initPaper()
-		// if (this.user && this.hasFetchedUser) {
-		// 	if (!this.onMouseUpInitialized) {
-		// 		this.initOnMouseUp()
-		// 	}
-		// }
+		this.initWhiteboard()
 		// sync whiteboard to Firestore
-		// const roomID = this.$route.params.room_id
-		// const ref = db.collection('whiteboards').doc(roomID)
-		// ref.onSnapshot(doc => {
-		// 	const data = doc.data()
-		// 	this.whiteboard = data
-		// 	if (!this.loadedPreviousDrawings) {
-		// 		// initial load
-		// 		this.drawAllPaths()
-		// 	} else {
-		// 		const updatedPaths = data.allPaths
-		// 		const n = updatedPaths.length
-		// 		if (n == 0) {
-		// 			// wipe whiteboard
-		// 		} else if (updatedPaths[n - 1].author == this.user.uid) {
-		// 			return
-		// 		} else {
-		// 			const newPath = updatedPaths[n - 1]
-		//      this.drawPath()
-		// 		}
-		// 	}
-		// })
+		this.ref.onSnapshot(doc => {
+			console.log('onSnapshot()')
+			this.whiteboard = doc.data()
+			const n = this.whiteboard.allPaths.length
+			const newPath = this.whiteboard.allPaths[n - 1]
+			if (!this.loadSavedDrawing) {
+				for (let i = 0; i < n; i++) {
+					const path = this.whiteboard.allPaths[i]
+					this.drawPath(path)
+				}
+				this.loadSavedDrawing = true
+			} else {
+				if (n == 0) {
+					console.log('clearing the rectangle')
+					this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+				} else if (newPath.author == this.user.uid) {
+					return
+				} else {
+					this.drawPath(newPath)
+				}
+			}
+		})
 	},
 	methods: {
-		initPaper() {
-			this.canvas = document.getElementById('paper')
+		async drawPath(data, instant = true) {
+			if (data.isEraser) {
+				this.ctx.strokeStyle = 'white'
+				this.ctx.lineWidth = 20
+				this.ctx.lineCap = 'round'
+			} else {
+				this.ctx.strokeStyle = 'purple'
+				this.ctx.lineWidth = 2
+				this.ctx.lineCap = 'round'
+			}
+			const points = data.points
+			this.ctx.beginPath()
+			// move to the first point
+			this.ctx.moveTo(
+				points[0].x * this.canvas.width,
+				points[0].y * this.canvas.height
+			)
+			const n = points.length
+			for (let i = 1; i < n; i++) {
+				this.ctx.lineTo(
+					points[i].x * this.canvas.width,
+					points[i].y * this.canvas.height
+				)
+				this.ctx.stroke()
+				if (!instant) {
+					await timeout(this.pointPeriod)
+				}
+			}
+			function timeout(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms))
+			}
+			let promise = new Promise(resolve => setTimeout(resolve, 0))
+			promise.catch(error => console.log('error =', error))
+			return promise
+		},
+		initWhiteboard() {
+			this.canvas = document.getElementById('whiteboard')
 			this.canvas.width = window.innerWidth - 120
 			this.ctx = this.canvas.getContext('2d')
 			this.canvas.addEventListener('mousedown', this.dragStart, false)
@@ -174,7 +207,7 @@ export default {
 				this.savePoint(position.x, position.y)
 			}
 		},
-		dragStop(event) {
+		async dragStop(event) {
 			this.dragging = false
 			const position = this.getCanvasCoordinates(event)
 			this.drawLine(position)
@@ -185,8 +218,9 @@ export default {
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
-			// source of Truth is constantly synced
-			this.allPaths.push(pathObject)
+			await this.ref.update({
+				allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
+			})
 			this.currentPath = []
 		},
 		savePoint(X, Y) {
@@ -210,9 +244,12 @@ export default {
 			this.dragStartLocation.x = position.x
 			this.dragStartLocation.y = position.y
 		},
-		async resetBoard() {
-			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-			this.allPaths = []
+		async clearBoard() {
+			const roomID = this.$route.params.room_id
+			const ref = db.collection('whiteboards').doc(roomID)
+			await ref.update({
+				allPaths: []
+			})
 		}
 	}
 }
