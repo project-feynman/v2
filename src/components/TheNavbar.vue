@@ -78,7 +78,7 @@ export default {
 		},
 		//
 		hasFetchedUser() {
-			if (!this.user && this.hasFetchedUser) {
+			if (!this.user && this.hasFetchedUser && !this.atHomePage) {
 				firebase
 					.auth()
 					.signInAnonymously()

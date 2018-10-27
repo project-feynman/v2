@@ -218,7 +218,6 @@ export default {
 		getPath(fullURL) {
 			const el = document.createElement('a')
 			el.href = fullURL
-			console.log('el.path =', el.pathname)
 			return el.pathname
 		},
 		async answerQuestion(question) {

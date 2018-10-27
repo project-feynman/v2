@@ -45,33 +45,6 @@ export default {
 	},
 	mounted() {
 		this.initPaper()
-		// if (this.user && this.hasFetchedUser) {
-		// 	if (!this.onMouseUpInitialized) {
-		// 		this.initOnMouseUp()
-		// 	}
-		// }
-		// sync whiteboard to Firestore
-		// const roomID = this.$route.params.room_id
-		// const ref = db.collection('whiteboards').doc(roomID)
-		// ref.onSnapshot(doc => {
-		// 	const data = doc.data()
-		// 	this.whiteboard = data
-		// 	if (!this.loadedPreviousDrawings) {
-		// 		// initial load
-		// 		this.drawAllPaths()
-		// 	} else {
-		// 		const updatedPaths = data.allPaths
-		// 		const n = updatedPaths.length
-		// 		if (n == 0) {
-		// 			// wipe whiteboard
-		// 		} else if (updatedPaths[n - 1].author == this.user.uid) {
-		// 			return
-		// 		} else {
-		// 			const newPath = updatedPaths[n - 1]
-		//      this.drawPath()
-		// 		}
-		// 	}
-		// })
 	},
 	methods: {
 		initPaper() {
@@ -147,8 +120,6 @@ export default {
 			this.currentPath = []
 		},
 		dragStart(event) {
-			// listen to ends
-			// mouse strt should't do anything
 			this.dragging = true
 			if (this.isEraser) {
 				this.ctx.strokeStyle = 'white'

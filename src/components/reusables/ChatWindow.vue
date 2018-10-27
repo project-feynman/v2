@@ -24,29 +24,23 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment from 'moment'
 import firebase from 'firebase/app'
-// import 'firebase'
-// import 'firebase/firestore'
 import db from '@/firebase/init.js'
-// import ChatNewMessage from "@/components/chat/ChatNewMessage.vue";
 
 export default {
-  // components: {
-  //   ChatNewMessage
-  // },
-  props: ["chatroom"],
-  data() {
-    return {
-      participants: ["Elton", "John", "Qiantan"],
-      newMessage: ""
-    };
-  },
-  computed: {
+	props: ['chatroom'],
+	data() {
+		return {
+			participants: ['Elton', 'John', 'Qiantan'],
+			newMessage: ''
+		}
+	},
+	computed: {
 		user() {
 			return this.$store.state.user
-    },
-    typingIndicator() {
+		},
+		typingIndicator() {
 			if (
 				this.chatroom.whoIsTyping &&
 				Object.keys(this.chatroom.whoIsTyping).length > 0
@@ -59,22 +53,22 @@ export default {
 			}
 			return '\xa0'
 		}
-  },
-  methods: {
-    prettifyDate(timestamp) {
-      return moment(timestamp).format("lll");
-    },
-    addMessage() {
+	},
+	methods: {
+		prettifyDate(timestamp) {
+			return moment(timestamp).format('lll')
+		},
+		addMessage() {
 			if (this.newMessage) {
 				const content = this.newMessage
-        this.newMessage = null
-        const whoIsTyping = this.chatroom.whoIsTyping
+				this.newMessage = null
+				const whoIsTyping = this.chatroom.whoIsTyping
 				delete whoIsTyping[this.user.uid]
-        const author = {
+				const author = {
 					displayName: this.user.displayName,
 					uid: this.user.uid
 				}
-        this.chatroom.messages.push({
+				this.chatroom.messages.push({
 					content,
 					author,
 					timestamp: Date.now()
@@ -85,30 +79,9 @@ export default {
 					participants: firebase.firestore.FieldValue.arrayUnion(author),
 					whoIsTyping
 				})
-				// const roomID = this.$route.params.room_id
-				// let chatRoomRef = db.collection('chatrooms').doc(roomID)
-				// let chatRoom = await chatRoomRef.get()
-				// const data = chatRoom.data()
-				// this.messages = data.messages
-				// const whoIsTyping = data.whoIsTyping
-				// delete whoIsTyping[this.user.uid]
-				// const author = {
-				// 	displayName: this.user.displayName,
-				// 	uid: this.user.uid
-				// }
-				// this.messages.push({
-				// 	content,
-				// 	author,
-				// 	timestamp: Date.now()
-				// })
-				// await chatRoomRef.update({
-				// 	messages: this.messages,
-				// 	participants: firebase.firestore.FieldValue.arrayUnion(author),
-				// 	whoIsTyping
-				// })
 			}
-    },
-    async newChatMessageChange(event) {
+		},
+		async newChatMessageChange(event) {
 			if (!this.user.uid) {
 				// early exit if user isn't loaded from db yet
 				return
@@ -132,29 +105,29 @@ export default {
 			chatRoomRef.update({
 				whoIsTyping
 			})
-    }
-  },
-  created(){
-    window.onbeforeunload = async () => {
-      let chatRoomRef = db.collection('chatrooms').doc(this.chatroom.id)
-  		let chatRoom = await chatRoomRef.get()
-      const whoIsTyping = chatRoom.data().whoIsTyping
-      delete whoIsTyping[this.user.uid]
-      await chatRoomRef.update({
+		}
+	},
+	created() {
+		window.onbeforeunload = async () => {
+			let chatRoomRef = db.collection('chatrooms').doc(this.chatroom.id)
+			let chatRoom = await chatRoomRef.get()
+			const whoIsTyping = chatRoom.data().whoIsTyping
+			delete whoIsTyping[this.user.uid]
+			await chatRoomRef.update({
 				whoIsTyping
 			})
-    }
-  },
-};
+		}
+	}
+}
 </script>
 
 <style scoped lang="scss">
 h2 {
-  @extend .center;
+	@extend .center;
 }
 
 .button-wrapper {
-  margin: auto;
+	margin: auto;
 }
 
 input {
@@ -162,38 +135,38 @@ input {
 }
 
 span {
-  font-size: 1.4em;
+	font-size: 1.4em;
 }
 
 .time {
-  display: block;
-  font-size: 0.8em;
+	display: block;
+	font-size: 0.8em;
 }
 
 .whiteboard-wrapper {
-  width: 50%;
-  height: 484px;
+	width: 50%;
+	height: 484px;
 }
 
 .messages {
-  max-height: 300px;
-  overflow: auto;
+	max-height: 300px;
+	overflow: auto;
 }
 
 .messages::-webkit-scrollbar {
-  width: 3px;
+	width: 3px;
 }
 
 .messages::-webkit-scrollbar-track {
-  background: #ddd;
+	background: #ddd;
 }
 
 .messages::-webkit-scrollbar-thumb {
-  background: #aaa;
+	background: #aaa;
 }
 
 .user-online {
-  font-size: 10px;
-  color: #4aba34;
+	font-size: 10px;
+	color: #4aba34;
 }
 </style>

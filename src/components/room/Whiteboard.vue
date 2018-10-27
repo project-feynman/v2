@@ -10,8 +10,6 @@
 </template>
 
 <script>
-// implement the online functionalities to the iPad too
-
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import paper from 'paper'

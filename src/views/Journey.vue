@@ -1,31 +1,32 @@
 <template>
   <div>
     <h2>{{ title }}</h2>
-    <!-- <div class="center">
+    <div class="center">
       <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
-    </div> -->
+    </div>
     <h4 class="white-text center" v-if="isLoading">There is only one reason to be in college - to be able to learn with companions.</h4>
         <p class="white-text center" v-if="doodle.length == 0">Fetching chat log...</p>
+        
+        <!-- Chatlog -->
         <div class="messages-wrapper" style="width: 45%; margin: auto;">
           <message-history v-if="messages.length != 0" :messages="messages"/>
         </div>
         <p class="white-text center" v-if="doodle.length == 0">Fetching doodle...</p>
+       
+        <!-- Doodle -->
         <doodle :allStrokes="doodle"/>
-        <!-- <beta-doodle v-else :allStrokes="doodle"/> -->
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init.js'
 import Doodle from '@/components/reusables/Doodle.vue'
-import BetaDoodle from '@/components/reusables/BetaDoodle.vue'
 import MessageHistory from '@/components/reusables/MessageHistory.vue'
 import { mapState } from 'vuex'
 
 export default {
 	components: {
 		Doodle,
-		BetaDoodle,
 		MessageHistory
 	},
 	computed: {

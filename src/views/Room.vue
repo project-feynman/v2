@@ -21,15 +21,21 @@
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" ref="journey" id="journey-input" class="teal-text center">
     </popup-modal>
     
-    <h3 class="center" v-if="!chatroom.title" >Fetching Content...</h3>
+    <h4 class="center" v-if="!chatroom.title" >
+      {{ getRandomText() }}
+    </h4>
+
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
+
+    <!-- online users -->
     <div class="row" style="margin-top: 50px;">
       <template v-if="chatroom">
         <div class="col s10 m2">
           <collection-list title="Members" :listItems="usersAvalibility">
             <template slot-scope="{ item }">
               {{ item.displayName }}
-              <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
+              <i v-if="item.isLooking" class="material-icons user-looking secondary-content">fiber_manual_record</i>
+              <i v-else-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
             </template>
           </collection-list>
           <base-button @click="updateParticipants()">
@@ -80,27 +86,27 @@
         </div> 
       </template>
     </div>
-      <div class="row">
-    <div class="col s12">
-      <ul class="tabs" id="tabs">
-        <li class="tab col s3"><a class="active" href="#tab1">Notepad</a></li>
-        <li class="tab col s3"><a href="#tab2">Whiteboard</a></li>
-      </ul>
-    </div>
-    <div id="tab1" class="col s12">
-      <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
-      <base-button @click="resetBoard()">Reset whiteboard</base-button>
-      <base-button @click="isEraser = true">Erase</base-button>
-      <base-button @click="isEraser = false">Pen</base-button>
-      <div class="center">
-        <pulse-button 
-          iconName="save" 
-          @click="openJourneyPopup()"/>
+    <div class="row">
+      <div class="col s12">
+        <ul class="tabs" id="tabs">
+          <li class="tab col s3"><a class="active" href="#tab1">Notepad</a></li>
+          <li class="tab col s3"><a href="#tab2">Whiteboard</a></li>
+        </ul>
       </div>
-      <div style="margin-left: 120px;">
-        <!-- Paper -->
-        <paper ref="whiteboard" :isEraser="isEraser"/>
-      </div>
+      <div id="tab1" class="col s12">
+        <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
+        <base-button @click="resetBoard()">Reset whiteboard</base-button>
+        <base-button @click="isEraser = true">Erase</base-button>
+        <base-button @click="isEraser = false">Pen</base-button>
+        <div class="center">
+          <pulse-button 
+            iconName="save" 
+            @click="openJourneyPopup()"/>
+        </div>
+        <div style="margin-left: 120px;">
+          <!-- Paper -->
+          <paper ref="whiteboard" :isEraser="isEraser"/>
+        </div>
         <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
       </div>
     <div id="tab2" class="col s12">
@@ -108,8 +114,6 @@
       <whiteboard :isEraser="isEraser"/>
     </div>
   </div>
-        
-
   </div>
 </template>
 
@@ -137,19 +141,25 @@ export default {
 	},
 	data() {
 		return {
+			onlineUsers: null,
 			hasFetchedJourneys: false,
+			roomID: null,
 			isSharingJourney: false,
 			chatroom: {},
 			whiteboard: {},
-			journeys: [],
+			journeys: null,
 			newJourneyTitle: '',
 			feedback: '',
 			usersViewingPage: [],
 			isEraser: false,
 			PRINT: null,
 			isDebugging: false,
-			fetchingJourneys: true,
-			isLookingAtPage: true
+			isLookingAtPage: true,
+			loadingTexts: [
+				'This is a room. Use the chat and the whiteboard to convey ideas elegantly.',
+				'Use the save button to preserve the chat log and convert the drawings into an animation',
+				'"Eureka!" screamed Archimedes, as he leaps out of the bathtub and hurries onto the street, exposed.'
+			]
 		}
 	},
 	computed: {
@@ -171,12 +181,13 @@ export default {
 			return '\xa0'
 		},
 		membersWithOnlineStatus() {
-			if (!this.usersViewingPage) {
+			if (this.usersViewingPage.length == 0) {
 				return
 			}
 			if (!this.chatroom.participants) {
 				return
 			}
+			console.log('users viewing page =', this.usersViewingPage)
 			const onlineUIDs = this.usersViewingPage.map(obj => obj.uid)
 			let output = this.chatroom.participants.map(person => {
 				const personCopy = {
@@ -194,14 +205,21 @@ export default {
 			if (!this.chatroom.participants) {
 				return
 			}
+			const onlineUIDs = this.onlineUsers.reduce((prev, obj) => {
+				prev[obj.uid] = true
+				return prev
+			}, {})
+
 			const activeUIDs = this.usersViewingPage.reduce((prev, obj) => {
 				prev[obj.uid] = true
 				return prev
 			}, {})
+
 			return this.chatroom.participants.map(user => {
 				return {
 					displayName: user.displayName,
-					isOnline: activeUIDs[user.uid] ? true : false
+					isOnline: onlineUIDs[user.uid] ? true : false,
+					isLooking: activeUIDs[user.uid] ? true : false
 				}
 			})
 		}
@@ -214,46 +232,81 @@ export default {
 	},
 	async created() {
 		// add event listener to page to remove user from whoIsTyping
+		this.roomID = this.$route.params.room_id
+		const roomID = this.roomID
 		window.onbeforeunload = async () => {
-			const roomID = this.$route.params.room_id
-			let chatRoomRef = db.collection('chatrooms').doc(roomID)
-			let chatRoom = await chatRoomRef.get()
+			const chatRoomRef = db.collection('chatrooms').doc(roomID)
+			const userRef = db.collection('users').doc(this.user.uid)
+			userRef.update({
+				lookingAtRoom: null
+			})
+			const chatRoom = await chatRoomRef.get()
 			const whoIsTyping = chatRoom.data().whoIsTyping
 			delete whoIsTyping[this.user.uid]
 			chatRoomRef.update({
 				whoIsTyping
 			})
-			this.isLookingAtPage = false
-			console.log('set looking at page = false')
 		}
 
-		window.onchange = () => {
-			if (!document.hidden) {
-				this.isLookingAtPage = true
-				console.log('set looking at page = true')
-			}
+		// handle whether user is looking at the room
+		if (this.user && this.hasFetchedUser) {
+			const userRef = db.collection('users').doc(this.user.uid)
+			userRef.update({
+				lookingAtRoom: this.roomID
+			})
+		}
+
+		var hidden, visibilityChange
+		if (typeof document.hidden !== 'undefined') {
+			// Opera 12.10 and Firefox 18 and later support
+			hidden = 'hidden'
+			visibilityChange = 'visibilitychange'
+		} else if (typeof document.msHidden !== 'undefined') {
+			hidden = 'msHidden'
+			visibilityChange = 'msvisibilitychange'
+		} else if (typeof document.webkitHidden !== 'undefined') {
+			hidden = 'webkitHidden'
+			visibilityChange = 'webkitvisibilitychange'
+		}
+
+		if (
+			typeof document.addEventListener === 'undefined' ||
+			hidden === undefined
+		) {
+			console.log(
+				'This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.'
+			)
+		} else {
+			document.addEventListener(
+				visibilityChange,
+				this.handleVisibilityChange,
+				false
+			)
 		}
 
 		// display users viewing the page
-		const roomID = this.$route.params.room_id
-		const membersRef = db.collection('users').where('isOnline', '==', true)
-		const chatRef = db.collection('chatrooms').doc(roomID)
-		const whiteboardDoc = db.collection('whiteboards').doc(roomID)
+		const membersRef = db
+			.collection('users')
+			.where('isOnline', '==', true)
+			.where('lookingAtRoom', '==', this.roomID)
+
+		const onlineUsersRef = db.collection('users').where('isOnline', '==', true)
+
+		const chatRef = db.collection('chatrooms').doc(this.roomID)
+		const whiteboardDoc = db.collection('whiteboards').doc(this.roomID)
 		const journeyRef = db
 			.collection('conversations')
-			.where('forGroup', '==', roomID)
-		Promise.all([
-			this.$bind('usersViewingPage', membersRef),
-			this.$bind('whiteboard', whiteboardDoc),
-			this.$bind('chatroom', chatRef),
-			this.$bind('journeys', journeyRef)
-		])
-		this.fetchingJourneys = false
+			.where('forGroup', '==', this.roomID)
+
+		this.$bind('onlineUsers', onlineUsersRef)
+		this.$bind('usersViewingPage', membersRef)
+		this.$bind('whiteboard', whiteboardDoc)
+		this.$bind('chatroom', chatRef)
+		this.$bind('journeys', journeyRef)
 	},
 	beforeRouteLeave(to, from, next) {
 		// remove user from whoIsTyping
-		const roomID = this.$route.params.room_id
-		let chatRoomRef = db.collection('chatrooms').doc(roomID)
+		let chatRoomRef = db.collection('chatrooms').doc(this.roomID)
 		chatRoomRef.get().then(chatRoom => {
 			const whoIsTyping = chatRoom.data().whoIsTyping
 			delete whoIsTyping[this.user.uid]
@@ -261,19 +314,34 @@ export default {
 				whoIsTyping
 			})
 		})
-		next()
-	},
-	async destroyed() {
 		const ref = db.collection('users').doc(this.user.uid)
 		ref.update({
-			isTalking: false
+			lookingAtRoom: null
 		})
+		next()
 	},
 	mounted() {
 		const el = document.getElementById('tabs')
 		M.Tabs.init(el, {})
 	},
 	methods: {
+		async handleVisibilityChange() {
+			const ref = db.collection('users').doc(this.user.uid)
+			if (!document.hidden) {
+				await ref.update({
+					lookingAtRoom: this.roomID
+				})
+			} else {
+				await ref.update({
+					lookingAtRoom: null
+				})
+			}
+		},
+		getRandomText() {
+			const randomNumber =
+				Math.floor(Math.random() * this.loadingTexts.length - 1) + 1
+			return this.loadingTexts[randomNumber]
+		},
 		openJourneyPopup() {
 			this.isSharingJourney = true
 			const journeyInput = this.$refs.journey
@@ -337,9 +405,13 @@ export default {
 				recentChatID: roomID
 			})
 		},
-		handleMembershipLogic() {
-			if (this.hasFetchedUser && this.user != null) {
+		async handleMembershipLogic() {
+			if (this.hasFetchedUser && this.user) {
 				this.addToRecentChat()
+				const ref = db.collection('users').doc(this.user.uid)
+				await ref.update({
+					lookingAtRoom: this.roomID
+				})
 			}
 		},
 		async updateParticipants() {
@@ -467,6 +539,11 @@ span {
 }
 
 .user-online {
+	font-size: 10px;
+	color: yellow;
+}
+
+.user-looking {
 	font-size: 10px;
 	color: #4aba34;
 }
