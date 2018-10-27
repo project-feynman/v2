@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div>{{ whiteboard }}</div>
+    <div v-show="isDebugging">{{ whiteboard }}</div>
     <base-button @click="clearBoard">Clear Board</base-button>
+    <base-button @click="isDebugging = !isDebugging">Debug mode</base-button>
     <div>
       <canvas id="whiteboard" width="1000" height="1200"/>
     </div>
@@ -33,7 +34,8 @@ export default {
 			ctx: null,
 			dragging: false,
 			dragStartLocation: null,
-			roomID: null
+			roomID: null,
+			isDebugging: false
 		}
 	},
 	computed: {
@@ -158,7 +160,7 @@ export default {
 			this.ctx.stroke()
 			this.savePoint(x, y)
 		},
-		touchEnd(event) {
+		async touchEnd(event) {
 			const x =
 				event.changedTouches[0].pageX -
 				this.canvas.getBoundingClientRect().left -
@@ -178,12 +180,13 @@ export default {
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
-			this.allPaths.push(pathObject)
+			await this.ref.update({
+				allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
+			})
 			this.currentPath = []
 		},
 		dragStart(event) {
 			// listen to ends
-			// mouse strt should't do anything
 			this.dragging = true
 			if (this.isEraser) {
 				this.ctx.strokeStyle = 'white'

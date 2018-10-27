@@ -148,7 +148,8 @@ export default {
 			isEraser: false,
 			PRINT: null,
 			isDebugging: false,
-			fetchingJourneys: true
+			fetchingJourneys: true,
+			isLookingAtPage: true
 		}
 	},
 	computed: {
@@ -222,7 +223,17 @@ export default {
 			chatRoomRef.update({
 				whoIsTyping
 			})
+			this.isLookingAtPage = false
+			console.log('set looking at page = false')
 		}
+
+		window.onchange = () => {
+			if (!document.hidden) {
+				this.isLookingAtPage = true
+				console.log('set looking at page = true')
+			}
+		}
+
 		// display users viewing the page
 		const roomID = this.$route.params.room_id
 		const membersRef = db.collection('users').where('isOnline', '==', true)
