@@ -5,6 +5,11 @@
 </template>
 
 <script>
+// on touch start --> // on mouse move
+
+// o
+// is that fine?
+
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import paper from 'paper'
@@ -33,6 +38,7 @@ export default {
 	computed: {
 		...mapState(['user', 'hasFetchedUser'])
 	},
+	// might not be necessary anymore as there is no database operation by default
 	watch: {
 		user() {
 			if (this.user && this.hasFetchedUser) {
@@ -145,6 +151,8 @@ export default {
 			this.currentPath = []
 		},
 		dragStart(event) {
+			// listen to ends
+			// mouse strt should't do anything
 			this.dragging = true
 			if (this.isEraser) {
 				this.ctx.strokeStyle = 'white'

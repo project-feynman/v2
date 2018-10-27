@@ -48,6 +48,7 @@
 import db from '@/firebase/init.js'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
 import PopupModal from '@/components/reusables/PopupModal.vue'
 // import {
 // 	getSubscription,
@@ -73,6 +74,15 @@ export default {
 				// 		const ref = db.collection('users').doc(this.user.uid)
 				// 	}
 				// }
+			}
+		},
+		//
+		hasFetchedUser() {
+			if (!this.user && this.hasFetchedUser) {
+				firebase
+					.auth()
+					.signInAnonymously()
+					.catch(error => console.log('error =', error))
 			}
 		}
 	},
