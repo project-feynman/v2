@@ -1,8 +1,11 @@
 <template>
   <div>
+    <!-- Debugging prints for iPad (with no console inspector -->
     <template v-if="isDebugging">
       <h2># of paths = {{ PRINT.doodle.length }}</h2>
     </template>
+
+    <!-- Tutorial popup -->
     <template v-if="isLoggedIn">
       <popup-modal v-if="user.firstTimeInChat" @close="updateUser()">
         <p slot="header" class="teal-text center">
@@ -12,32 +15,33 @@
         </p>
       </popup-modal>
     </template>
+
+    <!-- Popup for saving Journey -->
     <popup-modal v-show="isSharingJourney" @close="shareJourney()" @dismiss="shareDismiss()">
       <input slot="header" v-model="newJourneyTitle" placeholder="Give a title to this discussion" ref="journey" id="journey-input" class="teal-text center">
     </popup-modal>
+    
+    <h3 class="white-text" v-if="!chatroom.title" >Fetching Content...</h3>
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
-    <h5 v-if="!isLoggedIn" class="yellow-text text center">If you want to ask and answer questions, make sure to log in (top left) :></h5>
     <div class="row" style="margin-top: 50px;">
       <template v-if="chatroom">
-        <div class="col s10 m3">
-          <base-button 
-            @click="updateParticipants()">
-            Join group
-          </base-button>
-          <base-button @click="leaveGroup()">
-            Leave group
-          </base-button>
+        <div class="col s10 m2">
           <collection-list title="Members" :listItems="usersAvalibility">
             <template slot-scope="{ item }">
               {{ item.displayName }}
               <i v-if="item.isOnline" class="material-icons user-online secondary-content">fiber_manual_record</i>
             </template>
           </collection-list>
+          <base-button @click="updateParticipants()">
+            Join
+          </base-button>
+          <base-button @click="leaveGroup()">
+            Leave
+          </base-button>
         </div>
       </template>
-    <div class="col s10 m4 offset-m1">
+    <div class="col s10 m7 offset">
       <div class="chat-wrapper">
-        <base-button @click="resetMessages()">Reset chat</base-button>
         <div class="card">
           <div class="card-content">
             <ul class="messages" v-chat-scroll>
@@ -56,9 +60,10 @@
           </div>
         </div>
       </div>
+      <base-button @click="resetMessages()">Reset chat</base-button>
     </div>
     <template v-if="journeys">
-        <div class="col s10 m3 offset-m1">
+        <div class="col s10 m3">
         <collection-list title="Journeys"
                     :listItems="journeys"
                     actionIcon="delete"
@@ -71,19 +76,37 @@
       </div> 
     </template>
     </div>
+      <div class="row">
+    <div class="col s12">
+      <ul class="tabs" id="tabs">
+        <li class="tab col s3"><a class="active" href="#tab1">Notepad</a></li>
+        <li class="tab col s3"><a href="#whiteboard">Whiteboard</a></li>
+        <!-- <li class="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
+        <li class="tab col s3"><a href="#test4">Test 4</a></li> -->
+      </ul>
+    </div>
+    <div id="tab1" class="col s12">
       <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
       <base-button @click="resetBoard()">Reset whiteboard</base-button>
-			<base-button @click="isEraser = true">Erase</base-button>
-			<base-button @click="isEraser = false">Pen</base-button>
+      <base-button @click="isEraser = true">Erase</base-button>
+      <base-button @click="isEraser = false">Pen</base-button>
       <div class="center">
         <pulse-button 
           iconName="save" 
           @click="openJourneyPopup()"/>
       </div>
       <div style="margin-left: 120px;">
+        <!-- Paper -->
         <paper ref="whiteboard" :isEraser="isEraser"/>
       </div>
-    <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+        <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
+      </div>
+    <div id="whiteboard" class="col s12">Whiteboard</div>
+    <!-- <div id="test3" class="col s12">Test 3</div>
+    <div id="test4" class="col s12">Test 4</div> -->
+  </div>
+        
+
   </div>
 </template>
 
@@ -91,8 +114,8 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import moment from 'moment'
-import ChatNewMessage from '@/components/chat/ChatNewMessage.vue'
-import Paper from '@/components/chat/Paper.vue'
+import ChatNewMessage from '@/components/room/ChatNewMessage.vue'
+import Paper from '@/components/room/Paper.vue'
 import PulseButton from '@/components/reusables/PulseButton.vue'
 import CollectionList from '@/components/reusables/CollectionList.vue'
 import PopupModal from '@/components/reusables/PopupModal.vue'
@@ -119,7 +142,8 @@ export default {
 			usersViewingPage: [],
 			isEraser: false,
 			PRINT: null,
-			isDebugging: false
+			isDebugging: false,
+			fetchingJourneys: true
 		}
 	},
 	computed: {
@@ -195,20 +219,20 @@ export default {
 			})
 		}
 		// display users viewing the page
-		const membersRef = db.collection('users').where('isOnline', '==', true)
 		const roomID = this.$route.params.room_id
+		const membersRef = db.collection('users').where('isOnline', '==', true)
 		const chatRef = db.collection('chatrooms').doc(roomID)
 		const whiteboardDoc = db.collection('whiteboards').doc(roomID)
-		Promise.all([
-			this.$bind('usersViewingPage', membersRef),
-			this.$bind('whiteboard', whiteboardDoc)
-		])
-		await this.$bind('chatroom', chatRef)
-		// change psetNumber here - this is atrocious
 		const journeyRef = db
 			.collection('conversations')
-			.where('forGroup', '==', this.chatroom.id)
-		this.$bind('journeys', journeyRef)
+			.where('forGroup', '==', roomID)
+		Promise.all([
+			this.$bind('usersViewingPage', membersRef),
+			this.$bind('whiteboard', whiteboardDoc),
+			this.$bind('chatroom', chatRef),
+			this.$bind('journeys', journeyRef)
+		])
+		this.fetchingJourneys = false
 	},
 	beforeRouteLeave(to, from, next) {
 		// remove user from whoIsTyping
@@ -228,6 +252,10 @@ export default {
 		ref.update({
 			isTalking: false
 		})
+	},
+	mounted() {
+		const el = document.getElementById('tabs')
+		M.Tabs.init(el, {})
 	},
 	methods: {
 		openJourneyPopup() {

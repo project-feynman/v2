@@ -145,20 +145,6 @@ export default {
 		},
 		getLastMessage(messages) {
 			return messages[messages.length - 1].content
-		},
-		getPermissionForGeolocation() {
-			getPermissionForGeolocation(position => {
-				if (this.hasSentPosition) {
-					return
-				}
-				sendPositionToFirestore(this.user.uid, {
-					accuracy: position.coords.accuracy,
-					longitude: position.coords.longitude,
-					latitude: position.coords.latitude,
-					timestamp: position.timestamp
-				})
-				this.hasSentPosition = true
-			})
 		}
 	}
 }

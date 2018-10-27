@@ -6,7 +6,7 @@ Vue.use(Router)
 const Login = () => import('@/views/Login.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
 const Journey = () => import('@/views/Journey.vue')
-const Notepad = () => import('@/views/Notepad.vue')
+const Room = () => import('@/views/Room.vue')
 const StudyGroups = () => import('@/views/StudyGroups.vue')
 
 export default new Router({
@@ -27,7 +27,7 @@ export default new Router({
 		},
 		{
 			path: '/chat/:room_id',
-			component: Notepad
+			component: Room
 		},
 		{
 			path: '/journey/:convo_id',

@@ -1,15 +1,11 @@
 <template>
   <div>
+    <div>{{ whiteboard }}</div>
     <canvas id="paper" width="1000" height="1200"/>
   </div>
 </template>
 
 <script>
-// on touch start --> // on mouse move
-
-// o
-// is that fine?
-
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import paper from 'paper'
@@ -47,6 +43,12 @@ export default {
 				}
 			}
 		}
+	},
+	async created() {
+		const roomID = this.$route.params.room_id
+		console.log('roomID =', roomID)
+		const ref = db.collection('whiteboards').doc(roomID)
+		await this.$bind('whiteboard', ref)
 	},
 	mounted() {
 		this.initPaper()
@@ -100,7 +102,6 @@ export default {
 				this.ctx.lineWidth = 2
 				this.ctx.lineCap = 'round'
 			}
-			// start new
 			this.ctx.beginPath()
 			const x =
 				event.changedTouches[0].pageX -
@@ -184,6 +185,7 @@ export default {
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
+			// source of Truth is constantly synced
 			this.allPaths.push(pathObject)
 			this.currentPath = []
 		},
@@ -221,3 +223,6 @@ canvas {
 	background: white;
 }
 </style>
+
+
+</template>
