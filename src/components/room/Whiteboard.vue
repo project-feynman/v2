@@ -9,6 +9,8 @@
 </template>
 
 <script>
+// implement the online functionalities to the iPad too
+
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import paper from 'paper'
@@ -54,9 +56,7 @@ export default {
 	},
 	mounted() {
 		this.initWhiteboard()
-		// sync whiteboard to Firestore
 		this.ref.onSnapshot(doc => {
-			console.log('onSnapshot()')
 			this.whiteboard = doc.data()
 			const n = this.whiteboard.allPaths.length
 			const newPath = this.whiteboard.allPaths[n - 1]
@@ -66,15 +66,12 @@ export default {
 					this.drawPath(path)
 				}
 				this.loadSavedDrawing = true
+			} else if (n == 0) {
+				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+			} else if (newPath.author == this.user.uid) {
+				return
 			} else {
-				if (n == 0) {
-					console.log('clearing the rectangle')
-					this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-				} else if (newPath.author == this.user.uid) {
-					return
-				} else {
-					this.drawPath(newPath)
-				}
+				this.drawPath(newPath)
 			}
 		})
 	},
@@ -245,9 +242,7 @@ export default {
 			this.dragStartLocation.y = position.y
 		},
 		async clearBoard() {
-			const roomID = this.$route.params.room_id
-			const ref = db.collection('whiteboards').doc(roomID)
-			await ref.update({
+			await this.ref.update({
 				allPaths: []
 			})
 		}
@@ -260,6 +255,3 @@ canvas {
 	background: white;
 }
 </style>
-
-
-</template>

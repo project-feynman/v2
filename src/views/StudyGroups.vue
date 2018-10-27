@@ -33,7 +33,6 @@
 
     <h2 class="white-text center" style="margin-top: 65px;">{{ $route.params.subject_id }}</h2>
 
-
     <div class="row">
 
       <!-- Classmates -->
@@ -56,7 +55,7 @@
             <template slot-scope="{ item }">
             <p>{{ item.owner.displayName }} asks: {{ item.content }}</p>
             <div v-if="item.answerURL">
-              <a :href="item.answerURL">{{ item.answerURL }}</a>
+              <router-link :to="getPath(item.answerURL)">{{ item.answerURL }}</router-link>
             </div>
             <div v-else>
               <template v-if="item.owner.uid != user.uid">
@@ -71,12 +70,13 @@
         <base-button @click="askQuestion">Ask A Question</base-button>
       </div>
 
-      <!-- Chat -->
+      <!-- Lobby chat -->
       <div class="col s10 m5 offset-1">
         <chat-window :chatroom="subjectChat"></chat-window>
       </div>
     </div>
-
+    
+    <!-- Rooms -->
     <template v-if="studyGroups.length !== 0">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
@@ -104,9 +104,10 @@
         </template>
       </div>
     </template>
-    <template v-else-if="!loadingGroups">
-      <h4 class="center">There are no ongoing study sessions right now - start a new session by clicking the plus icon</h4>
-    </template>
+    <h4 v-else-if="!loadingGroups" class="center">
+      There are no ongoing study sessions right now - start a new session by clicking the plus icon
+    </h4>
+    <!-- Add group button -->
     <div class="fixed-action-btn">
       <pulse-button iconName="add" @click="createGroup()"></pulse-button>
     </div>
@@ -214,6 +215,12 @@ export default {
 		this.loadingGroups = false
 	},
 	methods: {
+		getPath(fullURL) {
+			const el = document.createElement('a')
+			el.href = fullURL
+			console.log('el.path =', el.pathname)
+			return el.pathname
+		},
 		async answerQuestion(question) {
 			const subjectRef = db.collection('subjects').doc(this.subject.id)
 			const oldQuestion = question
