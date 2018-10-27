@@ -89,11 +89,14 @@
     <div class="row">
       <div class="col s12">
         <ul class="tabs" id="tabs">
-          <li class="tab col s3"><a class="active" href="#tab1">Notepad</a></li>
-          <li class="tab col s3"><a href="#tab2">Whiteboard</a></li>
+          <li class="tab col s3"><a class="active" href="#tab1">Whiteboard</a></li>
+          <li class="tab col s3"><a href="#tab2">Paper</a></li>
         </ul>
       </div>
       <div id="tab1" class="col s12">
+        <whiteboard :isEraser="isEraser"/>
+      </div>
+      <div id="tab2" class="col s12">
         <base-button @click="isDebugging = !isDebugging">(For debugging)</base-button>
         <base-button @click="resetBoard()">Reset whiteboard</base-button>
         <base-button @click="isEraser = true">Erase</base-button>
@@ -109,11 +112,7 @@
         </div>
         <p v-if="feedback" class="yellow-text center">{{ feedback }}</p>
       </div>
-    <div id="tab2" class="col s12">
-      <!-- Whiteboard -->
-      <whiteboard :isEraser="isEraser"/>
     </div>
-  </div>
   </div>
 </template>
 
