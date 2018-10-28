@@ -37,18 +37,21 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser'])
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		})
 	},
 	// might not be necessary anymore as there is no database operation by default
-	watch: {
-		user() {
-			if (this.user && this.hasFetchedUser) {
-				if (!this.onMouseUpInitialized) {
-					// this.initPaper()
-				}
-			}
-		}
-	},
+	// watch: {
+	// 	user() {
+	// 		if (this.user && this.hasFetchedUser) {
+	// 			if (!this.onMouseUpInitialized) {
+	// 				// this.initPaper()
+	// 			}
+	// 		}
+	// 	}
+	// },
 	async created() {
 		this.roomID = this.$route.params.room_id
 		this.ref = db.collection('whiteboards').doc(this.roomID)

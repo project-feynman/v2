@@ -30,7 +30,10 @@ export default {
 		MessageHistory
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser'])
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		})
 	},
 	data() {
 		return {

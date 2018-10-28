@@ -14,8 +14,14 @@
               <i class="material-icons right">chat</i>
             </a>
           </li>
-          <template v-if="isLoggedIn">
-            <li>
+          <template v-if="hasFetchedUser && user">
+            <!-- <li class="black-text">{{ user.displayName }}</li> -->
+            <li v-if="user.displayName == 'Anonymous'">
+              <base-button buttonColor="grey" textColor="white-text">
+                Upgrade account
+              </base-button>
+            </li>
+            <li v-else>
               <base-button @click="signOut()" buttonColor="grey" textColor="white-text">
                 Logout
               </base-button>
@@ -91,7 +97,10 @@ export default {
 		M.Dropdown.init(elem)
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser']),
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		}),
 		isLoggedIn() {
 			return this.user && this.hasFetchedUser
 		},

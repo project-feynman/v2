@@ -50,7 +50,11 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser'])
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		})
+		// ...mapState(['user', 'hasFetchedUser'])
 	},
 	async created() {
 		const firstFeatureRef = db

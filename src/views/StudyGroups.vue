@@ -134,7 +134,10 @@ export default {
 		ChatWindow
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser']),
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		}),
 		isLoggedIn() {
 			return this.user && this.hasFetchedUser
 		},

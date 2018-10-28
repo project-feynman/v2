@@ -157,12 +157,16 @@ export default {
 			loadingTexts: [
 				'This is a room. Use the chat and the whiteboard to convey ideas elegantly.',
 				'Use the save button to preserve the chat log and convert the drawings into an animation',
-				'"Eureka!" screamed Archimedes, as he leaps out of the bathtub and hurries onto the street, exposed.'
+				'"Eureka!" screamed Archimedes, as he leaps out of the bathtub and hurries onto the street, naked.',
+				'Sometimes, the best helper is not the professor or the TA. It is the classmate who just overcame the same problem you are facing.'
 			]
 		}
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser']),
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		}),
 		isLoggedIn() {
 			return this.user && this.hasFetchedUser
 		},
@@ -313,10 +317,10 @@ export default {
 				whoIsTyping
 			})
 		})
-		const ref = db.collection('users').doc(this.user.uid)
-		ref.update({
-			lookingAtRoom: null
-		})
+		// const ref = db.collection('users').doc(this.user.uid)
+		// ref.update({
+		// 	lookingAtRoom: null
+		// })
 		next()
 	},
 	mounted() {

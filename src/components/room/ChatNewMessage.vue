@@ -20,9 +20,10 @@ export default {
 		participants: Array
 	},
 	computed: {
-		user() {
-			return this.$store.state.user
-		}
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		})
 	},
 	data() {
 		return {

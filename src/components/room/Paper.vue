@@ -31,7 +31,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser'])
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		})
 	},
 	// might not be necessary anymore as there is no database operation by default
 	watch: {

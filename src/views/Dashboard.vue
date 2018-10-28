@@ -49,7 +49,10 @@ export default {
 		ManageClasses
 	},
 	computed: {
-		...mapState(['user', 'hasFetchedUser']),
+		...mapState({
+			user: state => state.user.user,
+			hasFetchedUser: state => state.user.hasFetchedUser
+		}),
 		setOfOnlineUIDs() {
 			let arrayOfUIDs = []
 			this.onlineUsers.forEach(user => arrayOfUIDs.push(user.id))
