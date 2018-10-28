@@ -12,7 +12,6 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import paper from 'paper'
 import db from '@/firebase/init.js'
 import { mapState } from 'vuex'
 

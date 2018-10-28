@@ -14,6 +14,7 @@ import 'firebase'
 import 'firebase/firestore'
 import db from '@/firebase/init.js'
 import moment from 'moment'
+import { mapState } from 'vuex'
 
 export default {
 	props: {

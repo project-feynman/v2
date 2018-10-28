@@ -9,6 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "canvas-prebuilt": "^2.0.0-alpha.14",
     "firebase": "^5.3.1",
     "firebase-admin": "^6.0.0",
     "firebase-functions": "^2.0.4",
