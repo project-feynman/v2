@@ -26,6 +26,10 @@
     </h4>
 
     <h3 v-if="chatroom.title" class="center">{{ chatroom.title }}</h3>
+    <div class="center">
+       <base-button @click="redirectToSubject()">Return to lobby</base-button> 
+    </div>
+  
 
     <!-- online users -->
     <div class="row" style="margin-top: 50px;">
@@ -328,6 +332,9 @@ export default {
 		M.Tabs.init(el, {})
 	},
 	methods: {
+		redirectToSubject() {
+			this.$router.push(`/${this.chatroom.forSubject}`)
+		},
 		async handleVisibilityChange() {
 			const ref = db.collection('users').doc(this.user.uid)
 			if (!document.hidden) {

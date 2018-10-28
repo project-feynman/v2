@@ -52,10 +52,5 @@ describe('BaseButton', () => {
 	it('renders props.msg when passed', () => {
 		const wrapper = shallowMount(BaseButton)
 		expect(wrapper.html()).toMatchSnapshot()
-		// const msg = 'new message'
-		// const wrapper = shallowMount(HelloWorld, {
-		// 	propsData: { msg }
-		// })
-		// expect(wrapper.text()).toMatch(msg)
 	})
 })

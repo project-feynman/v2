@@ -15,7 +15,6 @@
             </a>
           </li>
           <template v-if="hasFetchedUser && user">
-            <!-- <li class="black-text">{{ user.displayName }}</li> -->
             <li v-if="user.displayName == 'Anonymous'">
               <base-button buttonColor="grey" textColor="white-text">
                 Upgrade account

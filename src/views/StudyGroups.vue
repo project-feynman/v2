@@ -48,25 +48,25 @@
 
       <!-- Questions -->
       <div class="col s10 m5">
-        <collection-list
-          title="Questions"
-          :listItems="subject.questions"
-          @item-click="loadingGroups = false">
-            <template slot-scope="{ item }">
-            <p>{{ item.owner.displayName }} asks: {{ item.content }}</p>
-            <div v-if="item.answerURL">
-              <router-link :to="getPath(item.answerURL)">{{ item.answerURL }}</router-link>
+        <ul class="collapsible">
+          <li v-for="(question, index) in subject.questions" :key="index">
+            <div class="collapsible-header black-text">
+              <!-- <i class="material-icons">filter_drama</i> -->
+                  <p class="black-text">{{ question.owner.displayName }} asks: {{ question.content }}</p>
             </div>
-            <div v-else>
-              <template v-if="item.owner.uid != user.uid">
-                <div style="display: flex; justify-content: space-evenly;">
-                  <input slot="header" class="teal-text center" placeholder="Answer with a journey URL" v-model="answerURL">
-                  <floating-button @click="answerQuestion(item)" iconName="send"></floating-button>
-                </div>
-              </template>
-            </div>
-          </template>
-        </collection-list>
+            <div class="collapsible-body"><span><div v-if="question.answerURL">
+            <router-link :to="getPath(question.answerURL)">{{ question.answerURL }}</router-link>
+          </div>
+          <div v-else-if="hasFetchedUser">
+            <template v-if="question.owner.uid != user.uid">
+              <div style="display: flex; justify-content: space-evenly;">
+                <input slot="header" class="teal-text center" placeholder="Answer with a journey URL" v-model="answerURL">
+                <floating-button @click="answerQuestion(item)" iconName="send"></floating-button>
+              </div>
+            </template>
+          </div></span></div>
+          </li>
+        </ul>
         <base-button @click="askQuestion">Ask A Question</base-button>
       </div>
 
@@ -77,7 +77,7 @@
     </div>
     
     <!-- Rooms -->
-    <template v-if="studyGroups.length !== 0">
+    <template v-if="studyGroups.length !== 0 && hasFetchedUser">
       <div class="responsive-grid" style="margin-top: 60px;">
         <template v-for="(group, idx) in studyGroups">
           <div class="collection-list-wrapper grid-item" :key="idx">
@@ -216,6 +216,10 @@ export default {
 			this.$bind('studyGroups', ref)
 		])
 		this.loadingGroups = false
+	},
+	mounted() {
+		var elems = document.querySelectorAll('.collapsible')
+		var instances = M.Collapsible.init(elems, {})
 	},
 	methods: {
 		getPath(fullURL) {
