@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="center">
-      <base-button @click="playAnimation()">Replay</base-button>
+      <!-- <base-button @click="playAnimation()">Replay</base-button> -->
       <!-- <base-button @click="speedUpReplay()">Speed Up Replay</base-button> -->
     </div>
     <div class="center">
-      <canvas :id="this.id" width="1000" height="1200"></canvas>
+      <canvas :id="this.id" width="2000" height="1200" @click="handleClick()"></canvas>
     </div>
   </div>
 </template>
@@ -16,7 +16,19 @@ var TOTAL_POINTS = 0
 export default {
 	props: {
 		allStrokes: Array,
-		small: Boolean
+		small: Boolean,
+		widthPercentage: {
+			type: Number,
+			default() {
+				return 0.8
+			}
+		},
+		heightPercentage: {
+			type: Number,
+			default() {
+				return 1
+			}
+		}
 	},
 	data() {
 		return {
@@ -36,8 +48,8 @@ export default {
 			this.canvas.width = 800
 			this.canvas.height = 1000
 		} else {
-			this.canvas.width = window.innerWidth * 0.8
-			this.canvas.width = window.innerHeight
+			this.canvas.width = window.innerWidth * this.widthPercentage
+			this.canvas.height = window.innerHeight * this.heightPercentage
 		}
 		this.ctx = this.canvas.getContext('2d')
 		this.renderEntireNote()
@@ -48,6 +60,10 @@ export default {
 		}
 	},
 	methods: {
+		handleClick() {
+			this.playAnimation()
+			console.log('handleClick()')
+		},
 		speedUpReplay() {
 			this.pointPeriod = 1
 			this.strokeSpeed = 2
@@ -65,6 +81,10 @@ export default {
 			this.loadedPreviousDrawings = true
 		},
 		async playAnimation() {
+			console.log('playAnimation')
+			if (!this.ctx || !this.canvas) {
+				return
+			}
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 			if (!this.allStrokes) {
 				return

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- <h3>{{ DEBUG }}</h3>
+    <h3>All paths = {{ allPaths }}</h3>
+    <h3>Current path = {{ currentPath }}</h3> -->
     <canvas id="paper" width="1000" height="1200"/>
   </div>
 </template>
@@ -26,7 +29,9 @@ export default {
 			canvas: null,
 			ctx: null,
 			dragging: false,
-			dragStartLocation: null
+			dragStartLocation: null,
+			started: false,
+			DEBUG: null
 		}
 	},
 	computed: {
@@ -54,9 +59,9 @@ export default {
 			this.canvas.width = window.innerWidth - 120
 			// console.log('this.canvas =', this.canvas)
 			this.ctx = this.canvas.getContext('2d')
-			this.canvas.addEventListener('mousedown', this.dragStart, false)
-			this.canvas.addEventListener('mousemove', this.drag, false)
-			this.canvas.addEventListener('mouseup', this.dragStop, false)
+			// this.canvas.addEventListener('mousedown', this.dragStart, false)
+			// this.canvas.addEventListener('mousemove', this.drag, false)
+			// this.canvas.addEventListener('mouseup', this.dragStop, false)
 			this.canvas.addEventListener('touchstart', this.touchStart, false)
 			this.canvas.addEventListener('touchmove', this.touch, false)
 			this.canvas.addEventListener('touchend', this.touchEnd, false)
@@ -73,12 +78,14 @@ export default {
 			}
 			// start new
 			this.ctx.beginPath()
+			// this.ctx.moveTo(event.touches[0].pageX, event.touches[0].pageY)
+			this.started = true
 			const x =
-				event.changedTouches[0].pageX -
+				event.touches[0].pageX -
 				this.canvas.getBoundingClientRect().left -
 				window.scrollX
 			const y =
-				event.changedTouches[0].pageY -
+				event.touches[0].pageY -
 				this.canvas.getBoundingClientRect().top -
 				window.scrollY
 			this.ctx.moveTo(x, y)
@@ -86,19 +93,31 @@ export default {
 		},
 		touch(event) {
 			event.preventDefault() // otherwise iPad will think that the user intends to scroll the page
-			const x =
-				event.changedTouches[0].pageX -
-				this.canvas.getBoundingClientRect().left -
-				window.scrollX
-			const y =
-				event.changedTouches[0].pageY -
-				this.canvas.getBoundingClientRect().top -
-				window.scrollY
-			this.ctx.lineTo(x, y)
-			this.ctx.stroke()
-			this.savePoint(x, y)
+			if (this.started) {
+				this.DEBUG = {
+					eventTouches: event.touches[0],
+					x: event.touches[0].pageX,
+					y: event.touches[0].pageY,
+					left: this.canvas.getBoundingClientRect().left,
+					top: this.canvas.getBoundingClientRect().top,
+					windowX: window.scrollX,
+					windowY: window.scrollY
+				}
+				const x =
+					event.touches[0].pageX -
+					this.canvas.getBoundingClientRect().left -
+					window.scrollX
+				const y =
+					event.touches[0].pageY -
+					this.canvas.getBoundingClientRect().top -
+					window.scrollY
+				this.ctx.lineTo(x, y)
+				this.ctx.stroke()
+				this.savePoint(x, y)
+			}
 		},
 		touchEnd(event) {
+			this.DEBUG = 'Touch Ended'
 			const x =
 				event.changedTouches[0].pageX -
 				this.canvas.getBoundingClientRect().left -
@@ -110,11 +129,10 @@ export default {
 			this.ctx.lineTo(x, y)
 			this.ctx.stroke()
 			this.savePoint(x, y)
-			// store current path
-			this.savePoint(x, y)
+			this.started = false
 			// save current path, and then reset it
 			const pathObject = {
-				author: this.user.uid,
+				author: 'Mother Fucker',
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}

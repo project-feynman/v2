@@ -17,7 +17,7 @@
           <template v-if="hasFetchedUser && user">
             <li v-if="user.displayName == 'Anonymous'">
               <base-button buttonColor="grey" textColor="white-text">
-                Upgrade account
+                Login
               </base-button>
             </li>
             <li v-else>

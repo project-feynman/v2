@@ -3,6 +3,7 @@
     <div v-show="isDebugging">{{ whiteboard }}</div>
     <base-button @click="clearBoard">Clear Board</base-button>
     <base-button @click="isDebugging = !isDebugging">Debug mode</base-button>
+    <base-button>Save Journey</base-button>
     <div>
       <canvas id="whiteboard" width="1000" height="1200"/>
     </div>
@@ -10,6 +11,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import db from '@/firebase/init.js'
@@ -26,6 +28,7 @@ export default {
 			width: 0,
 			height: 0,
 			currentPath: [],
+			currentBatch: [],
 			allPaths: [],
 			canvas: null,
 			ctx: null,
@@ -41,16 +44,6 @@ export default {
 			hasFetchedUser: state => state.user.hasFetchedUser
 		})
 	},
-	// might not be necessary anymore as there is no database operation by default
-	// watch: {
-	// 	user() {
-	// 		if (this.user && this.hasFetchedUser) {
-	// 			if (!this.onMouseUpInitialized) {
-	// 				// this.initPaper()
-	// 			}
-	// 		}
-	// 	}
-	// },
 	async created() {
 		this.roomID = this.$route.params.room_id
 		this.ref = db.collection('whiteboards').doc(this.roomID)
@@ -78,6 +71,9 @@ export default {
 		})
 	},
 	methods: {
+		saveJourney() {
+			// you have the data right- just add a new Journey with allPaths equal to that then
+		},
 		async drawPath(data, instant = true) {
 			if (data.isEraser) {
 				this.ctx.strokeStyle = 'white'
@@ -180,10 +176,35 @@ export default {
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
-			await this.ref.update({
-				allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
-			})
+			this.currentBatch.push(pathObject)
+			this.attemptUpload()
+			// await this.ref.update({
+			// 	allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
+			// })
 			this.currentPath = []
+		},
+		attemptUpload() {
+			console.log('attempting to upload...')
+			const ref = this.ref
+			async function uploadPaths() {
+				console.log('uploading path...')
+				const outdated = this.whiteboard.allPaths
+				outdated.concat(this.currentBatch)
+				this.currentBatch = []
+				await this.ref.update({
+					allPaths: outdated
+				})
+			}
+			_.debounce(uploadPaths, 1500)
+		},
+		async uploadPaths() {
+			console.log('uploading path...')
+			const outdated = this.whiteboard.allPaths
+			outdated.concat(this.currentBatch)
+			this.currentBatch = []
+			await this.ref.update({
+				allPaths: outdated
+			})
 		},
 		dragStart(event) {
 			// listen to ends
@@ -218,9 +239,11 @@ export default {
 				isEraser: this.isEraser,
 				points: this.currentPath
 			}
-			await this.ref.update({
-				allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
-			})
+			// await this.ref.update({
+			// 	allPaths: firebase.firestore.FieldValue.arrayUnion(pathObject)
+			// })
+			this.currentBatch.push(pathObject)
+			this.attemptUpload()
 			this.currentPath = []
 		},
 		savePoint(X, Y) {

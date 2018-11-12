@@ -4,7 +4,7 @@
     <div class="center">
       <base-button buttonColor="pink" @click="redirectToGroup()">More explanations</base-button>
     </div>
-    <h4 class="white-text center" v-if="isLoading">There is only one reason to be in college - to be able to learn with companions.</h4>
+    <h4 class="white-text center" v-if="isLoading">Clicking the doodle to replay it as an animation.</h4>
         <p class="white-text center" v-if="doodle.length == 0">Fetching chat log...</p>
         
         <!-- Chatlog -->

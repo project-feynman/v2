@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>Feynman Project (Beta)</h1>
-    <p v-if="!hasFetchedUser" class="white-text center" style="margin-bottom: 35px;">
+    <h1 style="margin-bottom: 80px; margin-top: 100px;">Feynman Project (Beta)</h1>
+    <p v-if="!hasFetchedUser" class="white-text center" style="font-size: 1.4em;">
       "If you cannot explain it simply, you don't understand it" - Richard Feynman
     </p>
-    <template v-else>
+    <div v-else>
       <template v-if="user">
         <div class="dashboard-button">
           <router-link to="/subjects">
@@ -18,12 +18,34 @@
           <base-button buttonColor="pink" @click="signInWithPopup()">Login with Google</base-button>
         </div>
       </template>
-    </template>
-    <carousel>     
+    </div>
+    <!-- <div style="display: flex; justify-content: space-evenly;"> -->
+    <carousel>
+      <doodle 
+              slot="first"
+              :allStrokes="showcase" 
+              :widthPercentage="0.5"
+              :heightPercentage="0.9">
+      </doodle>
+      <doodle 
+              slot="second"
+              :allStrokes="featureTwo" 
+              :widthPercentage="0.5" 
+              :heightPercentage="0.9">
+      </doodle>
+      <doodle 
+              slot="third"
+              :allStrokes="featureThree" 
+              :widthPercentage="0.5" 
+              :heightPercentage="0.9"></doodle>
+    </carousel>
+    <!-- </div> -->
+ 
+    <!-- <carousel>     
       <doodle @new-scope="payload => handleScope(payload)" slot="first" :allStrokes="showcase" :small="true"></doodle>
       <doodle @new-scope="payload => handleScope(payload)" slot="third" :allStrokes="featureThree" :small="true"></doodle>
       <doodle @new-scope="payload => handleScope(payload)" slot="second" :allStrokes="featureTwo" :small="true"></doodle>
-    </carousel>
+    </carousel> -->
   </div>
 </template>
 
@@ -54,7 +76,6 @@ export default {
 			user: state => state.user.user,
 			hasFetchedUser: state => state.user.hasFetchedUser
 		})
-		// ...mapState(['user', 'hasFetchedUser'])
 	},
 	async created() {
 		const firstFeatureRef = db

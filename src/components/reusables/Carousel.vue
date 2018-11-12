@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel">
+  <div class="carousel" style="margin-top: 0px;">
     <a class="carousel-item"><slot name="first"></slot></a>
     <a class="carousel-item"><slot name="second"></slot></a>
     <a class="carousel-item"><slot name="third"></slot></a>
