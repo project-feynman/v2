@@ -1,5 +1,6 @@
 # Feynman Project 
-### Despite the rise of digital learning, academic material is still mostly text-based. Feynman brings vivid explanations to every subject by making the content creation process 10x faster. 
+
+6.046 is notoriously hard, yet the average student asks 0.1 questions on Piazza per week because the response time is too long. Feynman is a student-driven Q&A platform with instant responses. 
 
 ## Table of contents:
   - [How Feynman works](./doc/harness_potential.md)
@@ -9,7 +10,9 @@
   - [Join our team](CONTRIBUTING.md)
   - [Frequently Asked Questions](FAQ.md)
 
+# Feynman makes it easy to create visual explanations 
 
+Despite the rise of digital learning, academic material is still mostly text-based. Feynman brings vivid explanations to every subject by making the content creation process 10x faster. 
 
 Feynman's goal is to minimize the cost of creating elegant explanations. 
 
