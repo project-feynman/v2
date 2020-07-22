@@ -1,4 +1,5 @@
 # Feynman Project 
+<img src="Hnet-image (1)..gif" style="max-height: 250px;" alt="PlayingCard Preview">
 
 6.046 is notoriously hard, yet the average student asks 0.1 questions on Piazza per week because the response time is too long. Feynman is a student-driven Q&A platform with instant responses. 
 
