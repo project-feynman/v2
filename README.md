@@ -1,6 +1,11 @@
 # Feynman Project 
 <img src="feynman-preview.gif" style="max-height: 400px;" alt="feynman-preview">
 
+Version 1 --> 2: 
+  - Boostrap --> MaterializeCSS 
+  - EJS --> Vue 
+  - MongoDB --> Firebase
+
 6.046 is notoriously hard, yet the average student asks 0.1 questions on Piazza per week because the response time is too long. Feynman is a student-driven Q&A platform with instant responses. 
 
 ## Table of contents:
