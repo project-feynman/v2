@@ -1,6 +1,8 @@
 # Feynman Project 
 <img src="feynman-preview.gif" style="max-height: 400px;" alt="feynman-preview">
 
+A conspiracy to bring visual explanations to every subject in the world
+
 Version 1 --> 2: 
   - Boostrap --> MaterializeCSS 
   - EJS --> Vue 
