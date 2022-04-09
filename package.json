@@ -15,7 +15,7 @@
     "firebase-functions": "^2.0.4",
     "lodash": "^4.17.11",
     "materialize-css": "^1.0.0-rc.2",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "paper": "^0.11.5",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.17",
